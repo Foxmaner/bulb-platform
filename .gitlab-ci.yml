@@ -5,7 +5,9 @@ unit-test:
   image: node:latest
   stage: test
   before_script:
+    - cd bulb
     - npm install
   script:
+    - cd bulb
     - npm run test:ci
   coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
