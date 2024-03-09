@@ -1,5 +1,16 @@
 stages:
+  - lint
   - test
+
+
+lint:
+  image: node:latest
+  stage: lint
+  before_script:
+    - cd bulb
+    - npm i eslint
+  script:
+    - node_modules/eslint/bin/eslint.js .
 
 unit-test:
   image: node:latest
