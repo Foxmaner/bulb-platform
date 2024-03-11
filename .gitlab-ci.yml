@@ -43,7 +43,7 @@ variables:
 cache:
   key:
     files:
-      - bulb/package-lock.json
+      - ./bulb/package-lock.json
   paths:
     - ./bulb/npm/ # Moves npm cache inside project per GitLab restrictions
 e2e-test:
