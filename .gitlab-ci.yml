@@ -1,6 +1,7 @@
 stages:
   - lint
   - test
+  - e2e-test
 
 
 lint:
@@ -29,3 +30,15 @@ unit-test:
   script:
     - npm run test:ci
   coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
+
+
+e2e-test:
+  image: node:latest
+  stage: e2e-test
+  script:
+    # Change to the directory where the app is located
+    - cd bulb
+    # install dependencies
+    - npm ci
+    # start the server in the background
+    - npm run e2e:headless
