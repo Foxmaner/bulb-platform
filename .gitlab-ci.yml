@@ -57,9 +57,7 @@ test:
     - npm ci --cache .npm --prefer-offline
     # Starts web server for E2E tests - replace with your own server invocation
     # https://docs.cypress.io/guides/continuous-integration/introduction#Boot-your-server
-    - npm start &
-    - npx wait-on 'http-get://localhost:3000' # Waits for above
     # Runs tests in parallel and records to Cypress Cloud
     # https://docs.cypress.io/guides/cloud/projects#Set-up-a-project-to-record
     # https://docs.cypress.io/guides/guides/parallelization
-    - npx cypress run --record --parallel --browser chrome
+    - npm run e2e:headless
