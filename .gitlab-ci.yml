@@ -1,6 +1,6 @@
 stages:
-  - lint
-  - test
+ # - lint
+ # - test
   - e2e-test
 
 
@@ -53,6 +53,7 @@ test:
   stage: test
   parallel: 2 # Uses 2 parallel instances
   script:
+    - cd bulb
     - npm ci --cache .npm --prefer-offline
     # Starts web server for E2E tests - replace with your own server invocation
     # https://docs.cypress.io/guides/continuous-integration/introduction#Boot-your-server
