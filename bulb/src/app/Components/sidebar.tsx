@@ -4,7 +4,7 @@ import { BsCalendarEvent, BsFileEarmarkTextFill, BsFillInfoCircleFill } from "re
 import Image from 'next/image'
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-/*import { Switch } from "@nextui-org/react";*/
+import { Switch } from "@nextui-org/react";
 
 export default function Sidebar() {
     const pathname = usePathname();
@@ -30,11 +30,11 @@ export default function Sidebar() {
             {/* Actionbar */}
             <div >
                 <button className="text-gray-500 flex w-full"> <BsFillInfoCircleFill color="#6b7280" /> Info</button>
-                {/*
+                {
                 <Switch defaultSelected >
                     <p className='text-gray-500'>Darkmode</p>
                 </Switch>
-                */}
+                }
             </div>
 
             <div className='flex'>
