@@ -2,7 +2,7 @@
 
 export default function documentPage() {
     return(
-        <div>
+        <div className='flex-col w-full'>
             <p>templates</p>
         </div>
     );
