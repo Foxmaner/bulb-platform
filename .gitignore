@@ -3,7 +3,7 @@
 
 ### NextJS ###
 # dependencies
-/node_modules
+*/node_modules
 /.pnp
 .pnp.js
 
@@ -13,6 +13,8 @@
 # next.js
 /.next/
 /out/
+
+/databas/.env
 
 # production
 /build
