@@ -38,7 +38,7 @@ export default function Sidebar() {
             </div>
 
             <div className='flex'>
-                <Image src="/cowboy.png" alt="East Sweden MedTech" width={100} height={100} />
+                <Image src="/placeholder.jpg" alt="East Sweden MedTech" width={100} height={100} />
                 <div>
                     <p className='text-gray-500'>East Sweden MedTech</p>
                     <p className='text-gray-500'>© 2024</p>
