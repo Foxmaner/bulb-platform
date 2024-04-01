@@ -29,6 +29,31 @@ class CompanyTests {
 		expect(companies.length).toBe(1);
 		expect(companies[0].name).toBe("Company 1");
 	}
+
+	@testDecorator("Update a company")
+	async updateCompany() {
+
+	}
+
+	@testDecorator("Delete a company")
+	async deleteCompany() {
+
+	}
+	
+	@testDecorator("List companies")
+	async listCompanies() {
+
+	}
+
+	@testDecorator("Get company")
+	async getCompany() {
+
+	}
+
+	@testDecorator("Get company by name")
+	async getCompanyByName() {
+
+	}
 }
 
 

@@ -4,8 +4,8 @@
     "rootDir": "./dist",
     "preset": "@shelf/jest-mongodb",
     "testEnvironment": "node",
-    "globalSetup": "<rootDir>/__tests__/setup.js",
-    "globalTeardown": "<rootDir>/__tests__/teardown.js",
+    "globalSetup": "<rootDir>/test/setup.js",
+    "globalTeardown": "<rootDir>/test/teardown.js",
     "testMatch": ["**/test/tests/**/?(*.)+(spec|test).[jt]s?(x)"],
     "testPathIgnorePatterns": ["/node_modules/"],
     "transform": {
