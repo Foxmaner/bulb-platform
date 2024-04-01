@@ -1,16 +1,23 @@
 'use client';
 
 import { BsCalendarEvent, BsFileEarmarkTextFill, BsFillInfoCircleFill } from "react-icons/bs";
+import SignOutButton from "./SignOutBtn";
+import SignInButton from "./SignInBtn";
+
+import { useSession } from "next-auth/react";
+
 import Image from 'next/image'
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Switch } from "@nextui-org/react";
 
+
 export default function Sidebar() {
     const pathname = usePathname();
+    const { data: session } = useSession();
     
     //Detta för att inte visa sideBar på Skapasidan, en sk fulfix.
-    if(pathname.includes("create")){
+    if(pathname.includes("create") || !session){
         return <></>;
     }
 
@@ -49,6 +56,8 @@ export default function Sidebar() {
                     <p className='text-gray-500'>East Sweden MedTech</p>
                     <p className='text-gray-500'>© 2024</p>
                 </div>
+
+                <SignOutButton/>
             </div>
         </div>
     );
