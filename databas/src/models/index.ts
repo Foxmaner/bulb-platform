@@ -1,6 +1,6 @@
-export { Example } from "./example.model";
+export { ExampleModel } from "./example.model";
 
-export { Company } from "./company.model";
-export { Meeting } from "./meeting.model";
-export { User } from "./user.model";
-export { Template } from "./template.model";
+export { CompanyModel } from "./company.model";
+export { MeetingModel } from "./meeting.model";
+export { UserModel } from "./user.model";
+export { TemplateModel } from "./template.model";

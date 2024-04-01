@@ -45,4 +45,4 @@ SchemaMain.statics.logModel = function () {
 
 const ModelMain = model<ISchema>("Meetings", SchemaMain);
 
-export { ModelMain as Meeting };
+export { ModelMain as MeetingModel };

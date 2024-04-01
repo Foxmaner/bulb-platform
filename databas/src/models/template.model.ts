@@ -32,4 +32,4 @@ SchemaMain.statics.logModel = function () {
 
 const ModelMain = model<ISchema>("Templates", SchemaMain);
 
-export { ModelMain as Template };
+export { ModelMain as TemplateModel };

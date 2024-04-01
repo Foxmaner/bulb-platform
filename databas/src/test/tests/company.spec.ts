@@ -1,5 +1,14 @@
-import { Company } from "../../models/company.model";
-import { testDecorator } from "../utils";
+import { Request, Response } from 'express';
+
+import { CompanyModel } from "../../models";
+import { CompanyController } from "../../controllers";
+
+import { MockRequest, MockResponse } from 'node-mocks-http';
+
+import { TestDecorators } from "../utils";
+
+
+jest.mock('../models/CompanyModel');
 
 
 class CompanyTests {
@@ -8,52 +17,54 @@ class CompanyTests {
 	}
 
 	async beforeEach() {
-		Company.deleteMany({}).exec();
+		CompanyModel.deleteMany({}).exec();
 	}
 
-	async afterEach() {
-		Company.deleteMany({}).exec();
-	}
-
-	@testDecorator("Create a company")
-	async createCompany() {
-		const company = new Company({
+	@TestDecorators.post("Create a company", "/company/create")
+	async createCompany(req: MockRequest<Request>, res: MockResponse<Response>) {
+		req.body = {
 			name: "Company 1"
-		});
-
-		await company.save();
-
-		const companies = await Company.find({});
+		};
+		
+		CompanyController.create(req, res);
 
 		// Check if the company was created
+		const companies = await CompanyModel.find({});
+		
 		expect(companies.length).toBe(1);
 		expect(companies[0].name).toBe("Company 1");
 	}
 
-	@testDecorator("Update a company")
-	async updateCompany() {
+	@TestDecorators.post("Create a company with invalid input", "/company/create")
+	async createInvalidCompany(req: MockRequest<Request>, res: MockResponse<Response>) {
+		req.body = {
+			name: ""
+		};
+		
+		CompanyController.create(req, res);
 
-	}
+		// Check if the company was created
+		const companies = await CompanyModel.find({});
 
-	@testDecorator("Delete a company")
-	async deleteCompany() {
-
+		expect(companies.length).toBe(0);
 	}
 	
-	@testDecorator("List companies")
-	async listCompanies() {
+	@TestDecorators.post("Create a company with same name", "/company/create")
+	async createTwoCompanyWithSameName(req: MockRequest<Request>, res: MockResponse<Response>) {
+		req.body = {
+			name: "Company 1"
+		};
+		
+		CompanyController.create(req, res);
 
-	}
+		CompanyController.create(req, res);
 
-	@testDecorator("Get company")
-	async getCompany() {
+		// Check if the company was created
+		const companies = await CompanyModel.find({});
 
-	}
-
-	@testDecorator("Get company by name")
-	async getCompanyByName() {
-
-	}
+		expect(companies.length).toBe(1);
+		expect(companies[0].name).toBe("Company 1");
+	}	
 }
 
 

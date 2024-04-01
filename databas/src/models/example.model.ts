@@ -22,4 +22,4 @@ SchemaMain.statics.logModel = function () {
 
 const ModelMain = model<ISchema>("Users", SchemaMain);
 
-export { ModelMain as Example };
+export { ModelMain as ExampleModel };

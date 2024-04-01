@@ -1,6 +1,5 @@
 import { Schema, Document, ObjectId, model } from "mongoose";
 
-
 interface ISchema extends Document {
     _id: ObjectId,
     name: string
@@ -24,4 +23,4 @@ SchemaMain.statics.logModel = function () {
 
 const ModelMain = model<ISchema>("Companies", SchemaMain);
 
-export { ModelMain as Company };
+export { ModelMain as CompanyModel };
