@@ -1,20 +1,14 @@
 import { Schema, Document, ObjectId, model } from "mongoose";
-import { Section } from "./meeting";
+
 
 interface ISchema extends Document {
     _id: ObjectId,
-    userID: ObjectId,
-    name: string,
-    sections: [Section],
-    companyAccess: ObjectId | null;
+    name: string
 }
 
 const SchemaMain = new Schema<ISchema>({
-    userID: Schema.Types.ObjectId,
-    name: String,
-    sections: [],
-    companyAccess: Schema.Types.ObjectId
-});
+    name: String
+})
 
 SchemaMain.pre("save", function (next) {
     next();
@@ -28,6 +22,6 @@ SchemaMain.statics.logModel = function () {
     console.log("This is a reference to the model", this);
 };
 
-const ModelMain = model<ISchema>("Templates", SchemaMain);
+const ModelMain = model<ISchema>("Companies", SchemaMain);
 
-export { ModelMain as Template };
+export { ModelMain as Company };

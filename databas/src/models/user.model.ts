@@ -1,12 +1,17 @@
 import { Schema, Document, ObjectId, model } from "mongoose";
 
+
 interface ISchema extends Document {
     _id: ObjectId,
-    name: string
+    accesLevel: Number,
+    companyID: ObjectId,
+    accessibleMeetings: [ObjectId]
 }
 
 const SchemaMain = new Schema<ISchema>({
-    name: String
+    accesLevel: Number,
+    companyID: Schema.Types.ObjectId,
+    accessibleMeetings: [Schema.Types.ObjectId]
 })
 
 SchemaMain.pre("save", function (next) {
@@ -21,6 +26,6 @@ SchemaMain.statics.logModel = function () {
     console.log("This is a reference to the model", this);
 };
 
-const ModelMain = model<ISchema>("Companies", SchemaMain);
+const ModelMain = model<ISchema>("Users", SchemaMain);
 
-export { ModelMain as Company };
+export { ModelMain as User };

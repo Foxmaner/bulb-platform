@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
 import * as dotenv from "dotenv";
 
+import * as config from "./db.config.json";
+
 
 dotenv.config();
 
@@ -13,7 +15,7 @@ export function connectDatabase(): void {
             throw new Error("DB_URI is not defined");
         }
 
-        mongoose.connect(uri);
+        mongoose.connect(uri, config);
 
         const db = mongoose.connection;
 
