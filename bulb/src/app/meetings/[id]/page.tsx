@@ -13,8 +13,9 @@ export default function createPage() {
                         <Link href="/">
                             <h1 className="text-pink-900 font-bold text-3xl">East <br /> Sweden <br /> MedTech</h1>
                         </Link>
-                        <div className="bg-pink-900 h-1 w-5/6 content-center"></div>
+                        <div className="bg-pink-900 h-1 w-full content-center"></div>
                     </div>
+                    <div className="bg-gray-300 h-1 w-full"></div>
                 </div>
 
                 <div className="flex text-black">hihi</div>
