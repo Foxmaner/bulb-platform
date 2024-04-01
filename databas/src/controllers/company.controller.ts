@@ -1,6 +1,8 @@
 import { CompanyModel }  from '../models';
 import { Request, Response } from 'express';
 
+import mongoose from 'mongoose';
+
 
 export class CompanyController {
 
@@ -23,5 +25,44 @@ export class CompanyController {
         } catch (error: any) {
             res.status(500).json({ error: error.message });
         }
+    }
+
+    static async delete(req: Request, res: Response) {
+        const { id } = req.params;
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: "Invalid ObjectID." });
+        }
+
+        try {
+            const result = await CompanyModel.deleteOne({ _id: id });
+            if (result.deletedCount === 0) {
+                return res.status(404).json({ message: "Object not found." });
+            }
+            res.status(200).json({ message: "Object removed." });
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ message: "An error occurred." });
+        }
+    }
+
+    static async list(req: Request, res: Response) {
+        const companies = await CompanyModel.find({});
+        res.json(companies);
+    }
+
+    static async get(req: Request, res: Response) {
+        const { id } = req.params;
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: "Invalid ObjectID." });
+        }
+
+        const company = await CompanyModel.findById(id);
+        if (!company) {
+            return res.status(404).json({ error: 'Company not found' });
+        }
+
+        res.status(200).json(company);
     }
 }

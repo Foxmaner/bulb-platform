@@ -10,7 +10,6 @@ import { TestDecorators } from "../utils";
 
 jest.mock('../models/CompanyModel');
 
-
 class CompanyTests {
 	constructor() {
 		console.log("Running CompanyTests!");
@@ -59,7 +58,7 @@ class CompanyTests {
 
 		CompanyController.create(req, res);
 
-		// Check if the company was created
+		// Check if only one company was created
 		const companies = await CompanyModel.find({});
 
 		expect(companies.length).toBe(1);
