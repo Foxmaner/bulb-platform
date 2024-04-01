@@ -16,12 +16,14 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const show = false;
   return (
     
     <html lang="en">
       <body className={inter.className}>
       <Providers>
         <div className="flex">
+          
           <Sidebar/>
           {children}
         </div>

@@ -1,10 +1,13 @@
 'use client';
 import {Button, ButtonGroup, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem} from "@nextui-org/react";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+
+
 
 export default function PageHeader({userName}: {userName: string}) {
    const pathName = usePathname().slice(1)
+   const router = useRouter();
     return (
         <div className="bg-slate-100 w-full flex-col justify-between">
             <div className="bg-white">
@@ -22,7 +25,7 @@ export default function PageHeader({userName}: {userName: string}) {
             </div>
 
             <div className="flex w-full gap-1">
-                <Button className="bg-white border-2 border-gray-200 w-5 h-7 m-2">Skapa</Button>
+                <Button onClick = {() => router.push("/meetings/create")}className="bg-white border-2 border-gray-200 w-5 h-7 m-2">Skapa</Button>
                 <Button className="bg-white border-2 border-gray-200 w-5 h-7 m-2">Företag</Button>
                 <Button className="bg-white border-2 border-gray-200 w-5 h-7 m-2">Månad</Button>
                 <Button className="bg-white border-2 border-gray-200 w-5 h-7 m-2">01</Button>

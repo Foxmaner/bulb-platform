@@ -8,6 +8,12 @@ import { Switch } from "@nextui-org/react";
 
 export default function Sidebar() {
     const pathname = usePathname();
+    
+    //Detta för att inte visa sideBar på Skapasidan, en sk fulfix.
+    if(pathname.includes("create")){
+        return <></>;
+    }
+
     return (
         <div className="bg-slate-100 divide-y divide-gray-400 h-screen flex flex-col" >
             <div className='p-5'>
