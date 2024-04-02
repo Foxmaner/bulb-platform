@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Switch } from "@nextui-org/react";
 
-export default function Sidebar() {
+export function Sidebar() {
     const pathname = usePathname();
     
     //Detta för att inte visa sideBar på Skapasidan, en sk fulfix.
