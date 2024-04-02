@@ -7,7 +7,7 @@ interface layoutProps {
     children: React.ReactNode;
 }
 
-export default function layoutPage({ children }: layoutProps) {
+export default function LayoutPage({ children }: layoutProps) {
     const [isClient, setIsClient] = useState(false);
 
 
