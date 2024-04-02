@@ -5,6 +5,11 @@ import mongoose from 'mongoose';
 
 
 export class CompanyController {
+    static companyModel = CompanyModel;
+
+    static async clear() {
+        await CompanyModel.deleteMany({}).exec();
+    }
 
     static async create(req: Request, res: Response) {
         const { name } = req.body;

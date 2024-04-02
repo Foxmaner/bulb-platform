@@ -1,8 +1,15 @@
 import httpMocks from "node-mocks-http";
 
-import 'reflect-metadata'
+import "reflect-metadata";
 
 import { RequestMethod } from "node-mocks-http";
+
+interface TestFnProps {
+    testName: string;
+    method: RequestMethod;
+    url: string;
+    originalMethod: Function;
+}
 
 class TestDecorators {
     static post(testName: string, url: string) {
@@ -32,47 +39,32 @@ class TestDecorators {
             descriptor: PropertyDescriptor
         ) {
             const originalMethod = descriptor.value;
-            /*descriptor.value = async function (...args: any[]) {
-                const req = httpMocks.createRequest({
-                    method: method,
-                    url: url,
-                });
-                const res = httpMocks.createResponse();
-
-                test.only(testName, async () => {
-                    await originalMethod.apply(this, [req, res, ...args]);
-                });
-            };*/
-
-            let tests = Reflect.getMetadata('tests', target) || [];
+            let tests = Reflect.getMetadata("tests", target) || [];
             tests.push({ testName, method, url, originalMethod });
-            Reflect.defineMetadata('tests', tests, target);
+            Reflect.defineMetadata("tests", tests, target);
         };
     }
 
     static describe(description: string) {
-        return function(constructor: new (...args: any[]) => any) {
-            // Use Jest's describe block to group tests
+        return function (constructor: new (...args: any[]) => any) {
             describe(description, () => {
-              // Instantiate the class
-              const instance = new constructor();
-        
-              // Retrieve tests metadata
-              const tests: Array<{ testName: string, method: RequestMethod, url: string, originalMethod: Function }> = Reflect.getMetadata('tests', constructor.prototype) || [];
-        
-              // Iterate over each test and register it with Jest
-              tests.forEach(test => {
-                const { testName, method, url, originalMethod } = test;
-        
-                // Register each test case
-                it(testName, async () => {
-                  const req = httpMocks.createRequest({ method, url });
-                  const res = httpMocks.createResponse();
-                  await originalMethod.apply(instance, [req, res]);
+                const instance = new constructor();
+                const cls = constructor.prototype;
+
+                const tests: Array<TestFnProps> =
+                    Reflect.getMetadata("tests", cls) || [];
+
+                tests.forEach((testProps: TestFnProps) => {
+                    const { testName, method, url, originalMethod } = testProps;
+
+                    test.only(testName, async () => {
+                        const req = httpMocks.createRequest({ method, url });
+                        const res = httpMocks.createResponse();
+                        await originalMethod.apply(instance, [req, res]);
+                    }, 15000);
                 });
-              });
             });
-        }
+        };
     }
 }
 

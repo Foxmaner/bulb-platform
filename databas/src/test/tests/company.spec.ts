@@ -6,27 +6,13 @@ import { CompanyController } from "../../controllers";
 import { MockRequest, MockResponse } from 'node-mocks-http';
 
 import { TestDecorators } from "../utils";
-import mongoose from 'mongoose';
 
 
 jest.mock('../../models/company.model');
-const mockedCompanyModel = jest.mocked(CompanyModel);
+const mockCompanyModel = CompanyModel as jest.Mocked<typeof CompanyModel>;
 
 @TestDecorators.describe("Company tests")
 class CompanyTests {
-	constructor() {
-		console.log("Running CompanyTests!");
-	}
-
-	async beforeEach() {
-		mockedCompanyModel.mockClear();
-		mockedCompanyModel.deleteMany({}).exec();
-	}
-
-	async afterEach() {
-		mockedCompanyModel.mockClear();
-		mockedCompanyModel.deleteMany({}).exec();
-	}
 
 	@TestDecorators.post("Create a company", "/company/create")
 	async createCompany(req: MockRequest<Request>, res: MockResponse<Response>) {
@@ -34,17 +20,19 @@ class CompanyTests {
 			name: "Company 1"
 		};
 		
-		console.log("Creating company...");
+		await CompanyController.create(req, res);
 
-		CompanyController.create(req, res);
+		await CompanyController.list(req, res);
 
-		console.log("Company created!");
+		console.log(res.json);
 
 		// Check if the company was created
-		/*const companies = await CompanyModel.find({});
+		//const companies = await CompanyModel.find({});
 		
-		expect(companies.length).toBe(1);
-		expect(companies[0].name).toBe("Company 1");*/
+		//console.log(companies.length);
+
+		//expect(companies.length).toBe(1);
+		//expect(companies[0].name).toBe("Company 1");
 	}
 
 	/*@TestDecorators.post("Create a company with invalid input", "/company/create")
