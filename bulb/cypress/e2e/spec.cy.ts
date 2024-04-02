@@ -5,6 +5,6 @@ describe('Home Page', () => {
     cy.visit('http://localhost:3000')
   })
   it('should display the home page', () => {
-    cy.get('H1').should('have.text', 'Welcome to nextJS!')
+    cy.contains('Welcome to Bulb platform!')
   })
 })
