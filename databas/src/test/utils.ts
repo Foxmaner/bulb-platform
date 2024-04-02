@@ -1,8 +1,12 @@
 import httpMocks from "node-mocks-http";
 
+import mongoose from 'mongoose';
+
+
 import "reflect-metadata";
 
 import { RequestMethod } from "node-mocks-http";
+import { closeDatabase, connectDatabase } from "../config/test-connection";
 
 interface TestFnProps {
     testName: string;
@@ -47,23 +51,38 @@ class TestDecorators {
 
     static describe(description: string) {
         return function (constructor: new (...args: any[]) => any) {
-            describe(description, () => {
-                const instance = new constructor();
-                const cls = constructor.prototype;
 
-                const tests: Array<TestFnProps> =
-                    Reflect.getMetadata("tests", cls) || [];
+            describe('MongoDB service', () => {
+                let connection: typeof mongoose;
 
-                tests.forEach((testProps: TestFnProps) => {
-                    const { testName, method, url, originalMethod } = testProps;
-
-                    test.only(testName, async () => {
-                        const req = httpMocks.createRequest({ method, url });
-                        const res = httpMocks.createResponse();
-                        await originalMethod.apply(instance, [req, res]);
-                    }, 15000);
+                beforeAll(async () => {
+                    connection = await connectDatabase();
                 });
-            });
+
+                afterAll(async () => {
+                    await closeDatabase(connection);
+                });
+
+                describe(description, () => {
+                    const instance = new constructor();
+                    const cls = constructor.prototype;
+
+                    const tests: Array<TestFnProps> =
+                        Reflect.getMetadata("tests", cls) || [];
+
+                    tests.forEach((testProps: TestFnProps) => {
+                        const { testName, method, url, originalMethod } = testProps;
+
+                        it(testName, async () => {
+                            const req = httpMocks.createRequest({ method, url });
+                            const res = httpMocks.createResponse();
+
+                            await originalMethod.apply(instance, [req, res]);
+                            
+                        });
+                    });
+                });
+            })
         };
     }
 }

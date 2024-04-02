@@ -6,6 +6,7 @@ import * as config from "../../db.config.json";
 
 dotenv.config();
 
+
 export async function connectDatabase() {
     try {
 
@@ -22,6 +23,8 @@ export async function connectDatabase() {
         const db = mongoose.connection;
 
         console.log("Connected to MongoDB")
+        
+        return db;
 
     } catch (error) {
         console.error("Error connecting to MongoDB:", error);
@@ -30,5 +33,5 @@ export async function connectDatabase() {
 };
 
 export async function closeDatabase() {
-    await mongoose.connection.close();
+    await mongoose.disconnect();
 }
