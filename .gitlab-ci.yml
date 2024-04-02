@@ -61,4 +61,6 @@ test:
     # Runs tests in parallel and records to Cypress Cloud
     # https://docs.cypress.io/guides/cloud/projects#Set-up-a-project-to-record
     # https://docs.cypress.io/guides/guides/parallelization
-    - npm run e2e:headless
+    - npm start &
+    - npx cypress run --browser firefox
+   # - npm run e2e:headless
