@@ -1,4 +1,6 @@
 import type { Config } from "tailwindcss";
+
+
 const {nextui} = require("@nextui-org/react");
 
 const config: Config = {
@@ -10,6 +12,15 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      colors:{
+        'primary': '#512641',
+        'primaryGrey': '#F5F5F5', //Tidigare använd färg är bg-slate-100. Detta är den gråa färgen
+        'secondaryGrey':'#888888', 
+        'edge': "#D9D9D9", //Bordercolor
+        'titleText':'#333333',
+        'primaryText': "#888888",
+      },
+
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
@@ -20,4 +31,6 @@ const config: Config = {
   darkMode: "class",
   plugins: [nextui()],
 };
+
+
 export default config;
