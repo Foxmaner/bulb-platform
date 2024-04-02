@@ -1,12 +1,12 @@
 import mongoose from 'mongoose';
 
 import * as dotenv from "dotenv";
-import * as config from "./db.config.json";
+import * as config from "../../db.config.json";
 
 
 dotenv.config();
 
-export function connectDatabase(): void {
+export async function connectDatabase() {
     try {
 
         const uri = process.env.DB_URI as string;
@@ -15,15 +15,13 @@ export function connectDatabase(): void {
             throw new Error("DB_URI is not defined");
         }
 
-        mongoose.connect(uri, config);
+        console.log(config)
+
+        await mongoose.connect(uri);
 
         const db = mongoose.connection;
 
-        db.on(
-            "error",
-            console.error.bind(console, "MongoDB connection error:")
-        );
-        db.once("open", () => console.log("Connected to MongoDB"));
+        console.log("Connected to MongoDB")
 
     } catch (error) {
         console.error("Error connecting to MongoDB:", error);

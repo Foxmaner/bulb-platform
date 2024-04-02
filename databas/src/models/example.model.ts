@@ -20,6 +20,6 @@ SchemaMain.statics.logModel = function () {
     console.log("This is a reference to the model", this);
 };
 
-const ModelMain = model<ISchema>("Users", SchemaMain);
+const ModelMain = model<ISchema>("Example", SchemaMain);
 
 export { ModelMain as ExampleModel };
