@@ -6,7 +6,7 @@ describe('Page', () => {
   it('Render heading', () => {
     render(<Page />)
  
-    const heading = screen.getByText("Welcome to nextJS!")
+    const heading = screen.getByText("Welcome to Bulb platform!")
  
     expect(heading).toBeInTheDocument()
   })
