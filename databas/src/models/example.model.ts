@@ -1,8 +1,14 @@
-import { Schema, Document, ObjectId, model } from "mongoose";
+import { Schema, Document, ObjectId, model, Model } from "mongoose";
 
 
 interface ISchema extends Document {
-    _id: ObjectId
+    _id: ObjectId;
+    addMember: () => void;
+}
+
+interface IMyModelStaticMethods extends Model<ISchema> {
+    findAll(): Promise<ISchema[]>;
+    findOneById(id: string): Promise<ISchema | null>;
 }
 
 const SchemaMain = new Schema<ISchema>({});
@@ -12,14 +18,15 @@ SchemaMain.pre("save", function (next) {
     next();
 });
 
-SchemaMain.methods.logThis = function () {
-    console.log("This is a reference to the instance", this);
-};
+SchemaMain.methods.addMember = async function() {
+    // Adds a member in new ExampleModel() obj...
+}
 
-SchemaMain.statics.logModel = function () {
-    console.log("This is a reference to the model", this);
-};
+SchemaMain.statics.findMember = async function() {
+    // Finds a member
+}
 
-const ModelMain = model<ISchema>("Example", SchemaMain);
+const ModelMain = model<ISchema, IMyModelStaticMethods>("Example", SchemaMain);
+
 
 export { ModelMain as ExampleModel };

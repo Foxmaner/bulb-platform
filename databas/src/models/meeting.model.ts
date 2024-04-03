@@ -33,6 +33,8 @@ SchemaMain.pre("save", function (next) {
 
 SchemaMain.methods.addMember = function addMember() {
     // await ModelMain.find({})
+
+    console.log("Aaa");
 }
 
 SchemaMain.methods.logThis = function () {

@@ -1,6 +1,6 @@
 import { MongoMemoryServer } from 'mongodb-memory-server';
 
-import mongoose, { ConnectOptions } from 'mongoose';
+import mongoose from 'mongoose';
 
 import * as dotenv from "dotenv";
 
@@ -29,13 +29,8 @@ const closeDatabase = async (mongoClient: any): Promise<void> => {
 	await mongoClient.disconnect();
 };
 
-const clearDatabase = async (): Promise<void> => {
-	const collections = mongoose.connection.collections;
-
-	for (const key in collections) {
-		const collection = collections[key];
-		await collection.deleteMany({});
-	}
+const clearDatabase = async (clearDatabase: any): Promise<void> => {
+	await clearDatabase.connection.dropDatabase();
 };
 
 export { connectDatabase, closeDatabase, clearDatabase };

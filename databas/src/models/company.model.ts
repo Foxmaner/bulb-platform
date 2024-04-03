@@ -1,26 +1,24 @@
-import { Schema, Document, ObjectId, model } from "mongoose";
+import { Schema, Document, ObjectId, model, Model } from "mongoose";
+import { CompanyController, ICompanyController } from "../controllers";
+
 
 interface ISchema extends Document {
     _id: ObjectId,
     name: string
 }
 
+type IMyModelStatic = Model<ISchema> & ICompanyController;
+
+
 const SchemaMain = new Schema<ISchema>({
     name: String
 })
 
-SchemaMain.pre("save", function (next) {
-    next();
-});
 
-SchemaMain.methods.logThis = function () {
-    console.log("This is a reference to the instance", this);
-};
+Object.assign(SchemaMain.statics, CompanyController);
 
-SchemaMain.statics.logModel = function () {
-    console.log("This is a reference to the model", this);
-};
 
-const ModelMain = model<ISchema>("Companies", SchemaMain);
+const ModelMain = model<ISchema, IMyModelStatic>("Companies", SchemaMain);
+
 
 export { ModelMain as CompanyModel };

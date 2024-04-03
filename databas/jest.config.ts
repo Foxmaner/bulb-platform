@@ -1,27 +1,20 @@
-const { defaults: tsjPreset } = require('ts-jest/presets');
+import { defaults as tsjPreset } from 'ts-jest/presets';
+
 
 module.exports = {
     preset: 'ts-jest',
+    rootDir: "./",
     transform: tsjPreset.transform,
-    coverageDirectory: "./coverage",
     testMatch: [
         "**/test/tests/**/?(*.)+(spec).ts"
     ],
     collectCoverageFrom: [
-        "./src/test/tests/**/*.ts"
-    ],
-    modulePathIgnorePatterns: [
-        "src/@types/",
-        "src/config/",
-        "src/database/",
-        "src/models/"
+        "./**/*.controller.ts"
     ],
 
     collectCoverage: true,
-    clearMocks: true,
-    watchPathIgnorePatterns: ['globalConfig'],
+    coverageDirectory: "./coverage",
 
-    setupFilesAfterEnv: ['./src/test/jest.setup.ts'],
-    globalSetup: './src/test/jest.setup.ts',
-    globalTeardown: './src/test/jest.teardown.ts',
+    clearMocks: true,
+    watchPathIgnorePatterns: ['globalConfig']
 };

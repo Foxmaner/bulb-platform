@@ -1,32 +1,47 @@
 import { CompanyModel }  from '../models';
 import { Request, Response } from 'express';
 
-import mongoose from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 
 
-export class CompanyController {
+interface ICompanyController {
+    new(): CompanyController;
+    create(req: Request, res: Response): Promise<void>;
+    delete(req: Request, res: Response): Promise<void>;
+    list(req: Request, res: Response): Promise<void>;
+    get(req: Request, res: Response): Promise<void>;
+}
 
-    static companyModel = CompanyModel;
 
-    static async clear() {
-        await this.companyModel.deleteMany({}).exec();
-    }
+function staticImplements<T>() {
+    return <U extends T>(constructor: U) => {constructor};
+}
 
-    static async create(req: Request, res: Response) {
+@staticImplements<ICompanyController>()
+class CompanyController {
+
+    static async create(req: Request, res: Response): Promise<void> {
+        console.log('Company:', req.body);
         const { name } = req.body;
 
-        if (!name) {
-            return res.status(400).json({ error: 'Missing name' });
+        if (!name && name !== "") {
+            res.status(400).json({ error: 'Missing name' });
+            return;
         }
 
         try {
             const existingCompany = await CompanyModel.findOne({ name });
             if (existingCompany) {
-                return res.status(409).json({ error: 'Company already exists' });
+                res.status(409).json({ error: 'Company already exists' });
+                return;
             }
 
             const company = new CompanyModel(req.body);
+
             await company.save();
+
+            console.log('Company created:', company);
+
             res.status(201).json(company);
         } catch (error: any) {
             console.error(error);
@@ -35,17 +50,19 @@ export class CompanyController {
         }
     }
 
-    static async delete(req: Request, res: Response) {
+    static async delete(req: Request, res: Response): Promise<void> {
         const { id } = req.params;
 
         if (!mongoose.Types.ObjectId.isValid(id)) {
-            return res.status(400).json({ message: "Invalid ObjectID." });
+            res.status(400).json({ message: "Invalid ObjectID." });
+            return;
         }
 
         try {
-            const result = await CompanyController.companyModel.deleteOne({ _id: id });
+            const result = await CompanyModel.deleteOne({ _id: id });
             if (result.deletedCount === 0) {
-                return res.status(404).json({ message: "Object not found." });
+                res.status(404).json({ message: "Object not found." });
+                return;
             }
             res.status(200).json({ message: "Object removed." });
         } catch (err) {
@@ -54,23 +71,28 @@ export class CompanyController {
         }
     }
 
-    static async list(req: Request, res: Response) {
-        const companies = await CompanyController.companyModel.find({});
+    static async list(req: Request, res: Response): Promise<void> {
+        const companies = await CompanyModel.find({});
         res.json(companies);
     }
 
-    static async get(req: Request, res: Response) {
+    static async get(req: Request, res: Response): Promise<void> {
         const { id } = req.params;
 
         if (!mongoose.Types.ObjectId.isValid(id)) {
-            return res.status(400).json({ message: "Invalid ObjectID." });
+            res.status(400).json({ message: "Invalid ObjectID." });
+            return;
         }
 
-        const company = await CompanyController.companyModel.findById(id);
+        const company = await CompanyModel.findById(id);
         if (!company) {
-            return res.status(404).json({ error: 'Company not found' });
+            res.status(404).json({ error: 'Company not found' });
+            return;
         }
 
         res.status(200).json(company);
     }
 }
+
+
+export { ICompanyController, CompanyController }

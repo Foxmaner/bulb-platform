@@ -1,3 +1,3 @@
-export { ExampleController } from "./example.controller";
+export * from "./example.controller";
 
-export { CompanyController } from "./company.controller";
+export * from "./company.controller";
