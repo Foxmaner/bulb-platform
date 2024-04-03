@@ -16,13 +16,15 @@ const connectDatabase = async () => {
 		throw new Error("Mongo URI is not provided");
 	}
 
-	const db = await mongoose.connect(uri);
+	const client = await mongoose.connect(uri);
 
-	db.connection.on("close", () => {
+	client.connection.on("close", () => {
 		mongoServer.stop();
 	});
 
-	return db;
+	const db = client.connection.db;
+
+	return { connection: client, db };
 };
 
 const closeDatabase = async (mongoClient: any): Promise<void> => {

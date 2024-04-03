@@ -1,5 +1,7 @@
-import { Schema, Document, ObjectId, model, Model } from "mongoose";
+import { Document, ObjectId } from "mongoose";
 import { CompanyController, ICompanyController } from "../controllers";
+
+import BaseModel from "./base.model";
 
 
 interface ISchema extends Document {
@@ -7,18 +9,20 @@ interface ISchema extends Document {
     name: string
 }
 
-type IMyModelStatic = Model<ISchema> & ICompanyController;
+class CompanyModel extends BaseModel<ISchema, ICompanyController> {
+    constructor() {
+        const companySchema = {
+            name: String
+        };
 
+        super({ 
+            name: 'Company', 
+            schema: companySchema, 
+            controller: CompanyController
+        });
+    }
+}
 
-const SchemaMain = new Schema<ISchema>({
-    name: String
-})
+const company = new CompanyModel().model;
 
-
-Object.assign(SchemaMain.statics, CompanyController);
-
-
-const ModelMain = model<ISchema, IMyModelStatic>("Companies", SchemaMain);
-
-
-export { ModelMain as CompanyModel };
+export { company as CompanyModel };

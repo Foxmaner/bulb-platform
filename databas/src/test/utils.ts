@@ -56,9 +56,10 @@ class TestDecorators {
         return function (constructor: new (...args: any[]) => any) {
             describe(description, () => {
                 let connection: typeof mongoose;
+                let db: any;
 
                 beforeAll(async () => {
-                    connection = await connectDatabase();
+                    ({ connection, db } = await connectDatabase());
                 });
 
                 afterAll(async () => {
@@ -67,6 +68,9 @@ class TestDecorators {
 
                 beforeEach(async () => {
                     await clearDatabase(connection);
+                
+                    const companies = db.collection("Companies");
+                    companies.deleteMany({});
                 });
 
                 const instance = new constructor();
