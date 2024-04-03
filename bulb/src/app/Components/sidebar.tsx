@@ -15,7 +15,7 @@ export function Sidebar() {
     }
 
     return (
-        <div className="bg-primaryGrey divide-y divide-gray-400 h-screen flex flex-col" >
+        <div className="bg-primaryGrey divide-y divide-gray-400 h-screen flex flex-col flex-shrink-0" >
             <div className='p-5'>
                 <Link href="/">
                     <h1 className="text-primary font-bold text-3xl">East <br /> Sweden <br /> MedTech</h1>
@@ -46,7 +46,7 @@ export function Sidebar() {
             <div className='flex'>
                 <Image src="/logo-1.png" alt="East Sweden MedTech" width={100} height={100} />
                 <div className="width-full flex-col content-center items-center">
-                    <p className='text-gray-500'>East Sweden MedTech</p>
+                    <p className='text-gray-500'>East Sweden <br></br> MedTech</p>
                     <p className='text-gray-500'>© 2024</p>
                 </div>
             </div>
