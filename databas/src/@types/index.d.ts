@@ -1,10 +1,23 @@
 declare module "index" {
 
+    type Meeting = {
+        id: ObjectId,
+        progress: Number,
+        date: Date,
+        wordcloud: [WordCloudWord],
+        mainDocumentSections: [Section],
+        summaryDocumentSections: [Section, Integer],
+        meetingHistory: [MeetingHistory],
+        members: [Member]
+    }
+
     type User = {
+        oAuthId: string,
         name: string,
         accesLevel: Integer,
         companyID: ObjectId,
         accessibleMeetings: [ObjectId]
+        token: string
     }
 
     type Company = {

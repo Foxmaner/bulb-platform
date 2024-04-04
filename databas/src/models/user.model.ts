@@ -28,7 +28,8 @@ class UserModel extends BaseModel<User, typeof StaticUserController, typeof Meth
                     message: (props: any) => "Couldn't identify the company, the ObjectId is invalid."
                 }
             },
-            accessibleMeetings: [Schema.Types.ObjectId]
+            accessibleMeetings: [Schema.Types.ObjectId],
+            token: String
         }
 
         super({

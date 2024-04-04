@@ -47,7 +47,6 @@ class CompanyTests {
 		};
 		
 		await CompanyModel.create(params, res);
-
 		await CompanyModel.create(params, res);
 
 		// Check if only one company was created
@@ -73,7 +72,6 @@ class CompanyTests {
 
 		// Check if the company was deleted
 		const companiesAfter = await CompanyModel.find();
-
 		expect(companiesAfter.length).toBe(0);
 	}
 }

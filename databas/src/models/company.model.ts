@@ -1,4 +1,4 @@
-import {  MethodCompanyController, StaticCompanyController } from "../dbControllers/company-controller"
+import { MethodCompanyController, StaticCompanyController } from "../dbControllers"
 
 import BaseModel from "./base.model";
 

@@ -1,31 +1,27 @@
-import { UserModel }  from '../../models';
+import { MeetingModel }  from '../../models';
 import { Request, Response } from 'express';
 
 import { getModelForClass } from '@typegoose/typegoose';
 
-import mongoose, { ObjectId } from 'mongoose';
+import mongoose from 'mongoose';
 
-import { User } from "index";
+import { Meeting } from "index";
 
 
-export class StaticUserController<T> {
-    private UserModel: any;
+export class StaticMeetingController<T> {
+    private MeetingModel: any;
 
-    constructor(model: new <T>(model: new () => T) => StaticUserController<T>) {
-        this.UserModel = getModelForClass(model);
+    constructor(model: new <T>(model: new () => T) => StaticMeetingController<T>) {
+        this.MeetingModel = getModelForClass(model);
     }
 
-    static async create(props: User, res: Response) {
+    static async create(props: Meeting, res: Response) {
         try {
-            const existingUser = await UserModel.findOne({ name: props.name });
-            if (existingUser) {
-                return res.status(409).json({ error: 'User already exists' });
-            }
 
-            const User = new UserModel(props);
-            await User.save();
+            const Meeting = new MeetingModel(props);
+            await Meeting.save();
 
-            return res.status(201).json(User);
+            return res.status(201).json(Meeting);
         } catch (error: any) {
             console.error(error);
 
@@ -39,7 +35,7 @@ export class StaticUserController<T> {
         }
 
         try {
-            const result = await UserModel.deleteOne({ _id: id });
+            const result = await MeetingModel.deleteOne({ _id: id });
             if (result.deletedCount === 0) {
                 return res.status(404).json({ message: "Object not found." });
             }
@@ -51,7 +47,7 @@ export class StaticUserController<T> {
     }
 
     static async list(req: Request, res: Response) {
-        const companies = await UserModel.find({});
+        const companies = await MeetingModel.find({});
         return res.json(companies);
     }
 
@@ -61,11 +57,11 @@ export class StaticUserController<T> {
             return res.status(400).json({ message: "Invalid ObjectID." });
         }
 
-        const User = await UserModel.findById(id);
-        if (!User) {
-            return res.status(404).json({ error: 'User not found' });
+        const meeting = await MeetingModel.findById(id);
+        if (!meeting) {
+            return res.status(404).json({ error: 'Meeting not found' });
         }
 
-        return res.status(200).json(User);
+        return res.status(200).json(meeting);
     }
 }
