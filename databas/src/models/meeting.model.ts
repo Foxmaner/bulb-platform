@@ -5,7 +5,6 @@ import { Integer } from "validators";
 
 import { WordCloudWord, Section, MeetingHistory, Member } from "index";
 
-import { UserModel } from "./user.model";
 
 interface ISchema extends Document {
     _id: ObjectId,
@@ -28,5 +27,12 @@ const SchemaMain = new Schema<ISchema>({
     members: []
 })
 
+SchemaMain.methods.addMember = function addMember() {
+    // await UserModel.find({})
+
+    console.log("Aaa");
+}
+
 const ModelMain = model<ISchema>("Meetings", SchemaMain);
+
 export { ModelMain as MeetingModel };

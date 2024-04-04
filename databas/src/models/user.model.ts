@@ -1,19 +1,51 @@
 import { Schema, Document, ObjectId, model } from "mongoose";
+import { CompanyModel } from "./company.model"
+import BaseModel from "./base.model";
 
+import Utils from "./utils";
 
-interface ISchema extends Document {
-    _id: ObjectId,
-    accesLevel: Number,
-    companyID: ObjectId,
-    accessibleMeetings: [ObjectId]
+import { User } from "index";
+
+import { MethodUserController, StaticUserController } from "../dbControllers/user-controller";
+
+class UserModel extends BaseModel<User, typeof StaticUserController, typeof MethodUserController> {
+    constructor() {
+
+        const userSchema = {
+            accesLevel: {
+                type: Number,
+                required: true,
+                unique: true,
+                validate: {
+                    validator: Utils.integerValidator,
+                    message: "{VALUE} is not an integer value"
+                }
+            },
+            companyID:  {
+                type: Schema.Types.ObjectId,
+                validate: {
+                    validator: UserModel.companyIDValidator,
+                    message: (props: any) => "Couldn't identify the company, the ObjectId is invalid."
+                }
+            },
+            accessibleMeetings: [Schema.Types.ObjectId]
+        }
+
+        super({
+            name: 'User',
+            schema: userSchema,
+            staticMethods: StaticUserController,
+            methods: MethodUserController
+        });
+    }
+
+    static async companyIDValidator (v: ObjectId) {
+        const result = await CompanyModel.findOne({_id:v})
+        return Boolean(result);
+    }
 }
 
-const SchemaMain = new Schema<ISchema>({
-    accesLevel: Number,
-    companyID: Schema.Types.ObjectId,
-    accessibleMeetings: [Schema.Types.ObjectId]
-})
 
-const ModelMain = model<ISchema>("Users", SchemaMain);
+const user = new UserModel().model;
 
-export { ModelMain as UserModel };
+export { user as UserModel };

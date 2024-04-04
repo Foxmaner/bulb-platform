@@ -19,26 +19,8 @@ interface TestFnProps {
 }
 
 class TestDecorators {
-    static post(testName: string, url: string) {
-        return TestDecorators.testDecorator(testName, "POST", url);
-    }
-
-    static get(testName: string, url: string) {
-        return TestDecorators.testDecorator(testName, "GET", url);
-    }
-
-    static put(testName: string, url: string) {
-        return TestDecorators.testDecorator(testName, "PUT", url);
-    }
-
-    static delete(testName: string, url: string) {
-        return TestDecorators.testDecorator(testName, "DELETE", url);
-    }
-
-    private static testDecorator(
+    static test(
         testName: string,
-        method: RequestMethod,
-        url: string
     ) {
         return function (
             target: any,
@@ -47,7 +29,7 @@ class TestDecorators {
         ) {
             const originalMethod = descriptor.value;
             let tests = Reflect.getMetadata("tests", target) || [];
-            tests.push({ testName, method, url, originalMethod });
+            tests.push({ testName, originalMethod });
             Reflect.defineMetadata("tests", tests, target);
         };
     }
@@ -68,9 +50,6 @@ class TestDecorators {
 
                 beforeEach(async () => {
                     await clearDatabase(connection);
-                
-                    const companies = db.collection("Companies");
-                    companies.deleteMany({});
                 });
 
                 const instance = new constructor();
@@ -83,10 +62,9 @@ class TestDecorators {
                     const { testName, method, url, originalMethod } = testProps;
 
                     test.only(testName, async () => {
-                        const req = httpMocks.createRequest({ method, url });
                         const res = httpMocks.createResponse();
 
-                        await originalMethod.apply(instance, [req, res]);
+                        await originalMethod.apply(instance, [res]);
                     });
                 });
             });

@@ -1,38 +1,37 @@
-import { CompanyModel }  from '../../models';
+import { UserModel }  from '../../models';
 import { Request, Response } from 'express';
 
 import { getModelForClass } from '@typegoose/typegoose';
 
 import mongoose, { ObjectId } from 'mongoose';
 
-import { Company } from "index";
+import { User } from "index";
 
 
-export class StaticCompanyController<T> {
-    private companyModel: any;
+export class StaticUserController<T> {
+    private UserModel: any;
 
-    constructor(model: new <T>(model: new () => T) => StaticCompanyController<T>) {
-        this.companyModel = getModelForClass(model);
+    constructor(model: new <T>(model: new () => T) => StaticUserController<T>) {
+        this.UserModel = getModelForClass(model);
     }
 
-    static async create(props: Company, res: Response) {
+    static async create(props: User, res: Response) {
 
         if (!props.name || props.name === "") {
-            console.log(props.name);
             return res.status(400).json({ error: 'Missing name' });
         }
 
         try {
-            const existingCompany = await CompanyModel.findOne({ name: props.name });
-            if (existingCompany) {
-                return res.status(409).json({ error: 'Company already exists' });
+            const existingUser = await UserModel.findOne({ name });
+            if (existingUser) {
+                return res.status(409).json({ error: 'User already exists' });
             }
 
-            const company = new CompanyModel(props);
+            const User = new UserModel(props);
 
-            await company.save();
+            await User.save();
 
-            return res.status(201).json(company);
+            return res.status(201).json(User);
         } catch (error: any) {
             console.error(error);
 
@@ -46,7 +45,7 @@ export class StaticCompanyController<T> {
         }
 
         try {
-            const result = await CompanyModel.deleteOne({ _id: id });
+            const result = await UserModel.deleteOne({ _id: id });
             if (result.deletedCount === 0) {
                 return res.status(404).json({ message: "Object not found." });
             }
@@ -57,8 +56,8 @@ export class StaticCompanyController<T> {
         }
     }
 
-    static async list(res: Response) {
-        const companies = await CompanyModel.find({});
+    static async list(req: Request, res: Response) {
+        const companies = await UserModel.find({});
         return res.json(companies);
     }
 
@@ -68,11 +67,11 @@ export class StaticCompanyController<T> {
             return res.status(400).json({ message: "Invalid ObjectID." });
         }
 
-        const company = await CompanyModel.findById(id);
-        if (!company) {
-            return res.status(404).json({ error: 'Company not found' });
+        const User = await UserModel.findById(id);
+        if (!User) {
+            return res.status(404).json({ error: 'User not found' });
         }
 
-        return res.status(200).json(company);
+        return res.status(200).json(User);
     }
 }

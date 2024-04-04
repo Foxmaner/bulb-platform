@@ -1,14 +1,19 @@
+import { ObjectId, Schema} from "mongoose";
+
+import { getModelForClass } from '@typegoose/typegoose';
+
+import { Response } from "express";
 
 
-interface ICompanyController {
+export class MethodCompanyController<T> {
+    private companyModel: any;
 
-}
+    constructor(model: new <T>(model: new () => T) => MethodCompanyController<T>) {
+        this.companyModel = getModelForClass(model);
+    }
 
-class CompanyController {
+    async rename(newName: String, res: Response) {
+        this.companyModel.name = newName;
+    }
 
-}
-
-export {
-    ICompanyController,
-    CompanyController
 }

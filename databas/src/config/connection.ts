@@ -16,8 +16,6 @@ export async function connectDatabase() {
             throw new Error("DB_URI is not defined");
         }
 
-        console.log(config)
-
         await mongoose.connect(uri);
 
         const db = mongoose.connection;

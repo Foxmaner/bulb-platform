@@ -1,44 +1,42 @@
-declare module "validators" {
-
-    type Integer = {
-        type: Number,
-        required: true,
-        unique: true,
-        validate: {
-            validator: Number.isInteger,
-            message: "{VALUE} is not an integer value"
-        }
-    }
-}
-
 declare module "index" {
 
-    interface WordCloudWord {
+    type User = {
+        name: string,
+        accesLevel: Integer,
+        companyID: ObjectId,
+        accessibleMeetings: [ObjectId]
+    }
+
+    type Company = {
+        name: string
+    }
+
+    type WordCloudWord = {
         word: string,
         weight: Number
     }
     
-    interface Section {
+    type Section = {
         id: Integer,
         title: string,
-        contains: [Paragraph, Question, Image],
+        contains: [Paragraph, Question, Image], // Add a comma here
         sectionHistory: []
     }
     
-    interface SectionHistory {
+    type SectionHistory = {
         userID: ObjectId,
         date: Date,
         contentIndex: Number,
         added: boolean
     }
     
-    interface Paragraph {
+    type Paragraph = {
         id: Integer,
         paragraphHistory: [ParagraphHistory],
         comments: [Comment]
     }
     
-    interface ParagraphHistory {
+    type ParagraphHistory = {
         userID: ObjectId,
         date: Date,
         textIndex: Number,
@@ -46,14 +44,14 @@ declare module "index" {
         text: string
     }
     
-    interface Comment {
+    type Comment = {
         userID: ObjectId,
         date: Date,
         index: Integer,
         text: string
     }
     
-    interface Question {
+    type Question = {
         id: Integer,
         responses: [Answer],
         questionText: Paragraph,
@@ -61,14 +59,14 @@ declare module "index" {
         questionHistory: [QuestionHistory]
     }
     
-    interface QuestionHistory {
+    type QuestionHistory = {
         userID: ObjectId,
         date: Date,
         answerIndex: Integer,
         added: boolean
     }
     
-    interface Answer {
+    type Answer = {
         xCoord: Number,
         yCoord: Number,
         size: Number,
@@ -76,23 +74,21 @@ declare module "index" {
         image: Image
     }
     
-    interface Image {
+    type Image = {
         id: Integer,
         url: string
     }
     
-    interface MeetingHistory {
+    type MeetingHistory = {
         userID: ObjectId,
         date: Date,
         sectionID: Integer,
         added: boolean
     }
     
-    interface Member {
+    type Member = {
         userID: ObjectId,
         expiryDate: Date,
         accessLevel: Integer
     }
-    
-    
 }
