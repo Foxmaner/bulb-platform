@@ -20,7 +20,9 @@ export default function PageHeader({ userName }: { userName: string }) {
   return (
     <div className="bg-primaryGrey w-full flex-col justify-between">
       <div className="bg-white w-full">
-        <h2 className="text-black">Good afternoon, {userName}</h2>
+
+        <h2 className="text-black m-1">Good afternoon, {userName}</h2>
+
       </div>
 
       <div className="flex justify-between border-2 border-primaryBorder w-full items-center">
