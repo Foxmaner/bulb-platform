@@ -5,6 +5,7 @@ import { Integer } from "validators";
 
 import { WordCloudWord, Section, MeetingHistory, Member } from "index";
 
+import { UserModel } from "./user.model";
 
 interface ISchema extends Document {
     _id: ObjectId,
@@ -27,24 +28,5 @@ const SchemaMain = new Schema<ISchema>({
     members: []
 })
 
-SchemaMain.pre("save", function (next) {
-    next();
-});
-
-SchemaMain.methods.addMember = function addMember() {
-    // await ModelMain.find({})
-
-    console.log("Aaa");
-}
-
-SchemaMain.methods.logThis = function () {
-    console.log("This is a reference to the instance", this);
-};
-
-SchemaMain.statics.logModel = function () {
-    console.log("This is a reference to the model", this);
-};
-
 const ModelMain = model<ISchema>("Meetings", SchemaMain);
-
 export { ModelMain as MeetingModel };

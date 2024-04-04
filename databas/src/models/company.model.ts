@@ -1,4 +1,4 @@
-import { CompanyController, ICompanyController } from "../controllers";
+import { CompanyController, ICompanyController } from "../dbControllers";
 
 import BaseModel from "./base.model";
 

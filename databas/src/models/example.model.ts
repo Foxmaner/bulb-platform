@@ -20,6 +20,7 @@ SchemaMain.pre("save", function (next) {
 
 SchemaMain.methods.addMember = async function() {
     // Adds a member in new ExampleModel() obj...
+    
 }
 
 SchemaMain.statics.findMember = async function() {
