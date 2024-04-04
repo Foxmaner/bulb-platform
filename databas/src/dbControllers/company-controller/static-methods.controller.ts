@@ -11,11 +11,6 @@ export class StaticCompanyController<T> extends BaseController<T> {
 
     static async create(props: Company, res: Response) {
 
-        if (!props.name || props.name === "") {
-            console.log(props.name);
-            return res.status(400).json({ error: 'Missing name' });
-        }
-
         try {
             const existingCompany = await CompanyModel.findOne({ name: props.name });
             if (existingCompany) {

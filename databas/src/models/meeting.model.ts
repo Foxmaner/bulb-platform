@@ -19,7 +19,10 @@ class MeetingModel extends BaseModel<Meeting, typeof StaticMeetingController, ty
             },
             progress: { type: Number, default: 0 },
             completed: { type: Boolean, default: true },
-            owner: { type: Schema.Types.ObjectId, required: true },
+            owner: { 
+                type: Schema.Types.ObjectId, 
+                required: [true, "The meeting owner is required."] 
+            },
             mainDocumentSections: { type: [Schema.Types.ObjectId], default: [] },
             summaryDocumentSections: { type: [Schema.Types.ObjectId], default: [] },
             meetingHistory: { type: [Schema.Types.ObjectId], default: [] },

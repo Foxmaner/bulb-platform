@@ -10,6 +10,7 @@ class CompanyModel extends BaseModel<Company, typeof StaticCompanyController, ty
         const companySchema = {
             name: {
                 type: String,
+                unique: true,
                 validate: {
                     validator: CompanyModel.nameValidator,
                     message: (props: any) => `${props.value}'s length is not within the range [3,63]`

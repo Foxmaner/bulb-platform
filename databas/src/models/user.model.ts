@@ -13,6 +13,19 @@ class UserModel extends BaseModel<User, typeof StaticUserController, typeof Meth
     constructor() {
 
         const userSchema = {
+            oAuthID: {
+                type: String,
+                required: true
+            },
+            oAuthProvider: {
+                type: String,
+                required: true
+            },
+            name: {
+                type: String,
+                required: true,
+                unique: true
+            },
             accesLevel: {
                 type: Number,
                 required: true,

@@ -2,21 +2,19 @@ declare module "index" {
 
     type Meeting = {
         name: string,
-        progress: number,
-        completed: boolean,
-        owner: Member,
+        progress?: number,
+        completed?: boolean,
+        owner: ObjectId,
         date: Date,
-        mainDocumentSections: [Section],
-        summaryDocumentSections: [Section, Integer],
-        meetingHistory: [MeetingHistory],
-        members: [Member]
+        mainDocumentSections?: [Section],
+        summaryDocumentSections?: [Section, Integer],
+        meetingHistory?: [MeetingHistory],
+        members?: [Member]
     }
 
-    type oAuthProvider = "google" | "github"
-
     type User = {
-        oAuthId: string,
-        oAuthProvider: oAuthProvider,
+        oAuthID: string,
+        oAuthProvider: "google" | "github",
         name: string,
         accesLevel: Integer,
         companyID: ObjectId,
@@ -32,11 +30,11 @@ declare module "index" {
         word: string,
         weight: number
     }
-    
+
     type Section = {
         id: Integer,
         title: string,
-        contains: [Paragraph, Question, Image], // Add a comma here
+        contains: (Paragraph | Question | Image)[],
         sectionHistory: []
     }
     
@@ -103,9 +101,10 @@ declare module "index" {
         added: boolean
     }
     
+    type MemberAccessLevel = "reviewer" | "editor" | "owner" | "admin" 
     type Member = {
         userID: ObjectId,
-        expiryDate: Date,
-        accessLevel: Integer
+        expiryDate: Date | never,
+        accessLevel: MemberAccessLevel
     }
 }

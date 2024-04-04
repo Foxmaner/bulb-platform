@@ -11,19 +11,16 @@ export class StaticMeetingController<T> extends BaseController<T> {
 
     static async create(props: Meeting, res: Response) {
         try {
-
             const Meeting = new MeetingModel(props);
             await Meeting.save();
 
             return res.status(201).json(Meeting);
         } catch (error: any) {
-            console.error(error);
-
             return res.status(500).json({ error: error.message });
         }
     }
 
-    static async delete(id: string, res: Response) {
+    static async delete(id: mongoose.Types.ObjectId, res: Response) {
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ message: "Invalid ObjectID." });
         }
@@ -35,7 +32,6 @@ export class StaticMeetingController<T> extends BaseController<T> {
             }
             return res.status(200).json({ message: "Object removed." });
         } catch (err) {
-            console.error(err);
             return res.status(500).json({ message: "An error occurred." });
         }
     }

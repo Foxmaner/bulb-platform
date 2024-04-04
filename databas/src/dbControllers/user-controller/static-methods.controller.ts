@@ -16,10 +16,10 @@ export class StaticUserController<T> extends BaseController<T> {
                 return res.status(409).json({ error: 'User already exists' });
             }
 
-            const User = new UserModel(props);
-            await User.save();
+            const user = new UserModel(props);
+            await user.save();
 
-            return res.status(201).json(User);
+            return res.status(201).json(user);
         } catch (error: any) {
             console.error(error);
 
@@ -49,7 +49,7 @@ export class StaticUserController<T> extends BaseController<T> {
         return res.json(companies);
     }
 
-    static async get(id: string, res: Response) {
+    static async get(id: mongoose.Types.ObjectId, res: Response) {
 
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ message: "Invalid ObjectID." });
