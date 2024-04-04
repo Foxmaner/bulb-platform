@@ -6,7 +6,7 @@ export default function meetingPage() {
         <div className='flex-col w-full bg-white'>
             <PageHeader userName="Eskil" />
             <div className="">
-                <div className="bg-slate-100 text-black flex flex-wrap content-start gap-96 border-2 border-gray-200">
+                <div className="bg-primaryGrey text-black flex flex-wrap content-start gap-96 border-2 border-gray-200">
                     <div className="text-black cursor-pointer p-2">Möte</div>
                     <div className="text-black cursor-pointer p-2">Datum</div>
                     <div className="text-black cursor-pointer p-2">Medlemmar</div>
