@@ -1,4 +1,4 @@
-import { model, Schema, Document, SchemaDefinition, Model } from 'mongoose';
+import { model, Schema, SchemaDefinition, Model } from 'mongoose';
 
 
 interface BaseModelProps<U> {
@@ -9,7 +9,7 @@ interface BaseModelProps<U> {
 
 class BaseModel<T, U> {
     protected _schema: Schema;
-    protected _model: Model<T>;
+    protected _model: Model<T & Document>;
 
     constructor({ name, schema, controller }: BaseModelProps<U>) {
         
@@ -17,7 +17,7 @@ class BaseModel<T, U> {
 
         this.assignStaticMethodsTo(controller)
 
-        this._model = model<T>(name, this._schema);
+        this._model = model<T & Document>(name, this._schema);
     
     }
 

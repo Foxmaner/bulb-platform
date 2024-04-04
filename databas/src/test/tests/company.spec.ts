@@ -39,23 +39,45 @@ class CompanyTests {
 
 		expect(companies.length).toBe(0);
 	}
-	/*
+	
 	@TestDecorators.post("Create a company with same name", "/company/create")
 	async createTwoCompanyWithSameName(req: MockRequest<Request>, res: MockResponse<Response>) {
 		req.body = {
 			name: "Company 1"
 		};
 		
-		CompanyController.create(req, res);
+		await CompanyModel.create(req, res);
 
-		CompanyController.create(req, res);
+		await CompanyModel.create(req, res);
 
 		// Check if only one company was created
-		const companies = await CompanyModel.find({});
+		const companies = await CompanyModel.find();
 
 		expect(companies.length).toBe(1);
 		expect(companies[0].name).toBe("Company 1");
-	}	*/
+	}
+
+	@TestDecorators.post("Delete a company", "/company/delete")
+	async deleteCompany(req: MockRequest<Request>, res: MockResponse<Response>) {
+		req.body = {
+			name: "Company 1"
+		};
+		
+		await CompanyModel.create(req, res);
+		
+		const companiesBefore = await CompanyModel.find();
+		
+		req.params = {
+			id: companiesBefore[0]._id.toString()
+		};
+
+		await CompanyModel.delete(req, res);
+
+		// Check if the company was deleted
+		const companiesAfter = await CompanyModel.find();
+
+		expect(companiesAfter.length).toBe(0);
+	}
 }
 
 

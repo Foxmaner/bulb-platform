@@ -1,11 +1,9 @@
-import { Document, ObjectId } from "mongoose";
 import { CompanyController, ICompanyController } from "../controllers";
 
 import BaseModel from "./base.model";
 
 
-interface ISchema extends Document {
-    _id: ObjectId,
+interface ISchema {
     name: string
 }
 
