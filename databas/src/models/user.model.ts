@@ -6,7 +6,7 @@ import Utils from "./utils";
 
 import { User } from "index";
 
-import { MethodUserController, StaticUserController } from "../dbControllers/user-controller";
+import { MethodUserController, StaticUserController } from "../dbControllers";
 
 class UserModel extends BaseModel<User, typeof StaticUserController, typeof MethodUserController> {
     constructor() {

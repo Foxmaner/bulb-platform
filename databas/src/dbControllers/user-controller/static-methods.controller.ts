@@ -6,14 +6,10 @@ import { getModelForClass } from '@typegoose/typegoose';
 import mongoose, { ObjectId } from 'mongoose';
 
 import { User } from "index";
+import BaseController from '../base.controller';
 
 
-export class StaticUserController<T> {
-    private UserModel: any;
-
-    constructor(model: new <T>(model: new () => T) => StaticUserController<T>) {
-        this.UserModel = getModelForClass(model);
-    }
+export class StaticUserController<T> extends BaseController {
 
     static async create(props: User, res: Response) {
         try {

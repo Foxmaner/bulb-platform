@@ -1,5 +1,3 @@
-export * from "./example.controller";
-
 export * from "./meeting-controller/static-methods.controller";
 export * from "./meeting-controller/methods.controller";
 

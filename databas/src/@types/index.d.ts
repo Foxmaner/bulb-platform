@@ -1,18 +1,22 @@
 declare module "index" {
 
     type Meeting = {
-        id: ObjectId,
+        name: string,
         progress: Number,
+        completed: boolean,
+        owner: Member,
         date: Date,
-        wordcloud: [WordCloudWord],
         mainDocumentSections: [Section],
         summaryDocumentSections: [Section, Integer],
         meetingHistory: [MeetingHistory],
         members: [Member]
     }
 
+    type oAuthProvider = "google" | "github"
+
     type User = {
         oAuthId: string,
+        oAuthProvider: oAuthProvider,
         name: string,
         accesLevel: Integer,
         companyID: ObjectId,

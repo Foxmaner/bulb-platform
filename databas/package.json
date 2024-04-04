@@ -7,7 +7,7 @@
 	"scripts": {
 		"build": "tsc",
 		"lint": "eslint .",
-		"test": "jest --detectOpenHandles --collectCoverage true"
+		"test": "jest"
 	},
 	"license": "GPL-3.0-only",
 	"dependencies": {

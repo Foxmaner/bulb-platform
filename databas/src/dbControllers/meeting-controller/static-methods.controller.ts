@@ -1,19 +1,13 @@
 import { MeetingModel }  from '../../models';
 import { Request, Response } from 'express';
 
-import { getModelForClass } from '@typegoose/typegoose';
-
 import mongoose from 'mongoose';
 
 import { Meeting } from "index";
+import BaseController from '../base.controller';
 
 
-export class StaticMeetingController<T> {
-    private MeetingModel: any;
-
-    constructor(model: new <T>(model: new () => T) => StaticMeetingController<T>) {
-        this.MeetingModel = getModelForClass(model);
-    }
+export class StaticMeetingController<T> extends BaseController {
 
     static async create(props: Meeting, res: Response) {
         try {

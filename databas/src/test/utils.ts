@@ -59,7 +59,7 @@ class TestDecorators {
                     Reflect.getMetadata("tests", cls) || [];
 
                 tests.forEach((testProps: TestFnProps) => {
-                    const { testName, method, url, originalMethod } = testProps;
+                    const { testName, originalMethod } = testProps;
 
                     test.only(testName, async () => {
                         const res = httpMocks.createResponse();

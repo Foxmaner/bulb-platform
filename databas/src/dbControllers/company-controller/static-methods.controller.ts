@@ -1,19 +1,13 @@
 import { CompanyModel }  from '../../models';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 
-import { getModelForClass } from '@typegoose/typegoose';
-
-import mongoose, { ObjectId } from 'mongoose';
+import mongoose from 'mongoose';
 
 import { Company } from "index";
+import BaseController from '../base.controller';
 
 
-export class StaticCompanyController<T> {
-    private companyModel: any;
-
-    constructor(model: new <T>(model: new () => T) => StaticCompanyController<T>) {
-        this.companyModel = getModelForClass(model);
-    }
+export class StaticCompanyController<T> extends BaseController {
 
     static async create(props: Company, res: Response) {
 
