@@ -1,4 +1,4 @@
-import { model, Schema, SchemaDefinition, Model } from 'mongoose';
+import { model, Schema, Model } from 'mongoose';
 
 
 interface BaseModelProps<U, S> {

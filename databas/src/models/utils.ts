@@ -1,7 +1,7 @@
 
 
 export default class Utils {
-    static integerValidator (v: Number) {
+    static integerValidator (v: number) {
         return Number.isInteger(v);
     }
 }

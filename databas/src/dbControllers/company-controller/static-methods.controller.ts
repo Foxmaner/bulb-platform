@@ -7,7 +7,7 @@ import { Company } from "index";
 import BaseController from '../base.controller';
 
 
-export class StaticCompanyController<T> extends BaseController {
+export class StaticCompanyController<T> extends BaseController<T> {
 
     static async create(props: Company, res: Response) {
 

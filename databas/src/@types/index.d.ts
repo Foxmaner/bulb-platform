@@ -2,7 +2,7 @@ declare module "index" {
 
     type Meeting = {
         name: string,
-        progress: Number,
+        progress: number,
         completed: boolean,
         owner: Member,
         date: Date,
@@ -30,7 +30,7 @@ declare module "index" {
 
     type WordCloudWord = {
         word: string,
-        weight: Number
+        weight: number
     }
     
     type Section = {
@@ -43,7 +43,7 @@ declare module "index" {
     type SectionHistory = {
         userID: ObjectId,
         date: Date,
-        contentIndex: Number,
+        contentIndex: number,
         added: boolean
     }
     
@@ -56,7 +56,7 @@ declare module "index" {
     type ParagraphHistory = {
         userID: ObjectId,
         date: Date,
-        textIndex: Number,
+        textIndex: number,
         added: boolean,
         text: string
     }
@@ -84,9 +84,9 @@ declare module "index" {
     }
     
     type Answer = {
-        xCoord: Number,
-        yCoord: Number,
-        size: Number,
+        xCoord: number,
+        yCoord: number,
+        size: number,
         text: Paragraph,
         image: Image
     }

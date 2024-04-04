@@ -7,7 +7,7 @@ import { Meeting } from "index";
 import BaseController from '../base.controller';
 
 
-export class StaticMeetingController<T> extends BaseController {
+export class StaticMeetingController<T> extends BaseController<T> {
 
     static async create(props: Meeting, res: Response) {
         try {

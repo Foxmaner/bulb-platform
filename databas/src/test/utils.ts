@@ -22,26 +22,25 @@ class TestDecorators {
     static test(
         testName: string,
     ) {
-        return function (
+        return (
             target: any,
             propertyKey: string | symbol,
             descriptor: PropertyDescriptor
-        ) {
+        ) => {
             const originalMethod = descriptor.value;
-            let tests = Reflect.getMetadata("tests", target) || [];
+            const tests = Reflect.getMetadata("tests", target) || [];
             tests.push({ testName, originalMethod });
             Reflect.defineMetadata("tests", tests, target);
         };
     }
 
-    static describe(description: string) {
-        return function (constructor: new (...args: any[]) => any) {
+    static describe<T>(description: string) {
+        return (constructor: new () => T) => {
             describe(description, () => {
                 let connection: typeof mongoose;
-                let db: any;
 
                 beforeAll(async () => {
-                    ({ connection, db } = await connectDatabase());
+                    connection = await connectDatabase();
                 });
 
                 afterAll(async () => {

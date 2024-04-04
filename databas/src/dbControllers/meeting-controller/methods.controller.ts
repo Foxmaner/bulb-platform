@@ -5,7 +5,7 @@ import { Response } from "express";
 import BaseController from "../base.controller";
 
 
-export class MethodMeetingController<T> extends BaseController {
+export class MethodMeetingController<T> extends BaseController<T> {
 
     async isMember (userID: ObjectId, res: Response) {
         if (!this.model.members.includes(userID)) {

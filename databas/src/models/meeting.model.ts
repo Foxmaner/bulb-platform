@@ -34,7 +34,7 @@ class MeetingModel extends BaseModel<Meeting, typeof StaticMeetingController, ty
         });
     }
     
-    static nameValidator (v: String) {
+    static nameValidator (v: string) {
         const len = v.length;
         return len > 2 && len < 64;
     }

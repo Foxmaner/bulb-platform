@@ -1,4 +1,4 @@
-import { Schema, Document, ObjectId, model } from "mongoose";
+import { Schema, ObjectId } from "mongoose";
 import { CompanyModel } from "./company.model"
 import BaseModel from "./base.model";
 
@@ -7,6 +7,7 @@ import Utils from "./utils";
 import { User } from "index";
 
 import { MethodUserController, StaticUserController } from "../dbControllers";
+
 
 class UserModel extends BaseModel<User, typeof StaticUserController, typeof MethodUserController> {
     constructor() {
@@ -25,7 +26,7 @@ class UserModel extends BaseModel<User, typeof StaticUserController, typeof Meth
                 type: Schema.Types.ObjectId,
                 validate: {
                     validator: UserModel.companyIDValidator,
-                    message: (props: any) => "Couldn't identify the company, the ObjectId is invalid."
+                    message: () => "Couldn't identify the company, the ObjectId is invalid."
                 }
             },
             accessibleMeetings: [Schema.Types.ObjectId],

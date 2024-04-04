@@ -4,7 +4,7 @@ import { Response } from "express";
 import BaseController from "../base.controller";
 
 
-export class MethodUserController<T> extends BaseController {
+export class MethodUserController<T> extends BaseController<T> {
 
     async signIn (token: any, res: Response) {
         this.model.token = token;
@@ -40,7 +40,7 @@ export class MethodUserController<T> extends BaseController {
     }
 
     // This should probably be overlooked :)
-    async changeAccessLevel (newLevel: Number, res: Response) {
+    async changeAccessLevel (newLevel: number, res: Response) {
         this.model.accesLevel = newLevel;
 
         res.status(200).json({ message: "Access level changed" });
