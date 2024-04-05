@@ -1,6 +1,9 @@
 import { Button } from "@nextui-org/react";
 import { FormEvent } from "react";
 import Link from "next/link";
+import {AddSection} from "../../components/section";
+
+
 
 export default function createPage() {
 
@@ -35,10 +38,7 @@ export default function createPage() {
                         <Button className="bg-white border-2 border-edge w-4 h-6 m-2">Help</Button>
                     </div>
                     <div className="flex ">
-                        <form action="" className="flex flex-col gap-20">
-                            <textarea name="" id="" cols={30} rows={10} placeholder="Placeholder" className="textBoxLines p-5 rounded border-2 border-gray-200"></textarea>
-                            <Button className="bg-white border-2 border-edge w-4 h-6 m-2">Create</Button>
-                        </form>
+                        <AddSection/>
                     </div>
                 </div>
             </div>
