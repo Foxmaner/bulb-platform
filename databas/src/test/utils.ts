@@ -19,47 +19,28 @@ interface TestFnProps {
 }
 
 class TestDecorators {
-    static post(testName: string, url: string) {
-        return TestDecorators.testDecorator(testName, "POST", url);
-    }
-
-    static get(testName: string, url: string) {
-        return TestDecorators.testDecorator(testName, "GET", url);
-    }
-
-    static put(testName: string, url: string) {
-        return TestDecorators.testDecorator(testName, "PUT", url);
-    }
-
-    static delete(testName: string, url: string) {
-        return TestDecorators.testDecorator(testName, "DELETE", url);
-    }
-
-    private static testDecorator(
+    static test(
         testName: string,
-        method: RequestMethod,
-        url: string
     ) {
-        return function (
+        return (
             target: any,
             propertyKey: string | symbol,
             descriptor: PropertyDescriptor
-        ) {
+        ) => {
             const originalMethod = descriptor.value;
-            let tests = Reflect.getMetadata("tests", target) || [];
-            tests.push({ testName, method, url, originalMethod });
+            const tests = Reflect.getMetadata("tests", target) || [];
+            tests.push({ testName, originalMethod });
             Reflect.defineMetadata("tests", tests, target);
         };
     }
 
-    static describe(description: string) {
-        return function (constructor: new (...args: any[]) => any) {
+    static describe<T>(description: string) {
+        return (constructor: new () => T) => {
             describe(description, () => {
                 let connection: typeof mongoose;
-                let db: any;
 
                 beforeAll(async () => {
-                    ({ connection, db } = await connectDatabase());
+                    connection = await connectDatabase();
                 });
 
                 afterAll(async () => {
@@ -68,9 +49,6 @@ class TestDecorators {
 
                 beforeEach(async () => {
                     await clearDatabase(connection);
-                
-                    const companies = db.collection("Companies");
-                    companies.deleteMany({});
                 });
 
                 const instance = new constructor();
@@ -80,13 +58,12 @@ class TestDecorators {
                     Reflect.getMetadata("tests", cls) || [];
 
                 tests.forEach((testProps: TestFnProps) => {
-                    const { testName, method, url, originalMethod } = testProps;
+                    const { testName, originalMethod } = testProps;
 
                     test.only(testName, async () => {
-                        const req = httpMocks.createRequest({ method, url });
                         const res = httpMocks.createResponse();
 
-                        await originalMethod.apply(instance, [req, res]);
+                        await originalMethod.apply(instance, [res]);
                     });
                 });
             });

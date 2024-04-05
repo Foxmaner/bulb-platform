@@ -1,59 +1,72 @@
-declare module "validators" {
-
-    type Integer = {
-        type: Number,
-        required: true,
-        unique: true,
-        validate: {
-            validator: Number.isInteger,
-            message: "{VALUE} is not an integer value"
-        }
-    }
-}
-
 declare module "index" {
 
-    interface WordCloudWord {
-        word: string,
-        weight: Number
+    type Meeting = {
+        name: string,
+        progress?: number,
+        completed?: boolean,
+        owner: ObjectId,
+        date: Date,
+        mainDocumentSections?: [Section],
+        summaryDocumentSections?: [Section, Integer],
+        meetingHistory?: [MeetingHistory],
+        members?: [Member]
     }
-    
-    interface Section {
+
+    type User = {
+        oAuthID: string,
+        oAuthProvider: "google" | "github",
+        name: string,
+        accesLevel: Integer,
+        companyID: ObjectId,
+        accessibleMeetings: [ObjectId]
+        token: string
+    }
+
+    type Company = {
+        name: string
+    }
+
+    type WordCloudWord = {
+        word: string,
+        weight: number
+    }
+
+    type Section = {
         id: Integer,
         title: string,
-        contains: [Paragraph, Question, Image],
+        contains: (Paragraph | Question | Image)[],
         sectionHistory: []
     }
     
-    interface SectionHistory {
+    type SectionHistory = {
         userID: ObjectId,
         date: Date,
-        contentIndex: Number,
+        contentIndex: number,
         added: boolean
     }
     
-    interface Paragraph {
+    type Paragraph = {
         id: Integer,
         paragraphHistory: [ParagraphHistory],
         comments: [Comment]
     }
     
-    interface ParagraphHistory {
+    type ParagraphHistory = {
         userID: ObjectId,
         date: Date,
-        textIndex: Number,
+        textIndex: number,
         added: boolean,
         text: string
     }
     
-    interface Comment {
+    type Comment = {
         userID: ObjectId,
         date: Date,
         index: Integer,
         text: string
     }
     
-    interface Question {
+    type Question = {
         id: Integer,
         responses: [Answer],
         questionText: Paragraph,
@@ -61,38 +74,37 @@ declare module "index" {
         questionHistory: [QuestionHistory]
     }
     
-    interface QuestionHistory {
+    type QuestionHistory = {
         userID: ObjectId,
         date: Date,
         answerIndex: Integer,
         added: boolean
     }
     
-    interface Answer {
-        xCoord: Number,
-        yCoord: Number,
-        size: Number,
+    type Answer = {
+        xCoord: number,
+        yCoord: number,
+        size: number,
         text: Paragraph,
         image: Image
     }
     
-    interface Image {
+    type Image = {
         id: Integer,
         url: string
     }
     
-    interface MeetingHistory {
+    type MeetingHistory = {
         userID: ObjectId,
         date: Date,
         sectionID: Integer,
         added: boolean
     }
     
-    interface Member {
+    type MemberAccessLevel = "reviewer" | "editor" | "owner" | "admin" 
+    type Member = {
         userID: ObjectId,
-        expiryDate: Date,
-        accessLevel: Integer
+        expiryDate: Date | never,
+        accessLevel: MemberAccessLevel
     }
-    
-    
 }
