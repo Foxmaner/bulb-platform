@@ -25,13 +25,13 @@ export default function createPage() {
 
                 <div className="bg-secondaryGrey h-5/6 w-1 content-center"></div>
 
-                <div className="flex flex-col text-primaryText gap-10 w-11/12">
+                <div className="flex flex-col text-primaryText gap-5 w-11/12 py-5">
                     <div className="flex flex-col gap-2 ">
-                        <p className="text-primaryText text-5xl font-bold">Untitled meeting</p>
-                        <p className="text-primaryText text-sm">Det lilla roliga mötet</p>
+                        <p className="text-black text-5xl font-bold">Untitled meeting</p>
+                        <p className="text-primaryText text-sm">2024 - 01 - 01</p>
+                        <div className="flex flex-row bg-secondaryGrey h-1 w-11/12"></div>
                     </div>
-
-                    <div className="flex flex-row gap-5">
+                    <div className="flex flex-row gap-2">
                         <Button className="bg-white border-2 border-edge w-4 h-6 m-2">File</Button>
                         <Button className="bg-white border-2 border-edge w-4 h-6 m-2">Edit</Button>
                         <Button className="bg-white border-2 border-edge w-4 h-6 m-2">Insert</Button>
@@ -39,7 +39,7 @@ export default function createPage() {
                         <Button className="bg-white border-2 border-edge w-4 h-6 m-2">Help</Button>
                     </div>
 
-                    <div className="flex w-11/12">
+                    <div className="flex w-11/12 py-5">
                         <AddSection/>
                     </div>
                 </div>

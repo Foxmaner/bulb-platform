@@ -25,7 +25,7 @@ export default function addSection() {
     },[]);
 
     return (
-        <div className="relative w-full h-full flex justify-center">
+        <div ref={popupRef} className="relative w-full h-full flex justify-center">
             <div className="border-2 w-11/12 h-11/12 text-center border-dashed cursor-pointer" onClick={toggleMenu}>
                 <p className="text-3xl select-none">----Lägg till avsnitt----</p>
             </div>
