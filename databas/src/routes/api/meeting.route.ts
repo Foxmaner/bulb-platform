@@ -6,7 +6,6 @@ const router: Router = express.Router();
 
 router.get('/', (req : Request, res : Response) => {
    MeetingModel.list()
-   //insert_get_databse_stuff(req.token)
 }) 
 
 router.get('/:id', (req: Request, res: Response) => {

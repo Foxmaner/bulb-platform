@@ -5,6 +5,7 @@ import { connectionHandler } from "./socket";
 import cors from 'cors';
 import { createServer } from 'http';
 import verifyToken from "./middleware/authMiddleware";
+import {profile} from './tmp';
 //Import routes
 //import {meeting} from './routes/api/'
 
@@ -23,8 +24,11 @@ const io = new Server(httpServer, {
     }
 });
 
-app.use(verifyToken)
+verifyToken(profile.id_token);
+//app.use(verifyToken)
 app.use(cors());
+
+
 
 io.on('connection', connectionHandler);
 

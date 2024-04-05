@@ -1,0 +1,18 @@
+const user = {
+    id: '108628406724579144651',
+    name: 'Gustav Carlsson',
+    email: 'gustavcarlsson555@gmail.com',
+    image: 'https://lh3.googleusercontent.com/a/ACg8ocINEkX2xLSpproV8xPx6HHLnK6uHDvqCcaHEkF2FMrgxXJ8mw=s96-c'
+  }
+const profile =  {
+    provider: 'google',
+    type: 'oauth',
+    providerAccountId: '108628406724579144651',
+    access_token: 'ya29.a0Ad52N3_QSAGLwOgmAbIl-cjsegfogwvfLIjFjCtXyMVOX96331mZGBLCnCk2ZYx53qv1UtEio-ECQjnGDC2d4MATskJ8x58nryuGe-5QdiqUfejJW1TdugSkfdiLrFNUP6rt77SX2FfNVCsiVedQZTcjn5gSXnrJwgaCgYKAeASARISFQHGX2MikSpxYnnCswaDUzajaTaIPw0169',
+    expires_at: 1712309719,
+    scope: 'openid https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile',
+    token_type: 'Bearer',
+    id_token: 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjkzYjQ5NTE2MmFmMGM4N2NjN2E1MTY4NjI5NDA5NzA0MGRhZjNiNDMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI2ODIyMzE2MTI4ODgtdHU4MWpwZ2hsaDg2aG02YWNyaHM4ZWZpaXYwcjhhdXQuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiI2ODIyMzE2MTI4ODgtdHU4MWpwZ2hsaDg2aG02YWNyaHM4ZWZpaXYwcjhhdXQuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMDg2Mjg0MDY3MjQ1NzkxNDQ2NTEiLCJlbWFpbCI6Imd1c3RhdmNhcmxzc29uNTU1QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJhdF9oYXNoIjoieFBoU3VaQmxpTUFCTUxPd3pRUXg4QSIsIm5hbWUiOiJHdXN0YXYgQ2FybHNzb24iLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jSU5Fa1gyeExTcHByb1Y4eFB4NkhITG5LNnVIRHZxQ2NhSEVrRjJGTXJneFhKOG13PXM5Ni1jIiwiZ2l2ZW5fbmFtZSI6Ikd1c3RhdiIsImZhbWlseV9uYW1lIjoiQ2FybHNzb24iLCJpYXQiOjE3MTIzMDYxMjAsImV4cCI6MTcxMjMwOTcyMH0.ZtiPlfeRUnd8c0RXSdoVnlMed_n8wOVtsduwm3sFzfG3BQGBSRkmc_lOLV9rlOpXbucrOmlv9tDm0hQK5ngGml5E8vmPJn8Ctzqj86uWvTodhzrqUn8VYIeeNYdnOuq8ehfdIsKkDfQHiGFs0rR2d1KAJRgwbsYE22UAV1wvetPcgJVwKgH2hD_ApBpNedFEETAB7OVhY8EOaGhgNdlUKBkPzhU5xw6T7hhuNG_ZAOgUDPltHFYS6pqWFmFtq-Fyhgw2glSGjeFFr3TctqFfuMBLcNAoTFhMhnzG39aGzhTvt7lQNP2Jl9RTSSWlga6PSzMYonx4ieZO0v0gPbtRwQ'
+  }
+
+export {user, profile}
