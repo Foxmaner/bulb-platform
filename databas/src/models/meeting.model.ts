@@ -5,6 +5,8 @@ import BaseModel from "./base.model";
 
 import { Meeting } from "index";
 
+import Utils from "./utils";
+
 
 class MeetingModel extends BaseModel<Meeting, typeof StaticMeetingController, typeof MethodMeetingController> {
     constructor() {  
@@ -19,14 +21,14 @@ class MeetingModel extends BaseModel<Meeting, typeof StaticMeetingController, ty
             },
             progress: { type: Number, default: 0 },
             completed: { type: Boolean, default: true },
-            owner: { 
-                type: Schema.Types.ObjectId, 
-                required: [true, "The meeting owner is required."] 
+            date: {
+                type: Date,
+                required: [true, "The creation date is required."]
             },
-            mainDocumentSections: { type: [Schema.Types.ObjectId], default: [] },
-            summaryDocumentSections: { type: [Schema.Types.ObjectId], default: [] },
-            meetingHistory: { type: [Schema.Types.ObjectId], default: [] },
-            members: { type: [{userID: Schema.Types.ObjectId}], default: [] }
+            mainDocumentSections: { type: [Utils.SectionSchema()], default: [] },
+            summaryDocumentSections: { type: {}, default: [] },
+            meetingHistory: { type: [Utils.MeetingHistorySchema()], default: [] },
+            members: { type: [MeetingModel.MemberSchema()], default: [] }
         };
         
         super({
@@ -40,6 +42,21 @@ class MeetingModel extends BaseModel<Meeting, typeof StaticMeetingController, ty
     static nameValidator (v: string) {
         const len = v.length;
         return len > 2 && len < 64;
+    }
+
+    static MemberSchema(){
+        return {
+            userID: Schema.Types.ObjectId,
+            expiryDate: {},
+            accessLevel: {
+                type: Number,
+                required: true,
+                validate: {
+                    validator: Utils.integerValidator,
+                    message: "{VALUE} is not an integer value"
+                }
+            }
+        } 
     }
 }
 

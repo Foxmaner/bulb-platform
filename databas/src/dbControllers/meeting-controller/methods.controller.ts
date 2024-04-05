@@ -17,6 +17,18 @@ export class MethodMeetingController<T> extends BaseController<T> {
         return res.status(200);
     }
 
+    async setToDocument (res: Response) {
+        this.model.completed = true;
+
+        res.status(200);
+    }
+
+    async setToMeeting (res: Response) {
+        this.model.completed = false;
+
+        res.status(200);
+    }
+
     async addMember (userID: ObjectId, res: Response) {
         this.model.members.push(userID);
 
@@ -35,6 +47,9 @@ export class MethodMeetingController<T> extends BaseController<T> {
         return res.status(200).json({ message: "User added" });
     }
 
+    /**
+     * Section
+     */
     addSection (res: Response) {
         const newSection: Section = {
             id: this.model.sections.length,
@@ -55,6 +70,9 @@ export class MethodMeetingController<T> extends BaseController<T> {
         return res.status(200).json({ message: "Section removed" });
     }
 
+    /**
+     * Paragraph
+     */
     addParagaraph (sectionID: number, res: Response) {
         const newParagraph = {
             id: this.model.sections[sectionID].contains.length,
@@ -74,6 +92,9 @@ export class MethodMeetingController<T> extends BaseController<T> {
         return res.status(200).json({ message: "Paragraph removed" });
     }
 
+    /**
+     * Paragraph
+    */
     addQuestion (sectionID: number, res: Response) {
         const newQuestion = {
             id: this.model.sections[sectionID].contains.length,
@@ -125,13 +146,5 @@ export class MethodMeetingController<T> extends BaseController<T> {
 
     async removeImage (sectionID: number, imageID: number, res: Response) {
         // Remove image
-    }
-
-    async setToDocument (res: Response) {
-        this.model.completed = true;
-    }
-
-    async setToMeeting (res: Response) {
-        this.model.completed = false;
     }
 }
