@@ -1,19 +1,30 @@
 import express, { Express, Request, Response } from "express";
-import { connectDatabase } from "./config/connection";
 import dotenv from "dotenv";
+import { Server, Socket } from 'socket.io';
+import { connectionHandler } from "./socket";
+import cors from 'cors';
+import { createServer } from 'http';
+//Import routes
+//import {meeting} from './routes/api/'
 
 dotenv.config();
 
 const app: Express = express();
-const PORT = process.env.PORT || 3000;
+const port = process.env.PORT || 3000;
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Express + TypeScript Server");
+const corsOrigin = "http://localhost:3000";
+
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+    cors: {
+        origin: corsOrigin,
+        methods: ["GET", "POST"]
+    }
 });
 
-app.listen(PORT, () => {
-  console.log(`[server]: Server is running at http://localhost:${PORT}`);
-});
+app.use(cors());
 
+io.on('connection', connectionHandler);
 
+httpServer.listen(port, () => console.log(`server listening on port : ${port}`));
 

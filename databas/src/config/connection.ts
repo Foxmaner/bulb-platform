@@ -1,11 +1,9 @@
 import mongoose from 'mongoose';
 
 import * as dotenv from "dotenv";
-import * as config from "../../db.config.json";
 
 
 dotenv.config();
-
 
 export async function connectDatabase() {
     try {
@@ -15,8 +13,6 @@ export async function connectDatabase() {
         if (!uri) {
             throw new Error("DB_URI is not defined");
         }
-
-        console.log(config)
 
         await mongoose.connect(uri);
 
@@ -30,7 +26,7 @@ export async function connectDatabase() {
         console.error("Error connecting to MongoDB:", error);
         process.exit(1);
     }
-};
+}
 
 export async function closeDatabase() {
     await mongoose.disconnect();

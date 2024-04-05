@@ -13,7 +13,7 @@
         "emitDecoratorMetadata": true, /* Emit design-type metadata for decorated declarations in source files. */
         "types": ["jest", "node"] /* Specify type package names to be included without being referenced in a source file. */,
         "sourceMap": true /* Generates corresponding '.map' file. */,
-        
+        "typeRoots": ["./src/@types", "./node_modules/@types"]
     },
     "include": ["./src/**/*"],
 }

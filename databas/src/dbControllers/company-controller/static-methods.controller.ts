@@ -1,32 +1,23 @@
 import { CompanyModel }  from '../../models';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 
 import mongoose from 'mongoose';
 
+import { Company } from "index";
+import BaseController from '../base.controller';
 
-interface ICompanyController {
-    create(req: Request, res: Response): Promise<Response<any, Record<string, any>>>;
-    delete(req: Request, res: Response): Promise<Response<any, Record<string, any>>>;
-    list(req: Request, res: Response): Promise<Response<any, Record<string, any>>>;
-    get(req: Request, res: Response): Promise<Response<any, Record<string, any>>>;
-}
 
-class CompanyController {
+export class StaticCompanyController<T> extends BaseController<T> {
 
-    static async create(req: Request, res: Response): Promise<Response<any, Record<string, any>>> {
-        const { name } = req.body;
-
-        if (!name || name === "") {
-            return res.status(400).json({ error: 'Missing name' });
-        }
+    static async create(props: Company, res: Response) {
 
         try {
-            const existingCompany = await CompanyModel.findOne({ name });
+            const existingCompany = await CompanyModel.findOne({ name: props.name });
             if (existingCompany) {
                 return res.status(409).json({ error: 'Company already exists' });
             }
 
-            const company = new CompanyModel(req.body);
+            const company = new CompanyModel(props);
 
             await company.save();
 
@@ -38,9 +29,7 @@ class CompanyController {
         }
     }
 
-    static async delete(req: Request, res: Response): Promise<Response<any, Record<string, any>>> {
-        const { id } = req.params;
-
+    static async delete(id: string, res: Response) {
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ message: "Invalid ObjectID." });
         }
@@ -57,13 +46,12 @@ class CompanyController {
         }
     }
 
-    static async list(req: Request, res: Response): Promise<Response<any, Record<string, any>>> {
+    static async list(res: Response) {
         const companies = await CompanyModel.find({});
         return res.json(companies);
     }
 
-    static async get(req: Request, res: Response): Promise<Response<any, Record<string, any>>> {
-        const { id } = req.params;
+    static async get(id: string, res: Response) {
 
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ message: "Invalid ObjectID." });
@@ -76,10 +64,4 @@ class CompanyController {
 
         return res.status(200).json(company);
     }
-}
-
-
-export { 
-    ICompanyController as IStaticComapnyController, 
-    CompanyController as StaticCompanyController
 }

@@ -20,4 +20,4 @@ const SchemaMain = new Schema<ISchema>({
 
 const ModelMain = model<ISchema>("Templates", SchemaMain);
 
-export { ModelMain as TemplateModel };
+export { ModelMain as TemplateModel};
