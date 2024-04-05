@@ -5,23 +5,15 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || 'wrong';
+console.log(CLIENT_SECRET);
 
 export default function verifyToken (token : string) {
   console.log(token)
   if (!token) {
     return false;
   }
-  jwt.verify(token, CLIENT_SECRET, { algorithms: ['RS256'] }, (err : any, decoded : any) => {
-    if (err) {
-      console.log(err)
-      return false;
-    }
-    
-    // if everything good, save to request for use in other routes
-    console.log('success');
-    console.log(decoded);
-    return true;
-  });
+  const decoded = jwt.verify(token, CLIENT_SECRET, {algorithms:['RS256']});
+  console.log(decoded);
 }
 //
 //export default function verifyToken (req: Request, res: Response, next: NextFunction) {
