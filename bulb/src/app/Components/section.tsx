@@ -1,8 +1,6 @@
-'use client'
-
 import { useState } from "react";
 
-export function AddSection() {
+export default function addSection() {
     const [menuOpen, setMenuOpen] = useState(false);
 
 

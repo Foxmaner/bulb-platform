@@ -1,8 +1,9 @@
+'use client'
+
 import { Button } from "@nextui-org/react";
 import { FormEvent } from "react";
 import Link from "next/link";
-import {AddSection} from "../../components/section";
-
+import AddSection from "../../components/section";
 
 
 export default function createPage() {
@@ -24,20 +25,21 @@ export default function createPage() {
 
                 <div className="bg-secondaryGrey h-5/6 w-1 content-center"></div>
 
-                <div className="flex flex-col text-primaryText gap-10">
+                <div className="flex flex-col text-primaryText gap-10 w-11/12">
                     <div className="flex flex-col gap-2 ">
                         <p className="text-primaryText text-5xl font-bold">Untitled meeting</p>
                         <p className="text-primaryText text-sm">Det lilla roliga mötet</p>
                     </div>
 
-                    <div className="flex flex-row justify-between">
+                    <div className="flex flex-row gap-5">
                         <Button className="bg-white border-2 border-edge w-4 h-6 m-2">File</Button>
                         <Button className="bg-white border-2 border-edge w-4 h-6 m-2">Edit</Button>
                         <Button className="bg-white border-2 border-edge w-4 h-6 m-2">Insert</Button>
                         <Button className="bg-white border-2 border-edge w-4 h-6 m-2">Format</Button>
                         <Button className="bg-white border-2 border-edge w-4 h-6 m-2">Help</Button>
                     </div>
-                    <div className="flex ">
+
+                    <div className="flex w-11/12">
                         <AddSection/>
                     </div>
                 </div>
