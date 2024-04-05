@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 
-export function addSection() {
+export default function addSection() {
     const [menuOpen, setMenuOpen] = useState(false);
     //Måste berätta för Typescript att det är en sjukt nice div
     const popupRef = useRef<HTMLDivElement>(null);

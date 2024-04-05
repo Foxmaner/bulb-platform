@@ -3,7 +3,7 @@
 import { Button } from "@nextui-org/react";
 import { FormEvent } from "react";
 import Link from "next/link";
-import {addSection} from "app/components/section";
+import AddSection from "../../components/section";
 
 
 export default function createPage() {
@@ -40,7 +40,7 @@ export default function createPage() {
                     </div>
 
                     <div className="flex w-11/12">
-                        {addSection()}
+                        <AddSection/>
                     </div>
                 </div>
             </div>
