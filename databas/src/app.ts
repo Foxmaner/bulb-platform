@@ -1,15 +1,36 @@
-// src/index.js
 import express, { Express, Request, Response } from "express";
+import dotenv from "dotenv";
+import { Server, Socket } from 'socket.io';
+import { connectionHandler } from "./socket";
+import cors from 'cors';
+import { createServer } from 'http';
+import verifyToken from "./middleware/authMiddleware";
+import {profile} from './tmp';
+//Import routes
+//import {meeting} from './routes/api/'
 
+dotenv.config();
 
 const app: Express = express();
-const port = 3001;
+const port = process.env.PORT || 3000;
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Express + TypeScript Server");
+const corsOrigin = "http://localhost:3000";
+
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+    cors: {
+        origin: corsOrigin,
+        methods: ["GET", "POST"]
+    }
 });
 
-app.listen(port, () => {
-  console.log(`[server]: Server is running at http://localhost:${port}`);
-});
+verifyToken(profile.id_token);
+//app.use(verifyToken)
+app.use(cors());
+
+
+
+io.on('connection', connectionHandler);
+
+httpServer.listen(port, () => console.log(`server listening on port : ${port}`));
 
