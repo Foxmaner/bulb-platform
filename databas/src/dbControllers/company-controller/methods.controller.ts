@@ -1,14 +1,12 @@
+import { Response } from "express";
+import BaseController from "../base.controller";
 
 
-interface ICompanyController {
+export class MethodCompanyController<T> extends BaseController<T> {
 
-}
+    rename(newName: string, res: Response) {
+        this.model.name = newName;
 
-class CompanyController {
-
-}
-
-export {
-    ICompanyController,
-    CompanyController
+        return res.status(200);
+    }
 }

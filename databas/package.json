@@ -7,10 +7,11 @@
 	"scripts": {
 		"build": "tsc",
 		"lint": "eslint .",
-		"test": "jest --detectOpenHandles --collectCoverage true"
+		"test": "jest"
 	},
 	"license": "GPL-3.0-only",
 	"dependencies": {
+		"@typegoose/typegoose": "^12.2.0",
 		"dotenv": "^16.4.5",
 		"express": "^4.19.2",
 		"merge": "^2.1.1",
