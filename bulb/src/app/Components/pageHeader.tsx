@@ -19,8 +19,8 @@ export default function PageHeader({ userName }: { userName: string }) {
   const router = useRouter();
   return (
     <div className="bg-primaryGrey w-full flex-col justify-between">
-      <div className="bg-white w-full">
-        <h2 className="text-black m-1">Good afternoon, {userName}</h2>
+      <div className="w-full">
+        <h2 className="text-black p-1">Good afternoon, {userName}</h2>
       </div>
 
       <div className="flex justify-between border-2 border-primaryBorder w-full items-center">
