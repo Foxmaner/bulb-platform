@@ -4,6 +4,7 @@ import { Server, Socket } from 'socket.io';
 import { connectionHandler } from "./socket";
 import cors from 'cors';
 import { createServer } from 'http';
+import verifyToken from "./middleware/authMiddleware";
 //Import routes
 //import {meeting} from './routes/api/'
 
@@ -22,6 +23,7 @@ const io = new Server(httpServer, {
     }
 });
 
+app.use(verifyToken)
 app.use(cors());
 
 io.on('connection', connectionHandler);
