@@ -9,6 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Switch } from "@nextui-org/react";
+import sidebarImg from "../../../public/sidbarImg.svg";
 
 export function Sidebar() {
   const pathname = usePathname();
@@ -29,11 +30,11 @@ export function Sidebar() {
         <div className="bg-primary h-1 w-5/6 content-center"></div>
       </div>
       <div className="p-5">
-        <h2 className="text-gray-800">Menu</h2>
+        <h2 className="text-gray-800 font-bold mb-2">Meny</h2>
         <ul>
           <Link
             href="/meetings"
-            className={`text-gray-500 font-bold text-2xl flex ${
+            className={`text-gray-500 font-bold text-xl flex my-1 ${
               pathname.includes("/meetings") || pathname === "/"
                 ? "text-primary"
                 : ""
@@ -51,7 +52,7 @@ export function Sidebar() {
           </Link>
           <Link
             href="/documents"
-            className={`text-gray-500 font-bold text-2xl flex ${
+            className={`text-gray-500 font-bold text-xl flex my-1 ${
               pathname.includes("/documents") ? "text-primary" : ""
             }`}
           >
@@ -65,7 +66,7 @@ export function Sidebar() {
           </Link>
           <Link
             href="/templates"
-            className={`text-gray-500 font-bold text-2xl flex ${
+            className={`text-gray-500 font-bold text-xl flex my-1 ${
               pathname.includes("/templates") ? "text-primary" : ""
             }`}
           >
@@ -79,7 +80,10 @@ export function Sidebar() {
           </Link>
         </ul>
       </div>
-      <div className="bg-primary flex flex-grow"></div>
+
+      <div className="flex flex-col-reverse flex-grow overflow-hidden">
+        <Image src={sidebarImg} alt="Sidebar Image" />
+      </div>
 
       {/* Actionbar */}
       <div>
@@ -98,8 +102,8 @@ export function Sidebar() {
         <Image
           src="/logo-1.png"
           alt="East Sweden MedTech"
-          width={100}
-          height={100}
+          width={80}
+          height={80}
         />
         <div className="width-full flex-col content-center items-center">
           <p className="text-gray-500">
