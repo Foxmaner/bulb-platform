@@ -4,7 +4,6 @@ declare module "index" {
         name: string,
         progress?: number,
         completed?: boolean,
-        owner: ObjectId,
         date: Date,
         mainDocumentSections?: [Section],
         summaryDocumentSections?: [Section, Integer],
@@ -47,6 +46,7 @@ declare module "index" {
     
     type Paragraph = {
         id: Integer,
+        text: String,
         paragraphHistory: [ParagraphHistory],
         comments: [Comment]
     }
@@ -100,11 +100,15 @@ declare module "index" {
         sectionID: Integer,
         added: boolean
     }
-    
-    type MemberAccessLevel = "reviewer" | "editor" | "owner" | "admin" 
+
     type Member = {
         userID: ObjectId,
         expiryDate: Date | never,
-        accessLevel: MemberAccessLevel
+        accessLevel: Integer
     }
+}
+
+declare module "accessLevels" {
+    type MemberAccessLevel = "reviewer" | "editor" | "owner";
+    type UserAccessLevel = "generic" | "admin";
 }

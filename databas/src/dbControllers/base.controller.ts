@@ -6,6 +6,7 @@ export default class BaseController<T> {
 
     constructor(model: new () => T) {
         this._model = getModelForClass(model);
+        
     }
 
     protected get model() {

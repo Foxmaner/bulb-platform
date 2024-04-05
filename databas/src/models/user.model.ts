@@ -23,8 +23,7 @@ class UserModel extends BaseModel<User, typeof StaticUserController, typeof Meth
             },
             name: {
                 type: String,
-                required: true,
-                unique: true
+                required: true
             },
             accesLevel: {
                 type: Number,

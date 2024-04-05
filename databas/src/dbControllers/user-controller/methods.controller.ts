@@ -1,8 +1,10 @@
-import { ObjectId } from "mongoose";
+import { ObjectId, Schema } from "mongoose";
 
 import { Response } from "express";
 import BaseController from "../base.controller";
+import { Member, Meeting } from "index";
 
+import { MeetingModel } from "../../models";
 
 export class MethodUserController<T> extends BaseController<T> {
 
@@ -47,10 +49,36 @@ export class MethodUserController<T> extends BaseController<T> {
         res.status(200).json({ message: "Company changed" });
     }
 
-    // This should probably be overlooked :)
     changeAccessLevel (newLevel: number, res: Response) {
         this.model.accesLevel = newLevel;
 
         res.status(200).json({ message: "Access level changed" });
     }
+
+    async create(props: Meeting, res: Response) {
+        try {
+            const Meeting = new MeetingModel(props);
+            await Meeting.save();
+
+            return res.status(201).json(Meeting);
+        } catch (error: any) {
+            return res.status(500).json({ error: error.message });
+        }
+    }
+
+    getMeetings (res: Response) {
+        const pipelineResult = this.model.aggregate([{
+            $match:{_id:this.model._id},
+            $lookup:{from:"Meetings",localField:"accessibleMeetings",foreignField:"_id",as:"Joined meetings"},
+            $replaceRoot:{newRoot:"Joined meetings"},
+            $unset:["meetingHistory","mainDocumentSections","summaryDocumentSections"],
+        }]);
+        res.status(200).json(pipelineResult);
+    }
+
+    /*async addUserToMeeting (user: Member, meetingID: Schema.Types.ObjectId, res: Response) {
+        const meeting = await MeetingModel.get(meetingID)
+
+        meeting        
+    }*/
 }
