@@ -1,6 +1,18 @@
 {
+<<<<<<< HEAD
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.12.4",
+    "cypress": "^13.7.1",
+    "typescript": "^5.4.3"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "express-openid-connect": "^2.17.1"
+=======
   "dependencies": {
     "@types/jsonwebtoken": "^9.0.6",
     "jsonwebtoken": "^9.0.2"
+>>>>>>> 33d7d4d920315176c1d7fe1e205903475cbf539b
   }
 }
