@@ -34,10 +34,12 @@ export default function addSection() {
             </div>
             {menuOpen && (
                 <div ref={popupRef} className="flex justify-center absolute mt-2 w-96 h-auto rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-
+                    
                     <div className="py-1">
                         <p className="flex text-lg text-primaryText select-none">Lägg till stycke</p>
-                            <InputField/>
+                        <button className="block px-4 py-2 text-lg text-primaryText hover:bg-gray-100">
+                            Paragraf
+                        </button>
                         <button className="block px-4 py-2 text-lg text-primaryText hover:bg-gray-100">
                             Fråga
                         </button>
