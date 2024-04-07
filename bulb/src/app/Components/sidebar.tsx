@@ -30,11 +30,11 @@ export function Sidebar() {
         <div className="bg-primary h-1 w-5/6 content-center"></div>
       </div>
       <div className="p-5">
-        <h2 className="text-gray-800 font-bold mb-2">Meny</h2>
+        <h2 className="text-gray-800 font-bold mb-1">Meny</h2>
         <ul>
           <Link
             href="/meetings"
-            className={`text-gray-500 font-bold text-xl flex my-1 ${
+            className={`text-gray-500 font-bold text-lg flex items-center mb-1 ${
               pathname.includes("/meetings") || pathname === "/"
                 ? "text-primary"
                 : ""
@@ -52,7 +52,7 @@ export function Sidebar() {
           </Link>
           <Link
             href="/documents"
-            className={`text-gray-500 font-bold text-xl flex my-1 ${
+            className={`text-gray-500 font-bold text-lg flex items-center mb-1 ${
               pathname.includes("/documents") ? "text-primary" : ""
             }`}
           >
@@ -66,7 +66,7 @@ export function Sidebar() {
           </Link>
           <Link
             href="/templates"
-            className={`text-gray-500 font-bold text-xl flex my-1 ${
+            className={`text-gray-500 font-bold text-lg flex items-center mb-2 ${
               pathname.includes("/templates") ? "text-primary" : ""
             }`}
           >
@@ -82,18 +82,18 @@ export function Sidebar() {
       </div>
 
       <div className="flex flex-col-reverse flex-grow overflow-hidden">
-        <Image src={sidebarImg} alt="Sidebar Image" />
+        <Image src={sidebarImg} alt="Sidebar Image" width={178} />
       </div>
 
       {/* Actionbar */}
       <div>
-        <button className="text-gray-500 flex w-full">
+        <button className="text-gray-500 items-center flex w-full mx-1">
           {" "}
           <BsFillInfoCircleFill color="grey" /> Info
         </button>
         {
           <Switch defaultSelected>
-            <p className="text-gray-500">Darkmode</p>
+            <p className="text-gray-500"> Darkmode</p>
           </Switch>
         }
       </div>
