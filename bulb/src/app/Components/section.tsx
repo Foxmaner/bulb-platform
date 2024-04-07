@@ -1,9 +1,12 @@
 import { useEffect, useState, useRef } from "react";
+import InputField from "./inputField";
+
 
 export default function addSection() {
     const [menuOpen, setMenuOpen] = useState(false);
     //Måste berätta för Typescript att det är en sjukt nice div
     const popupRef = useRef<HTMLDivElement>(null);
+
 
     const toggleMenu = () => {
         setMenuOpen(!menuOpen);
@@ -34,9 +37,7 @@ export default function addSection() {
 
                     <div className="py-1">
                         <p className="flex text-lg text-primaryText select-none">Lägg till stycke</p>
-                        <button className="block px-4 py-2 text-lg text-primaryText hover:bg-gray-100">
-                            Paragraf
-                        </button>
+                            <InputField/>
                         <button className="block px-4 py-2 text-lg text-primaryText hover:bg-gray-100">
                             Fråga
                         </button>
