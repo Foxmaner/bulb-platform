@@ -1,15 +1,15 @@
 import express, { Express, Request, Response, Router } from 'express';
-import { MeetingModel } from '../../models';
-
+import { UserModel } from '../../models';
 const app: Express = express();
 const router: Router = express.Router();
 
 router.get('/', (req : Request, res : Response) => {
-   MeetingModel.list()
+   
+   res.json()
 }) 
 
 router.get('/:id', (req: Request, res: Response) => {
-    
+   
 })
 
 router.delete('/delete/:id', (req: Request, res: Response) => {
