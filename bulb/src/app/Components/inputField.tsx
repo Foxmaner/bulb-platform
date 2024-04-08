@@ -8,7 +8,7 @@ export default function inputField({inputType} : {inputType:string}){
     const addInput = () => {
         setTextFields(prevTextFields =>[...prevTextFields, '']);
     };
-
+    
     return(
         <div>
             {textFields.map((textField, index) =>(
