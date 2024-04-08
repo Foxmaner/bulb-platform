@@ -2,7 +2,7 @@ import { useState } from "react";
 
 
 
-export default function inputField({inputType} : {inputType:string}){
+export default function InputField({inputType} : {inputType:string}){
     const [textFields, setTextFields] = useState<string[]>([]);
 
     const addInput = () => {
