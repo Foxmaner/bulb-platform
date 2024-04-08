@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import InputField from "./inputField";
 
 
-export default function addSection() {
+export default function AddSection() {
     const [menuOpen, setMenuOpen] = useState(false);
     //Måste berätta för Typescript att det är en sjukt nice div
     const popupRef = useRef<HTMLDivElement>(null);
