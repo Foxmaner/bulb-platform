@@ -1,19 +1,12 @@
-import { ObjectId, Schema} from "mongoose";
-
-import { getModelForClass } from '@typegoose/typegoose';
-
 import { Response } from "express";
+import BaseController from "../base.controller";
 
 
-export class MethodCompanyController<T> {
-    private companyModel: any;
+export class MethodCompanyController<T> extends BaseController<T> {
 
-    constructor(model: new <T>(model: new () => T) => MethodCompanyController<T>) {
-        this.companyModel = getModelForClass(model);
+    rename(newName: string, res: Response) {
+        this.model.name = newName;
+
+        return res.status(200);
     }
-
-    async rename(newName: String, res: Response) {
-        this.companyModel.name = newName;
-    }
-
 }

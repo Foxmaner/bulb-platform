@@ -22,17 +22,16 @@ const connectDatabase = async () => {
 		mongoServer.stop();
 	});
 
-	const db = client.connection.db;
-
-	return { connection: client, db };
+	return client;
 };
 
-const closeDatabase = async (mongoClient: any): Promise<void> => {
+const closeDatabase = async (mongoClient: typeof mongoose): Promise<void> => {
 	await mongoClient.disconnect();
 };
 
-const clearDatabase = async (clearDatabase: any): Promise<void> => {
+const clearDatabase = async (clearDatabase: typeof mongoose): Promise<void> => {
 	await clearDatabase.connection.dropDatabase();
 };
 
 export { connectDatabase, closeDatabase, clearDatabase };
+

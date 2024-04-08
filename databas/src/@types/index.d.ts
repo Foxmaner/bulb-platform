@@ -1,10 +1,24 @@
 declare module "index" {
 
+    type Meeting = {
+        name: string,
+        progress?: number,
+        completed?: boolean,
+        date: Date,
+        mainDocumentSections?: [Section],
+        summaryDocumentSections?: [Section, Integer],
+        meetingHistory?: [MeetingHistory],
+        members?: [Member]
+    }
+
     type User = {
+        oAuthID: string,
+        oAuthProvider: "google" | "github",
         name: string,
         accesLevel: Integer,
         companyID: ObjectId,
         accessibleMeetings: [ObjectId]
+        token: string
     }
 
     type Company = {
@@ -13,25 +27,26 @@ declare module "index" {
 
     type WordCloudWord = {
         word: string,
-        weight: Number
+        weight: number
     }
-    
+
     type Section = {
         id: Integer,
         title: string,
-        contains: [Paragraph, Question, Image], // Add a comma here
+        contains: (Paragraph | Question | Image)[],
         sectionHistory: []
     }
     
     type SectionHistory = {
         userID: ObjectId,
         date: Date,
-        contentIndex: Number,
+        contentIndex: number,
         added: boolean
     }
     
     type Paragraph = {
         id: Integer,
+        text: String,
         paragraphHistory: [ParagraphHistory],
         comments: [Comment]
     }
@@ -39,7 +54,7 @@ declare module "index" {
     type ParagraphHistory = {
         userID: ObjectId,
         date: Date,
-        textIndex: Number,
+        textIndex: number,
         added: boolean,
         text: string
     }
@@ -67,9 +82,9 @@ declare module "index" {
     }
     
     type Answer = {
-        xCoord: Number,
-        yCoord: Number,
-        size: Number,
+        xCoord: number,
+        yCoord: number,
+        size: number,
         text: Paragraph,
         image: Image
     }
@@ -85,10 +100,15 @@ declare module "index" {
         sectionID: Integer,
         added: boolean
     }
-    
+
     type Member = {
         userID: ObjectId,
-        expiryDate: Date,
+        expiryDate: Date | never,
         accessLevel: Integer
     }
+}
+
+declare module "accessLevels" {
+    type MemberAccessLevel = "reviewer" | "editor" | "owner";
+    type UserAccessLevel = "generic" | "admin";
 }

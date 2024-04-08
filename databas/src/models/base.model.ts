@@ -1,4 +1,4 @@
-import { model, Schema, SchemaDefinition, Model } from 'mongoose';
+import { model, Schema, Model } from 'mongoose';
 
 
 interface BaseModelProps<U, S> {
@@ -27,21 +27,6 @@ class BaseModel<T, U extends Function, S extends Function> {
         return this._model;
     }
 
-    assignMethodsTo(methods: any): void {
-        Object.getOwnPropertyNames(methods)
-        .filter(prop => typeof methods[prop] === 'function')
-        .forEach(methodName => {
-            this._schema.methods[methodName] = methods[methodName];
-        });
-    }
-
-    assignStaticMethodsTo(methods: any): void {
-        Object.getOwnPropertyNames(methods)
-        .filter(prop => typeof methods[prop] === 'function')
-        .forEach(methodName => {
-            this._schema.statics[methodName] = methods[methodName];
-        });
-    }
 }
 
 export default BaseModel;

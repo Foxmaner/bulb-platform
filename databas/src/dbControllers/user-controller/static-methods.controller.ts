@@ -1,37 +1,25 @@
 import { UserModel }  from '../../models';
 import { Request, Response } from 'express';
 
-import { getModelForClass } from '@typegoose/typegoose';
-
-import mongoose, { ObjectId } from 'mongoose';
+import mongoose from 'mongoose';
 
 import { User } from "index";
+import BaseController from '../base.controller';
 
 
-export class StaticUserController<T> {
-    private UserModel: any;
-
-    constructor(model: new <T>(model: new () => T) => StaticUserController<T>) {
-        this.UserModel = getModelForClass(model);
-    }
+export class StaticUserController<T> extends BaseController<T> {
 
     static async create(props: User, res: Response) {
-
-        if (!props.name || props.name === "") {
-            return res.status(400).json({ error: 'Missing name' });
-        }
-
         try {
-            const existingUser = await UserModel.findOne({ name });
+            const existingUser = await UserModel.findOne({ name: props.name });
             if (existingUser) {
                 return res.status(409).json({ error: 'User already exists' });
             }
 
-            const User = new UserModel(props);
+            const user = new UserModel(props);
+            await user.save();
 
-            await User.save();
-
-            return res.status(201).json(User);
+            return res.status(201).json(user);
         } catch (error: any) {
             console.error(error);
 
@@ -61,7 +49,7 @@ export class StaticUserController<T> {
         return res.json(companies);
     }
 
-    static async get(id: string, res: Response) {
+    static async get(id: mongoose.Types.ObjectId, res: Response) {
 
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ message: "Invalid ObjectID." });
@@ -75,3 +63,4 @@ export class StaticUserController<T> {
         return res.status(200).json(User);
     }
 }
+
