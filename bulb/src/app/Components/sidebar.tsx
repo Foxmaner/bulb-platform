@@ -10,7 +10,7 @@ export function Sidebar() {
     const pathname = usePathname();
     
     //Detta för att inte visa sideBar på Skapasidan, en sk fulfix.
-    if(pathname.includes("create")){
+    if(pathname.includes("/meetings/")){
         return <></>;
     }
 
@@ -53,5 +53,3 @@ export function Sidebar() {
         </div>
     );
 }
-
-

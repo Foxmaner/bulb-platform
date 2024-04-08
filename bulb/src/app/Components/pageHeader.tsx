@@ -25,7 +25,7 @@ export default function PageHeader({ userName }: { userName: string }) {
                     <Image src="/placeholder.jpg" alt="" height={122} width={400}></Image>
                 </div>
             </div>
-
+            
             <div className="flex gap-1 bg-white w-full">
                 <Button onClick={() => router.push("/meetings/create")} className="bg-white border-2 border-edge text-primaryText w-5 h-7 m-2">Skapa</Button>
                 <Button className="bg-white border-2 border-edge text-primaryText w-5 h-7 m-2">Företag</Button>
@@ -33,7 +33,6 @@ export default function PageHeader({ userName }: { userName: string }) {
                 <Button className="bg-white border-2 border-edge text-primaryText w-5 h-7 m-2">01</Button>
                 <Button className="bg-white border-2 border-edge text-primaryText w-5 h-7 m-2">Filter</Button>
             </div>
-
         </div>
     );
 }
