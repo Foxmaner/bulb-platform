@@ -13,5 +13,5 @@ import Utils from '../../../models/utils';
 
 @TestDecorators.describe("User tests")
 class UserTests {
-    
+        
 }
