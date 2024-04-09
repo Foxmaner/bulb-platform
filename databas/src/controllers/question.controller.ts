@@ -2,8 +2,8 @@ import { Request, Response } from 'express';
 
 
 
-export default class SectionController {
-    
+export default class QuestionController {
+
     static create(req: Request, res: Response) {
         
     }

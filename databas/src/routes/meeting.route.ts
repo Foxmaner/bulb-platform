@@ -6,30 +6,17 @@ const app: Express = express();
 const meetingRoutes: Router = Router();
 
 
+meetingRoutes.get('/', MeetingController.load)
 
-meetingRoutes.get('/', (req : Request, res : Response) => {
-   
-   res.json()
-}) 
+meetingRoutes.get('/:id', MeetingController.id)
 
-meetingRoutes.get('/:id', (req: Request, res: Response) => {
-   
-})
+meetingRoutes.delete('/delete/:id', MeetingController.delete)
 
-meetingRoutes.delete('/delete/:id', (req: Request, res: Response) => {
-    
-})
+meetingRoutes.post('/create', MeetingController.create)
 
-meetingRoutes.post('/create', (req: Request, res: Response) => {
-    
-})
+meetingRoutes.put('/edit/:id', MeetingController.edit)
 
-meetingRoutes.put('/edit/:id', (req: Request, res: Response) => {
-    
-})
+meetingRoutes.post('/edit/post', MeetingController.editPost)
 
-meetingRoutes.post('/edit/post', (req: Request, res: Response) => {
-    
-})
 
 export { meetingRoutes }

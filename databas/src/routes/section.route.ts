@@ -5,16 +5,11 @@ import SectionController from '../controllers/section.controller';
 const app: Express = express();
 const sectionRoutes: Router = Router();
 
-sectionRoutes.post('/create/:meetingId', (req: Request, res: Response) => {
+sectionRoutes.put('/create/:meetingId', SectionController.create)
 
-})
+sectionRoutes.delete('/delete/:id', SectionController.delete)
 
-sectionRoutes.delete('/delete/:id', (req: Request, res: Response) => {
+sectionRoutes.post('/edit/:id', SectionController.edit)
 
-})
-
-sectionRoutes.put('/edit/:id', (req: Request, res: Response) => {
-
-})
 
 export { sectionRoutes }
