@@ -1,23 +1,45 @@
-import { Schema, Document, ObjectId, model } from "mongoose";
+import { StaticTemplateController, MethodTemplateController } from "../dbControllers"
 
-import { Section } from "index";
+import BaseModel from "./base.model";
+
+import { Template } from "index";
+
+import Utils from "./utils";
 
 
-interface ISchema extends Document {
-    _id: ObjectId,
-    userID: ObjectId,
-    name: string,
-    sections: [Section],
-    companyAccess: ObjectId | null;
+class TemplateModel extends BaseModel<Template, typeof StaticTemplateController, typeof MethodTemplateController> {
+    constructor() {  
+        const companySchema = {
+            name: {
+                type: String,
+                validate: {
+                    validator: TemplateModel.nameValidator,
+                    message: (props: any) => `${props.value}'s length is not within the range [3,63]`
+                },
+                required: [true, "The meeting name is required."]
+            },
+            date: {
+                type: Date,
+                required: [true, "The creation date is required."]
+            },
+            mainDocumentSections: { type: [Utils.sectionSchema()], default: [] },
+            summaryDocumentSections: { type: {}, default: [] }
+        };
+        
+        super({
+            name: 'Template',
+            schema: companySchema,
+            staticMethods: StaticTemplateController,
+            methods: MethodTemplateController
+        });
+    }
+    
+    static nameValidator (v: string) {
+        const len = v.length;
+        return len > 2 && len < 64;
+    }
 }
 
-const SchemaMain = new Schema<ISchema>({
-    userID: Schema.Types.ObjectId,
-    name: String,
-    sections: [],
-    companyAccess: Schema.Types.ObjectId
-});
+const template = new TemplateModel().model;
 
-const ModelMain = model<ISchema>("Templates", SchemaMain);
-
-export { ModelMain as TemplateModel};
+export { template as TemplateModel };

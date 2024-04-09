@@ -25,9 +25,9 @@ class MeetingModel extends BaseModel<Meeting, typeof StaticMeetingController, ty
                 type: Date,
                 required: [true, "The creation date is required."]
             },
-            mainDocumentSections: { type: [Utils.SectionSchema()], default: [] },
+            mainDocumentSections: { type: [Utils.sectionSchema()], default: [] },
             summaryDocumentSections: { type: {}, default: [] },
-            meetingHistory: { type: [Utils.MeetingHistorySchema()], default: [] },
+            meetingHistory: { type: [Utils.meetingHistorySchema()], default: [] },
             members: { type: [MeetingModel.MemberSchema()], default: [] }
         };
         
