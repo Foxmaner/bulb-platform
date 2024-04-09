@@ -1,11 +1,13 @@
 import express, { Express, Request, Response, Router } from 'express';
 import { UserModel } from '../models';
+import AuthController from '../controllers/auth.controller'
 
 const app: Express = express();
-const router: Router = express.Router();
+const authRoutes: Router = Router();
 
-router.get('/', (req : Request, res : Response) => {
+authRoutes.get('/', AuthController.create)  
     
 
 
-}) 
+
+export { authRoutes }
