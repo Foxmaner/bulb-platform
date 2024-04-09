@@ -7,7 +7,7 @@ import { MockResponse } from 'node-mocks-http';
 import { TestDecorators } from "../../utils";
 
 
-@TestDecorators.describe("Company tests")
+@TestDecorators.describeModels("Company tests")
 class CompanyTests {
 
 	@TestDecorators.test("Create a company")

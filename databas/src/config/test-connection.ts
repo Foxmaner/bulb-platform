@@ -18,6 +18,9 @@ const connectDatabase = async () => {
 
 	const client = await mongoose.connect(uri);
 
+	process.env.TEST_ENV = "true";
+	process.env.MONGO_URI = uri;
+
 	client.connection.on("close", () => {
 		mongoServer.stop();
 	});
