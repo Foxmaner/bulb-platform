@@ -11,9 +11,9 @@ import {
     connectDatabase,
 } from "../config/test-connection";
 
-import app from "../app";
+import httpServer from "../app";
 
-import request from 'supertest';
+import { request, agent } from 'supertest';
 
 
 interface TestFnProps {
@@ -38,20 +38,31 @@ class TestDecorators {
             Reflect.defineMetadata("tests", tests, target);
         };
     }
-    
+
     static describeRoutes<T>(description: string) {
         return (constructor: new () => T) => {
             describe(description, () => {
                 let connection: typeof mongoose;
                 let req: any;
+                let server: any;
 
                 beforeAll(async () => {
                     connection = await connectDatabase();
-                    req = await request(app);
+
+                    const port = process.env.PORT;
+
+                    if (!port) {
+                        throw new Error("Port is not set in .env file");
+                    }
+
+                    server = httpServer.listen(process.env.PORT, () => {});
+                    req = agent(server)
                 });
 
                 afterAll(async () => {
                     await closeDatabase(connection);
+                    
+                    server.close();
                 });
 
                 beforeEach(async () => {

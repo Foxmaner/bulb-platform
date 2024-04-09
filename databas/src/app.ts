@@ -1,18 +1,15 @@
-import express, { Express, Request, Response } from "express";
-import dotenv from "dotenv";
-import { Server, Socket } from 'socket.io';
+import express, { Express } from "express";
+import { Server } from 'socket.io';
 import { connectionHandler } from "./socket";
 import cors from 'cors';
 import { createServer } from 'http';
 import verifyToken from "./middleware/authMiddleware";
-import {profile} from './tmp';
-//Import routes
-//import {meeting} from './routes/api/'
+import { profile } from './tmp';
 
-dotenv.config();
+import { exampleRoutes } from './routes';
+
 
 const app: Express = express();
-const port = process.env.PORT || 3000;
 
 const corsOrigin = "http://localhost:3000";
 
@@ -24,15 +21,13 @@ const io = new Server(httpServer, {
     }
 });
 
-verifyToken(profile.id_token);
-//app.use(verifyToken)
+app.use(() => verifyToken(profile.id_token))
 app.use(cors());
 
-
+// Routes
+app.use("/example", exampleRoutes)
 
 io.on('connection', connectionHandler);
 
-httpServer.listen(port, () => console.log(`server listening on port : ${port}`));
 
-
-export default app;
+export default httpServer;
