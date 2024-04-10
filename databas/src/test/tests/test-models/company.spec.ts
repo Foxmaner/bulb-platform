@@ -75,6 +75,3 @@ class CompanyTests {
 		expect(companiesAfter.length).toBe(0);
 	}
 }
-
-
-

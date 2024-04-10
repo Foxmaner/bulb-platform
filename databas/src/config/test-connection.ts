@@ -37,3 +37,4 @@ const clearDatabase = async (clearDatabase: typeof mongoose): Promise<void> => {
 };
 
 export { connectDatabase, closeDatabase, clearDatabase };
+

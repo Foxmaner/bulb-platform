@@ -63,3 +63,4 @@ export class StaticUserController<T> extends BaseController<T> {
         return res.status(200).json(User);
     }
 }
+
