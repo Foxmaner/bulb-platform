@@ -24,8 +24,7 @@ const io = new Server(httpServer, {
     }
 });
 
-verifyToken(profile.id_token);
-//app.use(verifyToken)
+//verifyToken(profile.id_token);
 app.use(cors());
 
 
