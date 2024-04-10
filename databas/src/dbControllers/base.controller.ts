@@ -12,9 +12,4 @@ export default class BaseController<T> {
     protected get model() {
         return this._model;
     }
-<<<<<<< HEAD
-
 }
-=======
-}
->>>>>>> refs/remotes/origin/backend-dev
