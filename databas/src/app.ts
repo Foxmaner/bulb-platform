@@ -4,16 +4,20 @@ import { connectionHandler } from "./socket";
 import cors from 'cors';
 import { createServer } from 'http';
 import verifyToken from "./middleware/authMiddleware";
-import { profile } from './tmp';
+
 
 import { authRoutes, exampleRoutes, 
         historyRoutes, imageRoutes, meetingRoutes, 
         paragraphRoutes, sectionRoutes, templateRoutes, 
         wordcloudRoutes } from './routes';
 
+import { connectDatabase } from "./config/connection";
+
 
 
 const app: Express = express();
+
+connectDatabase();
 
 const corsOrigin = "http://localhost:3000";
 
@@ -25,11 +29,14 @@ const io = new Server(httpServer, {
     }
 });
 
-app.use(() => verifyToken(profile.id_token))
+
 app.use(cors());
 
-// Routes
 app.use("/auth", authRoutes)
+
+app.use(verifyToken)
+
+// Routes
 app.use("/example", exampleRoutes)
 app.use("/history", historyRoutes)
 app.use("/image", imageRoutes)

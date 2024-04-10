@@ -2,7 +2,6 @@ import express, { Express, Request, Response, Router } from 'express';
 import SectionController from '../controllers/section.controller';
 
 
-const app: Express = express();
 const sectionRoutes: Router = Router();
 
 sectionRoutes.put('/create/:meetingId', SectionController.create)

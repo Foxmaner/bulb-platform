@@ -2,8 +2,6 @@ import express, { Express, Request, Response, Router } from 'express';
 import ParagraphController from '../controllers/paragraph.controller';
 
 
-const app: Express = express();
-
 const paragraphRoutes: Router = Router();
 
 

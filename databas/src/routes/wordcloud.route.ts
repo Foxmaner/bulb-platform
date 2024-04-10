@@ -1,7 +1,7 @@
 import express, { Express, Request, Response, Router } from 'express';
 import WordcloudController from '../controllers/wordcloud.controller';
 
-const app: Express = express();
+
 const wordcloudRoutes: Router = Router();
 
 

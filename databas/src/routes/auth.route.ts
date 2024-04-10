@@ -1,13 +1,13 @@
-import express, { Express, Request, Response, Router } from 'express';
-import { UserModel } from '../models';
+import { Router } from 'express';
 import AuthController from '../controllers/auth.controller'
 
-const app: Express = express();
+
 const authRoutes: Router = Router();
 
-authRoutes.get('/', AuthController.create)  
-    
 
+authRoutes.get('/signUp', AuthController.signUp)  
+    
+authRoutes.get('/signIn', AuthController.signIn) 
 
 
 export { authRoutes }

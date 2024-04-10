@@ -1,7 +1,7 @@
 import express, { Express, Request, Response, Router } from 'express';
 import TemplateController from '../controllers/template.controller';
 
-const app: Express = express();
+
 const templateRoutes: Router = Router();
 
 

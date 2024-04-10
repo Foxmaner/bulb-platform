@@ -2,7 +2,6 @@ import express, { Express, Request, Response, Router } from 'express';
 import { UserModel } from '../models';
 import MeetingController from '../controllers/meeting.controller';
 
-const app: Express = express();
 const meetingRoutes: Router = Router();
 
 
