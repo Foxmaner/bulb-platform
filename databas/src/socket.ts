@@ -4,6 +4,7 @@ import { isObjectBindingPattern } from 'typescript';
 import { Section } from 'index';
 import { response } from 'express';
 
+
 function connectionHandler(socket : Socket) : void {
     console.log(`User connected with ID: ${socket.id}`);
 

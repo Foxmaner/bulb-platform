@@ -1,15 +1,17 @@
 import { UserModel }  from '../../models';
-import { Request, Response } from 'express';
+
+import { response } from 'express'; 
 
 import mongoose from 'mongoose';
 
 import { User } from "index";
 import BaseController from '../base.controller';
 
+import { Response as res } from '../utils';
 
 export class StaticUserController<T> extends BaseController<T> {
 
-    static async create(props: User, res: Response) {
+    static async create(props: User) {
         try {
             const existingUser = await UserModel.findOne({ name: props.name });
             if (existingUser) {
@@ -27,7 +29,7 @@ export class StaticUserController<T> extends BaseController<T> {
         }
     }
 
-    static async delete(id: string, res: Response) {
+    static async delete(id: string) {
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ message: "Invalid ObjectID." });
         }
@@ -44,12 +46,12 @@ export class StaticUserController<T> extends BaseController<T> {
         }
     }
 
-    static async list(req: Request, res: Response) {
+    static async list() {
         const companies = await UserModel.find({});
-        return res.json(companies);
+        return res.status(200).json(companies);
     }
 
-    static async get(id: mongoose.Types.ObjectId, res: Response) {
+    static async get(id: mongoose.Types.ObjectId) {
 
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ message: "Invalid ObjectID." });
@@ -59,6 +61,20 @@ export class StaticUserController<T> extends BaseController<T> {
         if (!User) {
             return res.status(404).json({ error: 'User not found' });
         }
+
+        return res.status(200).json(User);
+    }
+
+    static async getByEmail(email: string) {
+        console.log('GET BY EMAIL', email);
+
+        const User = await UserModel.findOne({ email });
+        if (!User) {
+            console.log('User not found');
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        console.log('User found');
 
         return res.status(200).json(User);
     }

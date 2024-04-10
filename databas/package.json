@@ -5,6 +5,7 @@
 	"description": "databas",
 	"main": "",
 	"scripts": {
+		"start": "npm run build && node index.js",
 		"build": "tsc",
 		"lint": "eslint .",
 		"test": "jest"

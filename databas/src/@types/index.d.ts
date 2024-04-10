@@ -1,5 +1,11 @@
 declare module "index" {
 
+    declare namespace Express {
+        export interface Response {
+            respondWithMessage: (statusCode: number, message: string) => void;
+        }
+    }
+
     type Meeting = {
         name: string,
         progress?: number,

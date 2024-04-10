@@ -6,9 +6,11 @@ import { Member, Meeting } from "index";
 
 import { MeetingModel } from "../../models";
 
+import { Response as res } from "../utils";
+
 export class MethodUserController<T> extends BaseController<T> {
 
-    signIn (token: any, res: Response) {
+    signIn (token: any) {
         this.model.token = token;
 
         res.status(200).json({ token, message: "User signed in" });
@@ -55,7 +57,7 @@ export class MethodUserController<T> extends BaseController<T> {
         res.status(200).json({ message: "Access level changed" });
     }
 
-    async create(props: Meeting, res: Response) {
+    async createMeeting(props: Meeting, res: Response) {
         try {
             const Meeting = new MeetingModel(props);
             await Meeting.save();

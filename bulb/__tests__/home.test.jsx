@@ -6,7 +6,7 @@ describe('Page', () => {
   it('Render heading', () => {
     render(<Page />)
  
-    const heading = screen.getByText("Get started by editing")
+    const heading = screen.getByText("Welcome to nextJS!")
  
     expect(heading).toBeInTheDocument()
   })

@@ -3,9 +3,9 @@
 
 ### NextJS ###
 # dependencies
-*/node_modules
+databas/node_modules
+bulb/node_modules
 */dist
-
 /.pnp
 .pnp.js
 
