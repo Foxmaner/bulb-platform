@@ -2,12 +2,12 @@ import { ObjectId } from "mongoose";
 
 import { Response } from "express";
 
-import BaseController from "../base.controller";
+import BaseService from "../base.service";
 import { UserModel } from "../../models";
 import { Section } from "index";
 
 
-export class MethodMeetingController<T> extends BaseController<T> {
+export class MethodMeetingService<T> extends BaseService<T> {
 
     isMember (userID: ObjectId, res: Response) {
         if (!this.model.members.includes(userID)) {

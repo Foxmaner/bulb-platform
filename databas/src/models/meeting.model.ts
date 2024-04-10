@@ -1,5 +1,5 @@
 import { Schema } from "mongoose";
-import { MethodMeetingController, StaticMeetingController } from "../dbControllers"
+import { MethodMeetingService, StaticMeetingService } from "../services"
 
 import BaseModel from "./base.model";
 
@@ -8,7 +8,7 @@ import { Meeting } from "index";
 import Utils from "./utils";
 
 
-class MeetingModel extends BaseModel<Meeting, typeof StaticMeetingController, typeof MethodMeetingController> {
+class MeetingModel extends BaseModel<Meeting, typeof StaticMeetingService, typeof MethodMeetingService> {
     constructor() {  
         const companySchema = {
             name: {
@@ -34,8 +34,8 @@ class MeetingModel extends BaseModel<Meeting, typeof StaticMeetingController, ty
         super({
             name: 'Meeting',
             schema: companySchema,
-            staticMethods: StaticMeetingController,
-            methods: MethodMeetingController
+            staticMethods: StaticMeetingService,
+            methods: MethodMeetingService
         });
     }
     

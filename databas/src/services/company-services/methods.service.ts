@@ -1,8 +1,8 @@
 import { Response } from "express";
-import BaseController from "../base.controller";
+import BaseService from "../base.service";
 
 
-export class MethodCompanyController<T> extends BaseController<T> {
+export class MethodCompanyService<T> extends BaseService<T> {
 
     rename(newName: string, res: Response) {
         this.model.name = newName;

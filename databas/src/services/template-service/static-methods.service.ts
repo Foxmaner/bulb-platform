@@ -4,10 +4,10 @@ import { Request, Response } from 'express';
 
 import { TemplateModel } from '../../models';
 
-import BaseController from '../base.controller';
+import BaseService from '../base.service';
 
 
-export class StaticTemplateController<T> extends BaseController<T> {
+export class StaticTemplateService<T> extends BaseService<T> {
     static async delete(id: ObjectId, res: Response) {
         try {
             const result = await TemplateModel.deleteOne({ _id: id });

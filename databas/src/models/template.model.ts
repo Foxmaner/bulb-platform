@@ -1,4 +1,4 @@
-import { StaticTemplateController, MethodTemplateController } from "../dbControllers"
+import { StaticTemplateService, MethodTemplateService } from "../services"
 
 import BaseModel from "./base.model";
 
@@ -7,7 +7,7 @@ import { Template } from "index";
 import Utils from "./utils";
 
 
-class TemplateModel extends BaseModel<Template, typeof StaticTemplateController, typeof MethodTemplateController> {
+class TemplateModel extends BaseModel<Template, typeof StaticTemplateService, typeof MethodTemplateService> {
     constructor() {  
         const companySchema = {
             name: {
@@ -29,8 +29,8 @@ class TemplateModel extends BaseModel<Template, typeof StaticTemplateController,
         super({
             name: 'Template',
             schema: companySchema,
-            staticMethods: StaticTemplateController,
-            methods: MethodTemplateController
+            staticMethods: StaticTemplateService,
+            methods: MethodTemplateService
         });
     }
     

@@ -5,8 +5,7 @@ export default class BaseController<T> {
     private _model: any;
 
     constructor(model: new () => T) {
-        this._model = getModelForClass(model);
-        
+        this._model = getModelForClass(model);   
     }
 
     protected get model() {

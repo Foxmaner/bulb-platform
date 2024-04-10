@@ -1,15 +1,14 @@
 import { UserModel }  from '../../models';
 
-import { response } from 'express'; 
 
 import mongoose from 'mongoose';
 
 import { User } from "index";
-import BaseController from '../base.controller';
+import BaseService from '../base.service';
 
 import { Response as res } from '../utils';
 
-export class StaticUserController<T> extends BaseController<T> {
+export class StaticUserService<T> extends BaseService<T> {
 
     static async create(props: User) {
         try {

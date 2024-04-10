@@ -1,14 +1,14 @@
 import { ObjectId, Schema } from "mongoose";
 
 import { Response } from "express";
-import BaseController from "../base.controller";
+import BaseService from "../base.service";
 import { Member, Meeting } from "index";
 
 import { MeetingModel } from "../../models";
 
 import { Response as res } from "../utils";
 
-export class MethodUserController<T> extends BaseController<T> {
+export class MethodUserService<T> extends BaseService<T> {
 
     signIn (token: any) {
         this.model.token = token;

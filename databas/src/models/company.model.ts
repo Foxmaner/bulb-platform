@@ -1,11 +1,11 @@
-import { MethodCompanyController, StaticCompanyController } from "../dbControllers"
+import { MethodCompanyService, StaticCompanyService } from "../services"
 
 import BaseModel from "./base.model";
 
 import { Company } from "index";
 
 
-class CompanyModel extends BaseModel<Company, typeof StaticCompanyController, typeof MethodCompanyController> {
+class CompanyModel extends BaseModel<Company, typeof StaticCompanyService, typeof MethodCompanyService> {
     constructor() {  
         const companySchema = {
             name: {
@@ -22,8 +22,8 @@ class CompanyModel extends BaseModel<Company, typeof StaticCompanyController, ty
         super({
             name: 'Company',
             schema: companySchema,
-            staticMethods: StaticCompanyController,
-            methods: MethodCompanyController
+            staticMethods: StaticCompanyService,
+            methods: MethodCompanyService
         });
     }
     

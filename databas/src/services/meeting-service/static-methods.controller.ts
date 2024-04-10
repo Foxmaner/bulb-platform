@@ -3,12 +3,11 @@ import { Request, Response } from 'express';
 
 import mongoose, { ObjectId } from 'mongoose';
 
-import { Meeting } from "index";
-import BaseController from '../base.controller';
+import BaseService from '../base.service';
 
 
 
-export class StaticMeetingController<T> extends BaseController<T> {
+export class StaticMeetingService<T> extends BaseService<T> {
 
     static async delete(id: ObjectId, res: Response) {
         try {

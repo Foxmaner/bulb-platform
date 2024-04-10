@@ -4,10 +4,10 @@ import { Response } from 'express';
 import mongoose from 'mongoose';
 
 import { Company } from "index";
-import BaseController from '../base.controller';
+import BaseService from '../base.service';
 
 
-export class StaticCompanyController<T> extends BaseController<T> {
+export class StaticCompanyService<T> extends BaseService<T> {
 
     static async create(props: Company, res: Response) {
 
