@@ -8,11 +8,10 @@ import { MockResponse } from 'node-mocks-http';
 
 import { TestDecorators } from "../../utils";
 import { Meeting, Member } from 'index';
-import { MemberAccessLevel } from 'accessLevels';
 import Utils from '../../../models/utils';
 
 
-@TestDecorators.describeModels("Meeting tests")
+@TestDecorators.describe("Meeting tests")
 class MeetingTests {
 
 	/**
@@ -192,6 +191,3 @@ class MeetingTests {
 		
 	}
 }
-
-
-

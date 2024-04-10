@@ -17,6 +17,13 @@ declare module "index" {
         members?: [Member]
     }
 
+    type Template = {
+        name: string,
+        date: Date,
+        mainDocumentSections?: [Section],
+        summaryDocumentSections?: [Section, Integer]
+    }
+
     type User = {
         oAuthID: string,
         oAuthProvider: "google" | "github",

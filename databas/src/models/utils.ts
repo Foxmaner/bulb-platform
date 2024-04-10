@@ -2,12 +2,14 @@ import { Schema } from "mongoose";
 
 import { MemberAccessLevel, UserAccessLevel } from "accessLevels" 
 
+import { MemberAccessLevel, UserAccessLevel } from "accessLevels" 
+
 export default class Utils {
     static integerValidator (v: number) {
         return Number.isInteger(v);
     }
 
-    static SectionSchema () {
+    static sectionSchema () {
         return {
             section: {
                 id: {
@@ -21,12 +23,12 @@ export default class Utils {
                 },
                 title: String,
                 contains: {},
-                sectionHistory: [this.SectionHistorySchema()]
+                sectionHistory: [this.sectionHistorySchema()]
             }
         }
     }
 
-    static SectionHistorySchema() {
+    static sectionHistorySchema() {
         return {
             sectionHistory: {
                 userID: Schema.Types.ObjectId,
@@ -37,7 +39,7 @@ export default class Utils {
         }
     }
 
-    static MeetingHistorySchema() {
+    static meetingHistorySchema() {
         return {
             meetingHistory: {
                 userID: Schema.Types.ObjectId,
