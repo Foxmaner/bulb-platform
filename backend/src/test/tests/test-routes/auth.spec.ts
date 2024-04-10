@@ -1,12 +1,34 @@
 import { TestDecorators } from "../../utils";
 
+import jwt from "jsonwebtoken";
+
 
 @TestDecorators.describeRoutes("Auth tests")
 class ExempelTest {
-    @TestDecorators.test("Sign up")
-    async createExample(req: any) {
-        const response = req.post("/auth/signUp");
 
-        response.expect(200);
+    static async generateFakeToken() {
+
+        if (process.env.JWT_SECRET === undefined) {
+            throw new Error("JWT_SECRET not defined");
+        }
+
+        const token = jwt.sign({}, process.env.JWT_SECRET)
+
+        return token;
+    }
+
+    @TestDecorators.test("signIn")
+    async createExample(req: any) {
+        const testToken = await ExempelTest.generateFakeToken();
+
+        const resp = await req.post("/auth/signIn")
+        .set('Authorization', `Bearer ${testToken}`)
+        .send({
+          email: "test@gmail.com",
+          name: "test user"
+        });
+
+
+        expect(resp.statusCode).toBe(200);
     }
 }

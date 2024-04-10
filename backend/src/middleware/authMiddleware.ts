@@ -1,17 +1,18 @@
 import { NextFunction, Request, Response } from "express";
 import * as jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import jwksClient, { JwksClient } from "jwks-rsa";
+
+import { getSession } from "next-auth/react"
+
+import jwksClient from "jwks-rsa";
+
 
 dotenv.config();
-
-
-// const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || "wrong";
-
 
 const client = jwksClient({
     jwksUri: "https://www.googleapis.com/oauth2/v3/certs",
 });
+
 
 function getKey(header, callback) {
     client.getSigningKey(header.kid, (err, key) => {
@@ -24,12 +25,15 @@ function getKey(header, callback) {
     });
 }
 
-export default function verifyToken(
+async function verifyGoogleSignUp(
     req: Request,
     res: Response,
     next: NextFunction
 ) {
-    const token = req.headers["authorization"]?.split(" ")[1];
+    const token = req.headers["authorization"]?.split(" ")[1].trim();
+    
+    console.log("Token:", token);
+    
     if (!token) {
         return res.status(403).send("A token is required for authentication");
     }
@@ -39,8 +43,25 @@ export default function verifyToken(
             console.log("Token cannot be verified", err);
             return res.status(401).send("Invalid Token");
         }
-        console.log("Decoded JWT:", decoded);
 
         next();
     });
 }
+
+async function verifyToken(
+    req: Request,
+    res: Response,
+    next: NextFunction
+) {
+
+    const token = await getSession({ req });
+
+    if (!token) {
+        return res.status(403).send("A token is required for authentication");
+    }
+
+    next();
+}
+
+export { verifyGoogleSignUp, verifyToken }
+

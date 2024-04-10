@@ -88,16 +88,21 @@ export class StaticUserService<T> extends BaseService<T> {
         return res.status(200).json(User);
     }
 
-    static async getByEmail(email: string) {
-        console.log('GET BY EMAIL', email);
-
-        const User = await UserModel.findOne({ email });
+    static async getByOAuthID(oAuthID: string) {
+        const User = await UserModel.findOne({ oAuthID });
         if (!User) {
-            console.log('User not found');
             return res.status(404).json({ error: 'User not found' });
         }
 
-        console.log('User found');
+        return res.status(200).json(User);
+    }
+
+    static async getByEmail(email: string) {
+
+        const User = await UserModel.findOne({ email });
+        if (!User) {
+            return res.status(404).json({ error: 'User not found' });
+        }
 
         return res.status(200).json(User);
     }

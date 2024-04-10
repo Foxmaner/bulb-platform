@@ -1,11 +1,11 @@
-export * from "./meeting-controller/static-methods.controller";
-export * from "./meeting-controller/methods.controller";
+export * from "./meeting-service/static-methods.service";
+export * from "./meeting-service/methods.service";
 
-export * from "./user-controller/static-methods.controller";
-export * from "./user-controller/methods.controller";
+export * from "./user-service/static-methods.service";
+export * from "./user-service/methods.service";
 
-export * from "./company-controller/static-methods.controller";
-export * from "./company-controller/methods.controller";
+export * from "./company-service/static-methods.service";
+export * from "./company-service/methods.service";
 
-export * from "./template-controller/static-methods.controller";
-export * from "./template-controller/methods.controller";
+export * from "./template-service/static-methods.service";
+export * from "./template-service/methods.service";

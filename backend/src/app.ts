@@ -1,9 +1,9 @@
-import express, { Express } from "express";
+ import express, { Express } from "express";
 import { Server } from 'socket.io';
 import { connectionHandler } from "./socket";
 import cors from 'cors';
 import { createServer } from 'http';
-import verifyToken from "./middleware/authMiddleware";
+import {verifyToken} from "./middleware/authMiddleware";
 
 import { authRoutes, exampleRoutes, 
         historyRoutes, imageRoutes, meetingRoutes, 
@@ -39,13 +39,13 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Public routes
+
 app.use("/auth", authRoutes);
 
 // Middleware that verifies the token
 app.use(verifyToken);
 
-// Protected routes
+
 app.use("/example", exampleRoutes);
 app.use("/history", historyRoutes);
 app.use("/image", imageRoutes);

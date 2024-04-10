@@ -1,5 +1,7 @@
-import { Request, Response, response } from 'express';
+import { Request, Response } from 'express';
+
 import { UserModel } from '../models';
+
 
 
 export default class ExampleController {
@@ -16,44 +18,29 @@ export default class ExampleController {
 
     }
 
-    static async signIn(req: Request, res: Response) {
-        const authHeader = req.headers.authorization;
-        let token = '';
+    static async signUp(req: Request, res: Response) {
     
-        if (authHeader && authHeader.startsWith('Bearer ')) {
-            token = authHeader.substring(7); // Extract the token part
-        }
+        const resp = await UserModel.getByOAuthID(req.body.id);
 
-        if (!token) {
-            console.log('Token not found');
-            res.status(401).json({message: 'Token not found'});
-            return;
-        }
-
-        const email = req.body.email;
-    
-        const resp = await UserModel.getByEmail(email);
-
+        console.log('body:', req.body);
 
         if (resp.statusCode === 200) {
-            const user = resp.body;
-
-            user.signIn(token);
-
-            res.status(200).json({message: 'Sign in successful'});
+            res.status(200).json({message: 'Already exists'});
         } else if (resp.statusCode === 404) {
 
-            await UserModel.create({ 
+            const userCreatResp = await UserModel.create({ 
                 oAuthID: req.body.id,
                 oAuthProvider: "google",
-                name: req.body.name,
-                token: token
+                name: req.body.name
             });
 
-            res.status(200).json({ message: 'User created' });
-            return;
+            if (userCreatResp.statusCode === 201) {
+                res.status(201).json({ message: 'User created' });
+            } else {
+                return res.status(userCreatResp.statusCode).json(userCreatResp.json());
+            }
+        } else {
+            res.status(500);
         }
-        
-        //res.status(response.statusCode).json();
     }
 }

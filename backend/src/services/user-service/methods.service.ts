@@ -8,6 +8,7 @@ import { MeetingModel } from "../../models";
 
 import { Response as res } from "../utils.service";
 
+
 export class MethodUserService<T> extends BaseService<T> {
 
     signIn (token: string) {

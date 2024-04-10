@@ -3,7 +3,7 @@
 
 ### NextJS ###
 # dependencies
-backend/node_modules
+*/node_modules
 bulb/node_modules
 */dist
 /.pnp

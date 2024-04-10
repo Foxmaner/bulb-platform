@@ -15,7 +15,7 @@ const connectDatabase = async () => {
 	if (!uri) {
 		throw new Error("Mongo URI is not provided");
 	}
-
+	
 	const client = await mongoose.connect(uri);
 
 	process.env.TEST_ENV = "true";

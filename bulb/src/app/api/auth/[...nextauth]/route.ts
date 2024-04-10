@@ -1,67 +1,91 @@
 import NextAuth from "next-auth/next";
-import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
+
 
 
 export const authOptions = {
     providers: [
-        GithubProvider({
-            clientId: process.env.GITHUB_CLIENT_ID ?? "",
-            clientSecret: process.env.GITHUB_CLIENT_SECRET ?? "",
-        }),
         GoogleProvider({
-            clientId: process.env.GOOGLE_CLIENT_ID ?? "",
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? ""
-        })
+            clientId: process.env.GOOGLE_CLIENT_ID as string,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+        }),
     ],
+    secret: process.env.NEXTAUTH_SECRET,
     callbacks: {
-        async signOut({ token, session }: any) {
-            token = {};
-            session = {};
+        async signIn({ user, account, profile  }: any) {
+            console.log("User signed in", user, account, profile);
 
-            return {}
-        },
-        async signIn({ user, account, profile }: any) {
-            /*if (account.provider === "google") {
-                return profile.email_verified
-            }*/
-
-            console.log('SIGN IN', profile);
-
-            const res = await fetch("http://localhost:3001/auth/callback/google/signIn", {
+            const res = await fetch("http://localhost:3001/auth/callback/google/signUp", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${account.accessToken}` 
+                    'Authorization': `Bearer ${account.id_token}` 
                 },
-                body: JSON.stringify({
-                    email: profile.email,
-                    id: user.id,
-                    name: user.name
-                })
+                body: JSON.stringify(user),
             });
             
-            console.log('SIGN IN', res);
 
-            /*
-            const data = await res.json();
-
-            console.log('SIGN IN', data);
-
-            if (data.success) {
-
-                return true;
-            } else {
+            if (!res.ok) {
+                console.error('Error with sign in response:', res.statusText);
                 return false;
-            }*/
+            }
+
+            /*if (!dbUser?.data?.user) return false
+
+            */
+
+            //console.log("User signed in", dbUser);
 
             return true;
-        }
+        },
+        
     },
-    pages: {
-        signIn: "/auth/signIn",
-    }
 };
+
+
+/*async jwt({ token, user, trigger, session }: any) {
+if (trigger === "update") {
+    return {
+        ...token,
+        ...session.user,
+    };
+}
+
+/*const isTokenExpired =
+    token.accessTokenExp &&
+    checkTokenExpiry(token.accessTokenExp as number);
+
+const isRefreshTokenExpired =
+    token.refreshTokenExp &&
+    checkTokenExpiry(token.refreshTokenExp as number);
+
+if (token.refreshTokenExp && isRefreshTokenExpired) {
+    return {
+    ...token,
+    error: "refresh-token-expired",
+    };
+}
+
+if (isTokenExpired) {
+    const newTokens = await refreshToken(token.refreshToken as string);
+
+    token.accessToken = newTokens.accessToken;
+    token.accessTokenExp = newTokens.expiresIn;
+    token.refreshTokenExp = newTokens.expiresIn;
+
+    return {
+    ...token,
+    ...user,
+    };
+}
+
+return { ...token, ...user };
+},
+async session({ token, session }: any) {
+session.user = token as any;
+
+return session;
+}*/
 
 export const handler = NextAuth(authOptions);
 

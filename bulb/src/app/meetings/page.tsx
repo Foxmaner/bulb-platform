@@ -1,7 +1,16 @@
-import PageHeader from "../components/pageHeader"
-import Link from "next/link"
+'use client';
+
+import React, { useEffect, useState } from 'react';
+
+
+import PageHeader from "../Components/pageHeader";
+import { useSession } from 'next-auth/react';
+
 
 export default function meetingPage() {
+    const { data: session, status } = useSession();
+
+
     return (
         <div className='flex-col w-full bg-white'>
             <PageHeader userName="Eskil" />

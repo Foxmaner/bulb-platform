@@ -1,4 +1,3 @@
-import { Response } from "express";
 import BaseService from "../base.service";
 
 import { Response as res } from "../utils.service";

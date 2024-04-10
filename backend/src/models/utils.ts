@@ -2,7 +2,6 @@ import { Schema } from "mongoose";
 
 import { MemberAccessLevel, UserAccessLevel } from "accessLevels" 
 
-import { MemberAccessLevel, UserAccessLevel } from "accessLevels" 
 
 export default class Utils {
     static integerValidator (v: number) {

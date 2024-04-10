@@ -1,5 +1,3 @@
-import httpMocks from "node-mocks-http";
-
 import mongoose from "mongoose";
 
 import "reflect-metadata";
@@ -46,14 +44,16 @@ class TestDecorators {
                 beforeAll(async () => {
                     connection = await connectDatabase();
 
-                    const port = process.env.PORT;
+                    const port = process.env.PORT || 3000;
 
                     if (!port) {
                         throw new Error("Port is not set in .env file");
-                    }
+                    } 
+
+                    console.log(`Port is set to ${port}`);
 
                     server = httpServer.listen(process.env.PORT, () => {});
-                    req = agent(server)
+                    req = agent(server);
                 });
 
                 afterAll(async () => {

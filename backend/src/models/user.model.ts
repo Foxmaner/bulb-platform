@@ -6,10 +6,10 @@ import Utils from "./utils";
 
 import { User } from "index";
 
-import { MethodUserController, StaticUserController } from "../services";
+import { MethodUserService, StaticUserService } from "../services";
 
 
-class UserModel extends BaseModel<User, typeof StaticUserController, typeof MethodUserController> {
+class UserModel extends BaseModel<User, typeof StaticUserService, typeof MethodUserService> {
     constructor() {
 
         const userSchema = {
@@ -48,8 +48,8 @@ class UserModel extends BaseModel<User, typeof StaticUserController, typeof Meth
         super({
             name: 'User',
             schema: userSchema,
-            staticMethods: StaticUserController,
-            methods: MethodUserController
+            staticMethods: StaticUserService,
+            methods: MethodUserService
         });
     }
 

@@ -9,7 +9,8 @@ module.exports = {
         "**/test/tests/**/?(*.)+(spec).ts"
     ],
     collectCoverageFrom: [
-        "./**/*.controller.ts"
+        "./**/*.controller.ts",
+        "./**/*.service.ts",
     ],
 
     collectCoverage: true,

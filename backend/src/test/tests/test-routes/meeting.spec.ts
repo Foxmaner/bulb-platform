@@ -1,5 +1,5 @@
 import { CompanyModel, UserModel } from "../../../models";
-import { MockResponse } from 'node-mocks-http';
+
 import { TestDecorators } from "../../utils";
 import { User } from 'index';
 import {expect} from '@jest/globals';
@@ -17,8 +17,7 @@ class MeetingRouteTests {
             name: "Gustav",
             accesLevel: 1,
             companyID: "12",
-            accessibleMeetings: [123], 
-            token: "asd.ass.asd"
+            accessibleMeetings: [123]
         }
         const resp = await UserModel.create(params);
 
