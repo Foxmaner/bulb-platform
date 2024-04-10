@@ -26,7 +26,7 @@ const io = new Server(httpServer, {
     }
 });
 
-//verifyToken(profile.id_token);
+
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

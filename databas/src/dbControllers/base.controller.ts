@@ -12,4 +12,5 @@ export default class BaseController<T> {
     protected get model() {
         return this._model;
     }
+
 }
