@@ -23,7 +23,6 @@ export class StaticCompanyController<T> extends BaseController<T> {
 
             return res.status(201).json(company);
         } catch (error: any) {
-            console.error(error);
 
             return res.status(500).json({ error: error.message });
         }

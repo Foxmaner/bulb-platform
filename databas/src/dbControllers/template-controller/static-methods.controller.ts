@@ -1,26 +1,20 @@
-import { MeetingModel, UserModel }  from '../../models';
-import { Request, Response } from 'express';
-
 import mongoose, { ObjectId } from 'mongoose';
 
-import { Meeting } from "index";
+import { Request, Response } from 'express';
+
+import { TemplateModel } from '../../models';
+
 import BaseController from '../base.controller';
 
 
-
-export class StaticMeetingController<T> extends BaseController<T> {
-
+export class StaticTemplateController<T> extends BaseController<T> {
     static async delete(id: ObjectId, res: Response) {
         try {
-            const result = await MeetingModel.deleteOne({ _id: id });
+            const result = await TemplateModel.deleteOne({ _id: id });
             if (result.deletedCount === 0) {
                 return res.status(404).json({ message: "Object not found." });
             }
-            const result2 = await UserModel.updateMany(
-                { accessibleMeetings: { id } },
-                { $unset: { "accessibleMeetings$[element]": "" } }
-            )
-            // TODO CONRAD!!!!
+            
             return res.status(200).json({ message: "Object removed." });
         } catch (err) {
             return res.status(500).json({ message: "An error occurred." });
@@ -28,7 +22,7 @@ export class StaticMeetingController<T> extends BaseController<T> {
     }
 
     static async list(req: Request, res: Response) {
-        const meetings = await MeetingModel.find({});
+        const meetings = await TemplateModel.find({});
         return res.json(meetings);
     }
 
@@ -38,7 +32,7 @@ export class StaticMeetingController<T> extends BaseController<T> {
             return res.status(400).json({ message: "Invalid ObjectID." });
         }
 
-        const meeting = await MeetingModel.findById(id);
+        const meeting = await TemplateModel.findById(id);
         if (!meeting) {
             return res.status(404).json({ error: 'Meeting not found' });
         }
@@ -46,4 +40,3 @@ export class StaticMeetingController<T> extends BaseController<T> {
         return res.status(200).json(meeting);
     }
 }
-
