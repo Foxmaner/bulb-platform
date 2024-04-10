@@ -7,6 +7,10 @@ dotenv.config();
 export async function connectDatabase() {
     try {
 
+        if (process.env.TEST) {
+            return;
+        }
+
         const uri = process.env.DB_URI as string;
 
         if (!uri) {

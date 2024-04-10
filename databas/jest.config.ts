@@ -16,5 +16,6 @@ module.exports = {
     coverageDirectory: "./coverage",
 
     clearMocks: true,
-    watchPathIgnorePatterns: ['globalConfig']
+    watchPathIgnorePatterns: ['globalConfig'],
+    setupFiles: ['./src/test/setEnv.ts'],
 };

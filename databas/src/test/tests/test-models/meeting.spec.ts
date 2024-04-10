@@ -12,7 +12,7 @@ import { MemberAccessLevel } from 'accessLevels';
 import Utils from '../../../models/utils';
 
 
-@TestDecorators.describe("Meeting tests")
+@TestDecorators.describeModels("Meeting tests")
 class MeetingTests {
 
 	/**

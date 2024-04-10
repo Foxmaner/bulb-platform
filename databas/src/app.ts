@@ -1,18 +1,23 @@
-import express, { Express, Request, Response } from "express";
-import dotenv from "dotenv";
-import { Server, Socket } from 'socket.io';
+import express, { Express } from "express";
+import { Server } from 'socket.io';
 import { connectionHandler } from "./socket";
 import cors from 'cors';
 import { createServer } from 'http';
 import verifyToken from "./middleware/authMiddleware";
-import {profile} from './tmp';
-//Import routes
-//import {meeting} from './routes/api/'
 
-dotenv.config();
+
+import { authRoutes, exampleRoutes, 
+        historyRoutes, imageRoutes, meetingRoutes, 
+        paragraphRoutes, sectionRoutes, templateRoutes, 
+        wordcloudRoutes } from './routes';
+
+import { connectDatabase } from "./config/connection";
+
+
 
 const app: Express = express();
-const port = process.env.PORT || 3000;
+
+connectDatabase();
 
 const corsOrigin = "http://localhost:3000";
 
@@ -27,9 +32,22 @@ const io = new Server(httpServer, {
 //verifyToken(profile.id_token);
 app.use(cors());
 
+app.use("/auth", authRoutes)
+
+app.use(verifyToken)
+
+// Routes
+app.use("/example", exampleRoutes)
+app.use("/history", historyRoutes)
+app.use("/image", imageRoutes)
+app.use("/meeting", meetingRoutes)
+app.use("/paragraph", paragraphRoutes)
+app.use("/section", sectionRoutes)
+app.use("/template", templateRoutes)
+app.use("/wordcloud", wordcloudRoutes)
 
 
 io.on('connection', connectionHandler);
 
-httpServer.listen(port, () => console.log(`server listening on port : ${port}`));
 
+export default httpServer;
