@@ -1,7 +1,7 @@
 import { TestDecorators } from "../../utils";
 
 
-@TestDecorators.describe("User tests")
+@TestDecorators.describeModels("User tests")
 class UserTests {
         
 }

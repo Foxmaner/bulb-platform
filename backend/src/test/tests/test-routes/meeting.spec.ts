@@ -7,10 +7,10 @@ import {expect} from '@jest/globals';
 import { Response } from "express";
 
 
-@TestDecorators.describe("Testing meeting route")
+@TestDecorators.describeRoutes("Testing meeting route")
 class MeetingRouteTests {
 
-    static async createUser(res: MockResponse<Response>){
+    static async createUser(){
         const params : User = {
             oAuthID: "1234",
             oAuthProvider: "google",
@@ -20,15 +20,15 @@ class MeetingRouteTests {
             accessibleMeetings: [123], 
             token: "asd.ass.asd"
         }
-        await UserModel.create(params, res);
-        const user = await res._getData;
-        expect(res.statusCode).toBe(201);
-        return user;
+        const resp = await UserModel.create(params);
+
+        expect(resp.statusCode).toBe(201);
+        return resp.body.user;
     }
 
     @TestDecorators.test("Get all meetings for a user")
-    async getMeetings(res: MockResponse<Response>) {    
-        const user = await MeetingRouteTests.createUser(res); 
+    async getMeetings() {    
+        const user = await MeetingRouteTests.createUser(); 
         
         const response: any = await fetch('http://localhost:5000/meetings/', {
             method: 'GET',
@@ -44,12 +44,12 @@ class MeetingRouteTests {
     }
 
     @TestDecorators.test("Create a meeting")
-    async createMeeting(res: MockResponse<Response>) {
+    async createMeeting() {
         
      }
 
     @TestDecorators.test("Delete invalid meeting")
-    async deleteInvalidMeeting(res: MockResponse<Response>) {
+    async deleteInvalidMeeting() {
         
     }
 

@@ -1,8 +1,4 @@
-import { Response } from 'express';
-
 import { CompanyModel } from "../../../models";
-
-import { MockResponse } from 'node-mocks-http';
 
 import { TestDecorators } from "../../utils";
 
@@ -11,13 +7,13 @@ import { TestDecorators } from "../../utils";
 class CompanyTests {
 
 	@TestDecorators.test("Create a company")
-	async createCompany(res: MockResponse<Response>) {
+	async createCompany() {
 		
 		const params = {
 			name: "Company 1"
 		};
 		
-		await CompanyModel.create(params, res);
+		const resp = await CompanyModel.create(params);
 
 		// Check if the company was created
 		const companies = await CompanyModel.find();
@@ -27,12 +23,12 @@ class CompanyTests {
 	}
 
 	@TestDecorators.test("Create a company with invalid input")
-	async createInvalidCompany(res: MockResponse<Response>) {
+	async createInvalidCompany() {
 		const params = {
 			name: ""
 		};
 		
-		await CompanyModel.create(params, res);
+		await CompanyModel.create(params);
 
 		// Check if the company was created
 		const companies = await CompanyModel.find();
@@ -41,13 +37,13 @@ class CompanyTests {
 	}
 	
 	@TestDecorators.test("Create a company with same name")
-	async createTwoCompanyWithSameName(res: MockResponse<Response>) {
+	async createTwoCompanyWithSameName() {
 		const params = {
 			name: "Company 1"
 		};
 		
-		await CompanyModel.create(params, res);
-		await CompanyModel.create(params, res);
+		await CompanyModel.create(params);
+		await CompanyModel.create(params);
 
 		// Check if only one company was created
 		const companies = await CompanyModel.find();
@@ -57,18 +53,18 @@ class CompanyTests {
 	}
 
 	@TestDecorators.test("Delete a company")
-	async deleteCompany(res: MockResponse<Response>) {
+	async deleteCompany() {
 		const createParams = {
 			name: "Company 1"
 		};
 		
-		await CompanyModel.create(createParams, res);
+		await CompanyModel.create(createParams);
 		
 		const companiesBefore = await CompanyModel.find();
 		
 		const id = companiesBefore[0]._id.toString();
 
-		await CompanyModel.delete(id, res);
+		await CompanyModel.delete(id);
 
 		// Check if the company was deleted
 		const companiesAfter = await CompanyModel.find();

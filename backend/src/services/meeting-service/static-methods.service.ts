@@ -5,11 +5,12 @@ import mongoose, { ObjectId } from 'mongoose';
 
 import BaseService from '../base.service';
 
+import { Response as res } from '../utils.service';
 
 
 export class StaticMeetingService<T> extends BaseService<T> {
 
-    static async delete(id: ObjectId, res: Response) {
+    static async delete(id: ObjectId) {
         try {
             const result = await MeetingModel.deleteOne({ _id: id });
             if (result.deletedCount === 0) {
@@ -26,12 +27,12 @@ export class StaticMeetingService<T> extends BaseService<T> {
         }
     }
 
-    static async list(req: Request, res: Response) {
+    static async list() {
         const meetings = await MeetingModel.find({});
-        return res.json(meetings);
+        return res.status(200).json(meetings);
     }
 
-    static async get(id: string, res: Response) {
+    static async get(id: string) {
 
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ message: "Invalid ObjectID." });

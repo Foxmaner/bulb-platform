@@ -6,16 +6,40 @@ import mongoose from 'mongoose';
 import { User } from "index";
 import BaseService from '../base.service';
 
-import { Response as res } from '../utils';
+import { Response as res } from '../utils.service';
 
 export class StaticUserService<T> extends BaseService<T> {
 
     static async create(props: User) {
+
         try {
             const existingUser = await UserModel.findOne({ name: props.name });
             if (existingUser) {
                 return res.status(409).json({ error: 'User already exists' });
             }
+
+            props.accesLevel = 0;
+
+            const user = new UserModel(props);
+            await user.save();
+
+            return res.status(201).json(user);
+        } catch (error: any) {
+            console.error(error);
+
+            return res.status(500).json({ error: error.message });
+        }
+    }
+
+    static async createAdmin(props: User) {
+
+        try {
+            const existingUser = await UserModel.findOne({ name: props.name });
+            if (existingUser) {
+                return res.status(409).json({ error: 'User already exists' });
+            }
+
+            props.accesLevel = 1;
 
             const user = new UserModel(props);
             await user.save();

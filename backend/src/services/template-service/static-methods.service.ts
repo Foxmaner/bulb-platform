@@ -6,9 +6,11 @@ import { TemplateModel } from '../../models';
 
 import BaseService from '../base.service';
 
+import { Response as res } from '../utils.service';
+
 
 export class StaticTemplateService<T> extends BaseService<T> {
-    static async delete(id: ObjectId, res: Response) {
+    static async delete(id: ObjectId) {
         try {
             const result = await TemplateModel.deleteOne({ _id: id });
             if (result.deletedCount === 0) {
@@ -21,12 +23,13 @@ export class StaticTemplateService<T> extends BaseService<T> {
         }
     }
 
-    static async list(req: Request, res: Response) {
+    static async list() {
         const meetings = await TemplateModel.find({});
-        return res.json(meetings);
+        
+        return res.status(200).json(meetings);
     }
 
-    static async get(id: string, res: Response) {
+    static async get(id: string) {
 
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ message: "Invalid ObjectID." });

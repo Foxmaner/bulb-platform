@@ -6,10 +6,12 @@ import mongoose from 'mongoose';
 import { Company } from "index";
 import BaseService from '../base.service';
 
+import { Response as res } from '../utils.service';
+
 
 export class StaticCompanyService<T> extends BaseService<T> {
 
-    static async create(props: Company, res: Response) {
+    static async create(props: Company) {
 
         try {
             const existingCompany = await CompanyModel.findOne({ name: props.name });
@@ -18,7 +20,6 @@ export class StaticCompanyService<T> extends BaseService<T> {
             }
 
             const company = new CompanyModel(props);
-
             await company.save();
 
             return res.status(201).json(company);
@@ -28,7 +29,7 @@ export class StaticCompanyService<T> extends BaseService<T> {
         }
     }
 
-    static async delete(id: string, res: Response) {
+    static async delete(id: string) {
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ message: "Invalid ObjectID." });
         }
@@ -45,12 +46,12 @@ export class StaticCompanyService<T> extends BaseService<T> {
         }
     }
 
-    static async list(res: Response) {
+    static async list() {
         const companies = await CompanyModel.find({});
-        return res.json(companies);
+        return res.status(200).json(companies);
     }
 
-    static async get(id: string, res: Response) {
+    static async get(id: string) {
 
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ message: "Invalid ObjectID." });

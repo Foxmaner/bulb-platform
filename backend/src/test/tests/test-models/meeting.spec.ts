@@ -1,41 +1,33 @@
-import { Response } from 'express';
-import httpMocks from "node-mocks-http";
-
 import { MeetingModel, CompanyModel, UserModel } from "../../../models";
 
 import { ObjectId } from 'mongoose';
-import { MockResponse } from 'node-mocks-http';
 
 import { TestDecorators } from "../../utils";
 import { Meeting, Member } from 'index';
 import Utils from '../../../models/utils';
 
 
-@TestDecorators.describe("Meeting tests")
+@TestDecorators.describeModels("Meeting tests")
 class MeetingTests {
 
 	/**
 	 * Utils
 	 */
 	static async createCompany(name: string) {
-		const res = httpMocks.createResponse();
-
 		const companyParams = {
 			name: name
 		}
 
-		await CompanyModel.create(companyParams, res);
+		const resp = await CompanyModel.create(companyParams);
 		
 		const company = await CompanyModel.findOne({ name: "Company 1" });
 
-		expect(res.statusCode).toBe(201);
+		expect(resp.statusCode).toBe(201);
 
 		return company;
 	}
 
 	static async createUser(name: string, companyID?: ObjectId) {
-		const res = httpMocks.createResponse();
-
 		const userParams = {
 			oAuthID: "123",
 			oAuthProvider: "google",
@@ -44,18 +36,16 @@ class MeetingTests {
 			companyID
 		}
 
-		await UserModel.create(userParams, res);
+		const resp = await UserModel.create(userParams);
 		
 		const user = await UserModel.findOne({ name });
 
-		expect(res.statusCode).toBe(201);
+		expect(resp.statusCode).toBe(201);
 
 		return user;
 	}
 
 	static async createMeeting(name: string, creator: ObjectId, date: Date) {
-		const res = httpMocks.createResponse();
-
 		const meetingParams = {
 			name,
 			progress: 0,
@@ -67,7 +57,7 @@ class MeetingTests {
 			members: []
 		}
 
-		await MeetingModel.create(meetingParams, res);
+		const resp =await MeetingModel.create(meetingParams);
 		
 		const meeting = await MeetingModel.findOne({ name });
 
@@ -76,7 +66,7 @@ class MeetingTests {
             accessLevel: Utils.memberAccessLevelTypeConverter("owner")
 		})
 
-		expect(res.statusCode).toBe(201);
+		expect(resp.statusCode).toBe(201);
 
 		return meeting;
 	}
@@ -85,7 +75,7 @@ class MeetingTests {
 	 * Create Meeting
 	 */
 	@TestDecorators.test("Create a meeting")
-	async createMeeting(res: MockResponse<Response>) {
+	async createMeeting() {
 		// Setup
 		const company = await MeetingTests.createCompany("Company 1");
 		const user = await MeetingTests.createUser("User 1", company._id);
@@ -103,26 +93,26 @@ class MeetingTests {
 			members: [ owner ]
 		};
 
-		await MeetingModel.create(params, res);
+		const resp = await MeetingModel.create(params);
 
 		// Check if the company was created
 		const meetings = await MeetingModel.find();
 
-		expect(res.statusCode).toBe(201);
+		expect(resp.statusCode).toBe(201);
 		expect(meetings.length).toBe(1);
 		expect(meetings[0].owner).toStrictEqual(user._id);
 		expect(meetings[0].name).toBe("Meeting 1");
 	}
 
 	@TestDecorators.test("Create a meeting with invalid input")
-	async createInvalidMeeting(res: MockResponse<Response>) {
+	async createInvalidMeeting() {
 		const params = {
 			name: "Meeting 1",
 			owner: "",
 			date: new Date()
 		};
 		
-		await MeetingModel.create(params, res);
+		const resp = await MeetingModel.create(params);
 
 		// Check if the company was created
 		const meetings = await MeetingModel.find();
@@ -134,7 +124,7 @@ class MeetingTests {
 	 * Delete Meeting
 	 */
 	@TestDecorators.test("Delete Meeting")
-	async deleteMeeting(res: MockResponse<Response>) {
+	async deleteMeeting() {
 		// Setup
 		const company = await MeetingTests.createCompany("Company 1");
 		const user = await MeetingTests.createUser("User 1", company._id);
@@ -145,12 +135,12 @@ class MeetingTests {
 			date: new Date()
 		};
 		
-		await MeetingModel.create(params, res);
+		await MeetingModel.create(params);
 
 		const meeting = await MeetingModel.findOne({ name: "Meeting 1" });
 
 		// Delete Meeting
-		await MeetingModel.delete(meeting._id, res);
+		await MeetingModel.delete(meeting._id);
 
 		// Check if the company was created
 		const meetings = await MeetingModel.find();
@@ -159,7 +149,7 @@ class MeetingTests {
 	}
 
 	@TestDecorators.test("Delete None Existing Meeting")
-	async deleteNoneExistingMeeting(res: MockResponse<Response>) {
+	async deleteNoneExistingMeeting() {
 		// Setup
 		const company = await MeetingTests.createCompany("Company 1");
 		const user = await MeetingTests.createUser("User 1", company._id);
@@ -170,15 +160,15 @@ class MeetingTests {
 			date: new Date()
 		};
 		
-		await MeetingModel.create(params, res);
+		await MeetingModel.create(params);
 
 		// Delete Meeting
-		await MeetingModel.delete("123", res);
+		const resp = await MeetingModel.delete("123");
 
 		// Check no meeting was created
 		const meetings = await MeetingModel.find();
 
-		expect(res.statusCode).toBe(404);
+		expect(resp.statusCode).toBe(404);
 		expect(meetings.length).toBe(1);
 	}
 
@@ -186,7 +176,7 @@ class MeetingTests {
 	 * Get meetings a user participates in
 	 */
 	@TestDecorators.test("Get user's meetings")
-	async GetUserMeetings(res: MockResponse<Response>) {
+	async GetUserMeetings() {
 		const user1 = await MeetingTests.createUser("User 1");
 		
 	}

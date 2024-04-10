@@ -6,10 +6,12 @@ import BaseService from "../base.service";
 import { UserModel } from "../../models";
 import { Section } from "index";
 
+import { Response as res } from "../utils.service";
+
 
 export class MethodMeetingService<T> extends BaseService<T> {
 
-    isMember (userID: ObjectId, res: Response) {
+    isMember (userID: ObjectId) {
         if (!this.model.members.includes(userID)) {
             return res.status(403).json({ message: "User is not a member of this meeting" });
         }
@@ -17,30 +19,30 @@ export class MethodMeetingService<T> extends BaseService<T> {
         return res.status(200);
     }
 
-    async setToDocument (res: Response) {
+    async setToDocument () {
         this.model.completed = true;
 
-        res.status(200);
+        return res.status(200);
     }
 
-    async setToMeeting (res: Response) {
+    async setToMeeting () {
         this.model.completed = false;
 
-        res.status(200);
+        return res.status(200);
     }
 
-    async addMember (userID: ObjectId, res: Response) {
+    async addMember (userID: ObjectId) {
         this.model.members.push(userID);
 
-        const user = await UserModel.get(userID, res);
+        const resp = await UserModel.get(userID);
 
-        if (res.statusCode !== 200) {
+        if (resp.statusCode !== 200) {
             return res.status(404).json({ message: "User not found" });
         }
 
-        user.addMeeting(this.model._id, res);
+        resp.user.addMeeting(this.model._id, res);
 
-        if (res.statusCode !== 200) {
+        if (resp.statusCode !== 200) {
             return res.status(500).json({ message: "Error adding meeting to user" });
         }
 
@@ -50,7 +52,7 @@ export class MethodMeetingService<T> extends BaseService<T> {
     /**
      * Section
      */
-    addSection (res: Response) {
+    addSection () {
         const newSection: Section = {
             id: this.model.sections.length,
             title: "Untitled Section",
@@ -63,7 +65,7 @@ export class MethodMeetingService<T> extends BaseService<T> {
         return res.status(200).json(newSection);
     }
 
-    removeSection (sectionID: number, res: Response) {
+    removeSection (sectionID: number) {
         const newSections = this.model.sections.filter((section: Section) => section.id !== sectionID);
         this.model.sections = newSections;
 
@@ -73,7 +75,7 @@ export class MethodMeetingService<T> extends BaseService<T> {
     /**
      * Paragraph
      */
-    addParagaraph (sectionID: number, res: Response) {
+    addParagaraph (sectionID: number) {
         const newParagraph = {
             id: this.model.sections[sectionID].contains.length,
             paragraphHistory: [],
@@ -85,7 +87,7 @@ export class MethodMeetingService<T> extends BaseService<T> {
         return res.status(200).json(newParagraph);
     }
 
-    removeParagraph (sectionID: number, paragraphID: number, res: Response) {
+    removeParagraph (sectionID: number, paragraphID: number) {
         const newParagraphs = this.model.sections[sectionID].contains.filter((paragraph: any) => paragraph.id !== paragraphID);
         this.model.sections[sectionID].contains = newParagraphs;
 
@@ -95,7 +97,7 @@ export class MethodMeetingService<T> extends BaseService<T> {
     /**
      * Paragraph
     */
-    addQuestion (sectionID: number, res: Response) {
+    addQuestion (sectionID: number) {
         const newQuestion = {
             id: this.model.sections[sectionID].contains.length,
             questionHistory: [],
@@ -107,44 +109,44 @@ export class MethodMeetingService<T> extends BaseService<T> {
         return res.status(200).json(newQuestion);
     }
 
-    removeQuestion (sectionID: number, questionID: number, res: Response) {
+    removeQuestion (sectionID: number, questionID: number) {
         const newQuestions = this.model.sections[sectionID].contains.filter((question: any) => question.id !== questionID);
         this.model.sections[sectionID].contains = newQuestions;
 
         return res.status(200).json({ message: "Question removed" });
     }
 
-    addAnswer (sectionID: number, questionID: number, answer: any, res: Response) {
+    addAnswer (sectionID: number, questionID: number, answer: any) {
         this.model.sections[sectionID].contains[questionID].responses.push(answer);
 
         return res.status(200).json({ message: "Answer added" });
     }
 
-    removeAnswer (sectionID: number, questionID: number, answerID: number, res: Response) {
+    removeAnswer (sectionID: number, questionID: number, answerID: number) {
         const newAnswers = this.model.sections[sectionID].contains[questionID].responses.filter((answer: any) => answer.id !== answerID);
         this.model.sections[sectionID].contains[questionID].responses = newAnswers;
 
         return res.status(200).json({ message: "Answer removed" });
     }
 
-    async addComment (sectionID: number, paragraphID: number, comment: any, res: Response) {
+    async addComment (sectionID: number, paragraphID: number, comment: any) {
         this.model.sections[sectionID].contains[paragraphID].comments.push(comment);
 
         return res.status(200).json({ message: "Comment added" });
     }
 
-    async removeComment (sectionID: number, paragraphID: number, commentID: number, res: Response) {
+    async removeComment (sectionID: number, paragraphID: number, commentID: number) {
         const newComments = this.model.sections[sectionID].contains[paragraphID].comments.filter((comment: any) => comment.id !== commentID);
         this.model.sections[sectionID].contains[paragraphID].comments = newComments;
 
         return res.status(200).json({ message: "Comment removed" });
     }
 
-    async addImage (sectionID: number, res: Response) {
+    async addImage (sectionID: number) {
         // Add image
     }
 
-    async removeImage (sectionID: number, imageID: number, res: Response) {
+    async removeImage (sectionID: number, imageID: number) {
         // Remove image
     }
 }

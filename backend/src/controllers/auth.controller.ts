@@ -1,6 +1,5 @@
 import { Request, Response, response } from 'express';
 import { UserModel } from '../models';
-import { UserAccessLevel } from 'accessLevels';
 
 
 export default class ExampleController {
@@ -32,10 +31,9 @@ export default class ExampleController {
         }
 
         const email = req.body.email;
-        
+    
         const resp = await UserModel.getByEmail(email);
 
-        console.log(resp);
 
         if (resp.statusCode === 200) {
             const user = resp.body;
@@ -45,23 +43,12 @@ export default class ExampleController {
             res.status(200).json({message: 'Sign in successful'});
         } else if (resp.statusCode === 404) {
 
-            /*
-                oAuthID: string;
-                oAuthProvider: "google" | "github";
-                name: string;
-                accesLevel: Integer;
-                companyID: ObjectId;
-                accessibleMeetings: [ObjectId];
-                token: string;
-            */
-
             await UserModel.create({ 
                 oAuthID: req.body.id,
                 oAuthProvider: "google",
                 name: req.body.name,
-                accesLevel: 0,
                 token: token
-            }, response);
+            });
 
             res.status(200).json({ message: 'User created' });
             return;
