@@ -1,5 +1,8 @@
 import mongoose from "mongoose";
 
+import { google, Auth } from "googleapis";
+
+
 import "reflect-metadata";
 
 import {
@@ -116,6 +119,17 @@ class TestDecorators {
                 });
             });
         };
+    }
+}
+
+export class GoogleAuthService {
+    oauthClient: Auth.OAuth2Client;
+    constructor(
+    ) {
+        const clientID = process.env.GOOGLE_AUTH_CLIENT_ID;
+        const clientSecret = process.env.GOOGLE_AUTH_CLIENT_SECRET;
+        
+        this.oauthClient = new google.auth.OAuth2(clientID, clientSecret);
     }
 }
 

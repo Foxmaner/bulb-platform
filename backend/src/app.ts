@@ -39,12 +39,11 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-
-app.use("/auth", authRoutes);
-
-// Middleware that verifies the token
 app.use(verifyToken);
 
+//app.use("/auth", authRoutes);
+
+// Middleware that verifies the token
 
 app.use("/example", exampleRoutes);
 app.use("/history", historyRoutes);

@@ -8,7 +8,7 @@ const historyRoutes: Router = Router();
 historyRoutes.get('/:id', HistoryController.id)
 
 // vet inte vad addressen är
-historyRoutes.put('/create/:id', HistoryController.create)
+historyRoutes.post('/create', HistoryController.create)
 
 
 export { historyRoutes }
