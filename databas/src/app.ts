@@ -4,7 +4,7 @@ import { connectionHandler } from "./socket";
 import cors from 'cors';
 import { createServer } from 'http';
 import verifyToken from "./middleware/authMiddleware";
-
+import bodyParser from "body-parser";
 
 import { authRoutes, exampleRoutes, 
         historyRoutes, imageRoutes, meetingRoutes, 
@@ -12,7 +12,6 @@ import { authRoutes, exampleRoutes,
         wordcloudRoutes } from './routes';
 
 import { connectDatabase } from "./config/connection";
-
 
 
 const app: Express = express();
@@ -32,9 +31,15 @@ const io = new Server(httpServer, {
 //verifyToken(profile.id_token);
 app.use(cors());
 
-app.use("/auth", authRoutes)
+//app.use("/auth", authRoutes)
 
-app.use(verifyToken)
+//app.use(verifyToken)
+
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }));
+
+// parse application/json
+app.use(bodyParser.json());
 
 // Routes
 app.use("/example", exampleRoutes)

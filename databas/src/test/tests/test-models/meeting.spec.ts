@@ -1,17 +1,14 @@
 import { Response } from 'express';
 import httpMocks from "node-mocks-http";
-
 import { MeetingModel, CompanyModel, UserModel } from "../../../models";
-
 import { ObjectId } from 'mongoose';
 import { MockResponse } from 'node-mocks-http';
-
 import { TestDecorators } from "../../utils";
 import { Meeting, Member } from 'index';
 import Utils from '../../../models/utils';
 
 
-@TestDecorators.describe("Meeting tests")
+@TestDecorators.describeModels("Meeting tests")
 class MeetingTests {
 
 	/**
