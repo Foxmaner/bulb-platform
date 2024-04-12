@@ -99,10 +99,6 @@ export function Sidebar() {
       {/* Actionbar */}
       <div>
         <button className="text-gray-500 items-center flex w-full mx-1">
-<<<<<<< HEAD
-
-=======
->>>>>>> c02d620 (småändringar i sidebaren)
           {" "}
           <BsFillInfoCircleFill color="grey" /> Info
         </button>
