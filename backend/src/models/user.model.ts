@@ -15,7 +15,8 @@ class UserModel extends BaseModel<User, typeof StaticUserService, typeof MethodU
         const userSchema = {
             oAuthID: {
                 type: String,
-                required: true
+                required: true,
+                unique: true
             },
             oAuthProvider: {
                 type: String,
@@ -28,7 +29,6 @@ class UserModel extends BaseModel<User, typeof StaticUserService, typeof MethodU
             accesLevel: {
                 type: Number,
                 required: true,
-                unique: true,
                 validate: {
                     validator: Utils.integerValidator,
                     message: "{VALUE} is not an integer value"

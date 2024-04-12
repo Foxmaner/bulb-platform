@@ -6,8 +6,7 @@ dotenv.config();
 
 export async function connectDatabase() {
     try {
-
-        if (process.env.TEST) {
+        if (process.env.NODE_ENV === "test") {
             return;
         }
 

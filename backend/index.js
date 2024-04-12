@@ -4,6 +4,8 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const port = process.env.PORT || 3001;
+const db_uri = process.env.DB_URI;
 
+process.env.NODE_ENV = 'dev';
 
-app.httpServer.listen(port, () => console.log(`server listening on port : ${port}`));
+app.run(db_uri).listen(port, () => console.log(`server listening on port : ${port}`));

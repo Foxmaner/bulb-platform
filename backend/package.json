@@ -8,7 +8,7 @@
 		"start": "npm run build && node index.js",
 		"build": "tsc",
 		"lint": "eslint .",
-		"test": "jest"
+		"test": "jest --no-cache  --detectOpenHandles --runInBand --forceExit"
 	},
 	"license": "GPL-3.0-only",
 	"dependencies": {
@@ -43,9 +43,11 @@
 		"googleapis": "^134.0.0",
 		"jest": "^29.7.0",
 		"mongodb-memory-server": "^9.1.8",
+		"passport-local": "^1.0.0",
 		"reflect-metadata": "^0.2.2",
 		"ts-jest": "^29.1.2",
 		"typescript": "^5.4.4",
-		"typescript-eslint": "^7.4.0"
+		"typescript-eslint": "^7.4.0",
+		"uuid": "^9.0.1"
 	}
 }

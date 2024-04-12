@@ -22,8 +22,6 @@ export default class ExampleController {
     
         const resp = await UserModel.getByOAuthID(req.body.id);
 
-        console.log('body:', req.body);
-
         if (resp.statusCode === 200) {
             res.status(200).json({message: 'Already exists'});
         } else if (resp.statusCode === 404) {

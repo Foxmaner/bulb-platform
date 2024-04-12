@@ -1,6 +1,6 @@
 import type { NextRequest } from 'next/server';
-import { getSession } from 'next-auth/react';
 import { NextResponse } from 'next/server';
+
 
 const routes = [
     '/documents',
@@ -20,7 +20,6 @@ export async function middleware(req: NextRequest) {
     const pathname = req.nextUrl.pathname.toLocaleLowerCase();
 
     if (!routes.some(route => pathname.startsWith(route))){
-        console.log(pathname);
         return NextResponse.next();
     }
 

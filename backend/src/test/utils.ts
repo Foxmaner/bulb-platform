@@ -11,7 +11,7 @@ import {
     connectDatabase,
 } from "../config/test-connection";
 
-//import { httpServer } from "../app";
+import { run } from "../app";
 
 import { agent } from 'supertest';
 
@@ -42,27 +42,29 @@ class TestDecorators {
             describe(description, () => {
                 let connection: typeof mongoose;
                 let req: any;
-                let server: any;
+                let close: any;
 
                 beforeAll(async () => {
-                    connection = await connectDatabase();
+                    const { client, uri } = await connectDatabase();
+                    connection = client;
 
                     const port = process.env.PORT || 3000;
 
-                    if (!port) {
-                        throw new Error("Port is not set in .env file");
-                    } 
+                    console.log(`Testing Port is set to ${port}`);
 
-                    console.log(`Port is set to ${port}`);
-
-                    //server = httpServer.listen(process.env.PORT, () => {});
-                    req = agent(server);
+                    const { httpServer, closeServer } = run(uri);
+                    close = closeServer;
+                    
+                    httpServer.listen(process.env.PORT, () => {});
+                    req = agent(httpServer);
+                    
                 });
 
                 afterAll(async () => {
                     await closeDatabase(connection);
-                    
-                    server.close();
+                    await new Promise<void>((resolve) => setTimeout(() => resolve(), 500)); // avoid jest open handle error
+
+                    await close();
                 });
 
                 beforeEach(async () => {
@@ -92,7 +94,8 @@ class TestDecorators {
                 let connection: typeof mongoose;
 
                 beforeAll(async () => {
-                    connection = await connectDatabase();
+                    const { client, uri } = await connectDatabase();
+                    connection = client;
                 });
 
                 afterAll(async () => {
