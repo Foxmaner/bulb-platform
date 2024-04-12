@@ -23,7 +23,6 @@ export default class RequestApi {
     }
 
     static requestApi(method: string, props: IRequestProps): Promise<Response> {
-
         const body = props.body ?? {}
         const header = props.header ?? {}
 

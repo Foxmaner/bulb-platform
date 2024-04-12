@@ -1,6 +1,8 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
+import { parse } from 'cookie';
+
 
 const routes = [
     '/documents',
@@ -16,6 +18,9 @@ const protectedRoutes = [
 ];
 
 export async function middleware(req: NextRequest) {
+    const cookieHeader = req.headers.get("cookie") || '';
+
+    const connectSid = parse(cookieHeader)['connect.sid'];
 
     const pathname = req.nextUrl.pathname.toLocaleLowerCase();
 
@@ -23,11 +28,12 @@ export async function middleware(req: NextRequest) {
         return NextResponse.next();
     }
 
-    const response = await fetch('http://localhost:3001/verify', {
+    const response = await fetch('http://localhost:3001/history/create', {
         method: 'POST',
         credentials: 'include',
         headers: {
             'Content-Type': 'application/json',
+            'Cookie': `connect.sid=${connectSid}`
         }
     })
 

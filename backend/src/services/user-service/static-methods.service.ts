@@ -12,6 +12,7 @@ export class StaticUserService<T> extends BaseService<T> {
 
     static async findOrCreate(props: User) {
         try {
+            console.log("PROPS", props);
 
             const existingUser = await UserModel.findOne({ oAuthID: props.oAuthID });
             if (existingUser) {

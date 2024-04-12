@@ -8,4 +8,6 @@ const db_uri = process.env.DB_URI;
 
 process.env.NODE_ENV = 'dev';
 
-app.run(db_uri).listen(port, () => console.log(`server listening on port : ${port}`));
+const { httpServer } = app.run(db_uri)
+
+httpServer.listen(port, () => console.log(`server listening on port : ${port}`));
