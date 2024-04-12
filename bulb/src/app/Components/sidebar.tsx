@@ -12,15 +12,20 @@ import { Switch } from "@nextui-org/react";
 import sidebarImg from "../../../public/sidbarImg.svg";
 
 export function Sidebar() {
-    const pathname = usePathname();
-    
-    //Detta för att inte visa sideBar på Skapasidan, en sk fulfix.
-    if(pathname.includes("/meetings/")){
-        return <></>;
-    }
+  const pathname = usePathname();
+
+  //Detta för att inte visa sideBar på Skapasidan, en sk fulfix.
+  if (pathname.includes("/meetings/")) {
+    return <></>;
+  }
 
   //Detta för att inte visa sideBar på Skapasidan, en sk fulfix.
   if (pathname.includes("create")) {
+    return <></>;
+  }
+
+  //Detta för att inte visa sideBar på Hemsidan, en sk fulfix.
+  if (pathname === "/") {
     return <></>;
   }
 
