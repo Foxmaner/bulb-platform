@@ -10,6 +10,30 @@ import { Response as res } from '../utils.service';
 
 export class StaticUserService<T> extends BaseService<T> {
 
+    static async findOrCreate(props: User) {
+        try {
+
+            const existingUser = await UserModel.findOne({ oAuthID: props.oAuthID });
+            if (existingUser) {
+                return res.status(200).json({ user: existingUser });
+            }
+
+            const user = new UserModel({
+                oAuthID: props.oAuthID,
+                oAuthProvider: props.oAuthProvider,
+                name: props.name,
+                accesLevel: 0
+            });
+            await user.save();
+
+            return res.status(200).json({ user });
+        } catch (error: any) {
+            console.error(error);
+
+            return res.status(500).json({ error: error.message });
+        }
+    }
+
     static async create(props: User) {
 
         try {

@@ -1,4 +1,4 @@
-import SignInButton from "@/app/components/SignInBtn";
+import SignInButton from "@/app/Components/SignInBtn";
 
 
 const SignInPage = () => {

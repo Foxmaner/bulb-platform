@@ -57,7 +57,7 @@ class MeetingTests {
 			members: []
 		}
 
-		const resp =await MeetingModel.create(meetingParams);
+		const resp = await MeetingModel.create(meetingParams);
 		
 		const meeting = await MeetingModel.findOne({ name });
 

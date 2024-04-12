@@ -6,8 +6,7 @@ import { Inter } from "next/font/google";
 import { Providers } from "./providers";
 import { getServerSession } from "next-auth";
 
-import SessionProvider from "./components/SessionProvider";
-import Sidebar from "./components/sidebar";
+import Sidebar from "./Components/sidebar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,7 +28,6 @@ export default async function RootLayout({
 
 		<html lang="en">
 			<body className={inter.className}>
-				<SessionProvider basePath="http://localhost:3000/api/auth" session={session}>
 
 					<Providers>
 						<div className="flex">
@@ -38,7 +36,7 @@ export default async function RootLayout({
 							{children}
 						</div>
 					</Providers>
-				</SessionProvider>
+
 			</body>
 		</html>
 

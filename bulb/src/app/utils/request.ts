@@ -27,19 +27,14 @@ export default class RequestApi {
         const body = props.body ?? {}
         const header = props.header ?? {}
 
-        return fetch('/api/proxy', { 
-            method: "POST", 
+        return fetch(`http://localhost:3001${props.url}`, { 
+            method, 
+            credentials: 'include',
             headers: {
+                ...header,
                 'Content-Type': 'application/json'
             }, 
-            body: JSON.stringify({
-                url: props.url,
-                options: {
-                    method: method,
-                    header,
-                    body: body
-                }
-            })
+            body: JSON.stringify(body)
         });
     }
 }

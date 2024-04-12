@@ -11,7 +11,7 @@ import {
     connectDatabase,
 } from "../config/test-connection";
 
-import { httpServer } from "../app";
+//import { httpServer } from "../app";
 
 import { agent } from 'supertest';
 
@@ -55,7 +55,7 @@ class TestDecorators {
 
                     console.log(`Port is set to ${port}`);
 
-                    server = httpServer.listen(process.env.PORT, () => {});
+                    //server = httpServer.listen(process.env.PORT, () => {});
                     req = agent(server);
                 });
 

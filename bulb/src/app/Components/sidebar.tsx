@@ -14,10 +14,9 @@ import { Switch } from "@nextui-org/react";
 
 export default function Sidebar() {
     const pathname = usePathname();
-    const { data: session } = useSession();
     
     //Detta för att inte visa sideBar på Skapasidan, en sk fulfix.
-    if(pathname.includes("create") || !session){
+    if(pathname.includes("create")){
         return <></>;
     }
 

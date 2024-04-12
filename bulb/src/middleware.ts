@@ -2,8 +2,12 @@ import type { NextRequest } from 'next/server';
 import { getSession } from 'next-auth/react';
 import { NextResponse } from 'next/server';
 
-import { getToken } from 'next-auth/jwt';
-
+const routes = [
+    '/documents',
+    '/templates',
+    '/meetings',
+    '/auth/signin'
+]
 
 const protectedRoutes = [
     '/documents',
@@ -12,19 +16,30 @@ const protectedRoutes = [
 ];
 
 export async function middleware(req: NextRequest) {
-    const requestForNextAuth = {
-        headers: {
-            cookie: req.headers.get('cookie') ?? undefined,
-        }, 
-    };
-
-    const session = await getSession({ req: requestForNextAuth });
 
     const pathname = req.nextUrl.pathname.toLocaleLowerCase();
 
-    if (session) {
-        if (pathname.startsWith('/auth/signIn')) {
-            return NextResponse.redirect(new URL('/document', req.nextUrl.origin));
+    if (!routes.some(route => pathname.startsWith(route))){
+        console.log(pathname);
+        return NextResponse.next();
+    }
+
+    const response = await fetch('http://localhost:3001/verify', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+
+    let authorized = false;
+    if (response.status === 200) {
+        authorized = true;
+    }
+
+    if (authorized) {
+        if (pathname === '/auth/signin') {
+            return NextResponse.redirect(new URL('/meetings', req.nextUrl.origin));
         }
 
         return NextResponse.next();
@@ -36,3 +51,4 @@ export async function middleware(req: NextRequest) {
 
     return NextResponse.next();
 }
+

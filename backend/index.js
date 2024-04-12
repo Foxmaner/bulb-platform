@@ -1,4 +1,4 @@
-const httpServer = require('./dist/app');
+const app = require('./dist/app');
 const dotenv = require('dotenv');
 
 dotenv.config();
@@ -6,4 +6,4 @@ dotenv.config();
 const port = process.env.PORT || 3001;
 
 
-httpServer.httpServer.listen(port, () => console.log(`server listening on port : ${port}`));
+app.httpServer.listen(port, () => console.log(`server listening on port : ${port}`));
