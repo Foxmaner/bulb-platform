@@ -1,6 +1,11 @@
-import QRCode from "react-qr-code"
+
+import QRCodeWindow from "../../../components/qrCode";
+
 export default function Page({ params }: { params: { id: string } }) {
     return (
-    <QRCode className="w-full" value={params.id} />
+     <div className="w-screen h-screen">
+          <QRCodeWindow qrData={params.id} />
+     </div> 
+    
     )
   }
