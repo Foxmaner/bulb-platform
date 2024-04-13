@@ -27,8 +27,9 @@ const protectedRoutes = [
 
 export async function middleware(req: NextRequest) {
     const cookieHeader = req.headers.get("cookie") || '';
-
-    const connectSid = parse(cookieHeader)['connect.sid'];
+    const cookies = parse(cookieHeader);
+    const connectSid = cookies['connect.sid'];
+    const csrfToken = cookies['XSRF-TOKEN']; // Retrieve CSRF token from cookies
 
     const pathname = req.nextUrl.pathname.toLocaleLowerCase();
 
@@ -36,16 +37,20 @@ export async function middleware(req: NextRequest) {
         return NextResponse.next();
     }
 
+    console.log(csrfToken);
+
     let authorized = false;
-        if (connectSid) {
-        const response = await fetch('http://localhost:3001/history/create', {
+    if (connectSid && csrfToken) { // Check if both connect.sid and CSRF token exist
+        const response = await fetch('http://localhost:3001/verify', {
             method: 'POST',
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
-                'Cookie': `connect.sid=${connectSid}`
-            }
-        })
+                'Cookie': `connect.sid=${connectSid}`,
+                'XSRF-TOKEN': csrfToken // Include CSRF token in the request headers
+            },
+            body: JSON.stringify({ _csrf: csrfToken })
+        });
         
         if (response.status === 200) {
             authorized = true;

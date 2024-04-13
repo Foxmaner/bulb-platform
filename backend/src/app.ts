@@ -3,13 +3,13 @@ import { Server } from "socket.io";
 import { connectionHandler } from "./socket";
 import { createServer } from "http";
 
-import { Strategy as GoogleStrategy, Profile } from "passport-google-oauth20";
 
 import cors from "cors";
 import session from "express-session";
 import cookieParser from "cookie-parser";
 import MongoStore from "connect-mongo";
 import passport from "passport";
+import csrf from "csurf";
 
 import { setupPassport } from "./config/passport-setup";
 
@@ -56,6 +56,7 @@ const run = (DB_URI: string) => {
         next();
     });
 
+   
     app.use(
         session({
             secret: ["secret123"],
@@ -79,7 +80,20 @@ const run = (DB_URI: string) => {
     app.use(passport.initialize());
     app.use(passport.session());
 
+    //app.use(csrf({ cookie: true }));
+    /*app.use(function (req: any, res, next) {
+        res.cookie('XSRF-TOKEN', req.csrfToken());
+        res.locals.csrfToken = req.csrfToken();
+        next();
+    });*/
+
     app.use("/auth", authRoutes);
+
+    app.use(function (req: any, res: any, next) {
+        res.locals.currentUser = req.user;
+        res.locals.session = req.session;
+        next();
+    });
 
     const verifySession = (req: any, res: any, next: any) => {
         if (req.isAuthenticated()) {
@@ -90,6 +104,11 @@ const run = (DB_URI: string) => {
     };
 
     app.use(verifySession);
+
+    /*app.use((req: any, res, next) => {
+        res.locals.csrfToken = req.csrfToken();
+        next();
+    });*/
 
     // Middleware that verifies the token
     app.post("/verify", (req, res) => {
