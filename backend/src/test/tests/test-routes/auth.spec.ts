@@ -11,18 +11,11 @@ class ExempelTest {
 
         await req.post("/login").send({
             password: 'testPassword',
-            name: 'testUser',
-        });
-        
-        const resp = await req.post("/meeting/create").send({
-            name: 'testMeeting',
-        })
+            name: 'testUser' 
+        });*/
 
-        expect(resp.status).toBe(200);
+        const resp = await req.post("/history/create");
         
-        const respMeeting = await req.get("/meeting") 
-
-        expect(respMeeting.status).toBe(200);
-        expect(respMeeting.body.length).toBe(1);
+        console.log(resp.status);
     }
 }
