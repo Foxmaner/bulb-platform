@@ -10,7 +10,8 @@ import { authRoutes, exampleRoutes,
         paragraphRoutes, sectionRoutes, templateRoutes, 
         wordcloudRoutes } from './routes';
 
-import { connectDatabase } from "./config/test-connection";
+//import { connectDatabase } from "./config/test-connection";
+import { connectDatabase } from "./config/connection";
 
 
 connectDatabase();

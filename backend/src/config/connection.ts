@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import * as dotenv from "dotenv";
 
 
-dotenv.config();
+//dotenv.config();
 
 export async function connectDatabase() {
     try {
@@ -12,7 +12,7 @@ export async function connectDatabase() {
         }
 
         const uri = process.env.DB_URI as string;
-
+        console.log(uri);
         if (!uri) {
             throw new Error("DB_URI is not defined");
         }
