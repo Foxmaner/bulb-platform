@@ -41,8 +41,10 @@ class UserModel extends BaseModel<User, typeof StaticUserService, typeof MethodU
                     message: () => "Couldn't identify the company, the ObjectId is invalid."
                 }
             },
-            accessibleMeetings: [Schema.Types.ObjectId],
-            token: String
+            accessibleMeetings: {
+                type: [Schema.Types.ObjectId],
+                required: false
+            }
         }
 
         super({

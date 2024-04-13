@@ -50,7 +50,7 @@ class TestDecorators {
 
                     console.log(`Testing Port is set to ${port}`);
 
-                    const { httpServer, closeServer } = run(uri);
+                    const { httpServer, closeServer } = run();
                     close = closeServer;
                     
                     httpServer.listen(process.env.PORT, () => {});
@@ -114,7 +114,6 @@ class TestDecorators {
                     const { testName, originalMethod } = testProps;
 
                     test.only(testName, async () => {
-
                         await originalMethod.apply(instance, []);
                     });
                 });

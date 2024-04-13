@@ -1,15 +1,13 @@
-import { ObjectId } from "mongoose";
+import mongoose, { ObjectId } from "mongoose";
 
-import { Response } from "express";
 
-import BaseService from "../base.service";
 import { UserModel } from "../../models";
-import { Section } from "index";
+import { Meeting, Section } from "index";
 
 import { Response as res } from "../utils.service";
 
 
-export class MethodMeetingService<T> extends BaseService<T> {
+export class MethodMeetingService extends mongoose.Model<Meeting> {
 
     isMember (userID: ObjectId) {
         if (!this.model.members.includes(userID)) {

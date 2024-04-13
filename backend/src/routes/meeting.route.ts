@@ -1,21 +1,20 @@
 import express, { Express, Request, Response, Router } from 'express';
-import { UserModel } from '../models';
-import MeetingController from '../controllers/meeting.controller';
+import { MeetingController } from '../controllers';
 
-const meetingRoutes: Router = Router();
-
-
-meetingRoutes.get('/', MeetingController.load)
-
-meetingRoutes.get('/:id', MeetingController.id)
-
-meetingRoutes.delete('/delete/:id', MeetingController.delete)
-
-meetingRoutes.post('/create', MeetingController.create)
-
-meetingRoutes.put('/edit/:id', MeetingController.edit)
-
-meetingRoutes.post('/edit/post', MeetingController.editPost)
+const routes: Router = Router();
 
 
-export { meetingRoutes }
+routes.get('/', MeetingController.load)
+
+routes.get('/:id', MeetingController.id)
+
+routes.delete('/delete/:id', MeetingController.delete)
+
+routes.post('/create', MeetingController.create)
+
+routes.put('/edit/:id', MeetingController.edit)
+
+routes.post('/edit/post', MeetingController.editPost)
+
+
+export { routes as meetingRoutes }

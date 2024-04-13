@@ -31,7 +31,7 @@ import { connectDatabase } from "./config/connection";
 
 dotenv.config();
 
-const run = (DB_URI: string) => {
+const run = () => {
     connectDatabase();
 
     const app = express();
@@ -49,12 +49,7 @@ const run = (DB_URI: string) => {
 
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
-
-    app.use((req, res, next) => {
-        console.log("Accessed route:", req.originalUrl);
-        next();
-    });
-
+    
     app.use(
         session({
             secret: ["secret123"],
@@ -66,7 +61,7 @@ const run = (DB_URI: string) => {
             resave: false,
             saveUninitialized: false,
             store: MongoStore.create({
-                mongoUrl: DB_URI,
+                mongoUrl: process.env.DB_URI,
                 collectionName: "sessions",
             }),
         })
@@ -83,8 +78,6 @@ const run = (DB_URI: string) => {
 
     const verifySession = (req: any, res: any, next: any) => {
         if (req.isAuthenticated()) {
-
-            console.log(req.session)
             return next();
         } else {
             res.status(401).send("Unauthorized");
@@ -106,8 +99,6 @@ const run = (DB_URI: string) => {
         }
 
         req.session.cookie.path = req.headers.referer;
-
-        console.log("Session cookie:", req.session.cookie);
         
         req.session.save(err => {
             if (err) {

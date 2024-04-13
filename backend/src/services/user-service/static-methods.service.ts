@@ -4,11 +4,10 @@ import { UserModel }  from '../../models';
 import mongoose from 'mongoose';
 
 import { User } from "index";
-import BaseService from '../base.service';
 
 import { Response as res } from '../utils.service';
 
-export class StaticUserService<T> extends BaseService<T> {
+export class StaticUserService {
 
     static async findOrCreate(props: User) {
         try {

@@ -1,14 +1,12 @@
 import { MeetingModel, UserModel }  from '../../models';
-import { Request, Response } from 'express';
 
 import mongoose, { ObjectId } from 'mongoose';
 
-import BaseService from '../base.service';
 
 import { Response as res } from '../utils.service';
 
 
-export class StaticMeetingService<T> extends BaseService<T> {
+export class StaticMeetingService {
 
     static async delete(id: ObjectId) {
         try {

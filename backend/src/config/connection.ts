@@ -6,17 +6,11 @@ dotenv.config();
 
 export async function connectDatabase() {
     try {
-        if (process.env.NODE_ENV === "test") {
-            return;
-        }
-
-        const uri = process.env.DB_URI as string;
-
-        if (!uri) {
+        if (!process.env.DB_URI) {
             throw new Error("DB_URI is not defined");
         }
 
-        await mongoose.connect(uri);
+        await mongoose.connect(process.env.DB_URI);
 
         const db = mongoose.connection;
 
