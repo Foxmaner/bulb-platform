@@ -26,8 +26,9 @@ import {
 } from "./routes";
 
 import dotenv from "dotenv";
-import { UserModel } from "./models";
+
 import { connectDatabase } from "./config/connection";
+
 
 dotenv.config();
 
@@ -71,38 +72,12 @@ const run = (DB_URI: string) => {
         })
     );
 
+    setupPassport(app);
+
     app.use(cookieParser());
     app.use(passport.authenticate("session"));
     app.use(passport.initialize());
     app.use(passport.session());
-
-    passport.serializeUser((user, done) => done(null, user.id))
-    passport.deserializeUser(async (id, done) => {
-        const resp = await UserModel.get(id);
-        return done(null, resp.body)
-    })
-
-    passport.use(
-        new GoogleStrategy(
-            {
-                clientID: process.env.GOOGLE_CLIENT_ID,
-                clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-                callbackURL: "/auth/google/redirect",
-                passReqToCallback: true,
-            },
-            (request, accessToken, refreshToken, profile, done) => {
-                const user = {
-                    oAuthProvider: "google",
-                    oAuthID: profile.id,
-                    name: profile.displayName,
-                };
-
-                UserModel.findOrCreate(user).then((resp) => {
-                    done(null, resp.body.user);
-                });
-            }
-        )
-    );
 
     app.use("/auth", authRoutes);
 
@@ -114,14 +89,15 @@ const run = (DB_URI: string) => {
         }
     };
 
+    app.use(verifySession);
 
     // Middleware that verifies the token
-    app.post("/verify", verifySession, (req, res) => {
+    app.post("/verify", (req, res) => {
         res.status(200).send("Authorized");
     });
 
     app.use("/example", exampleRoutes);
-    app.use("/history", verifySession, historyRoutes);
+    app.use("/history", historyRoutes);
     app.use("/image", imageRoutes);
     app.use("/meeting", meetingRoutes);
     app.use("/paragraph", paragraphRoutes);

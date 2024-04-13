@@ -4,6 +4,14 @@ import { NextResponse } from 'next/server';
 import { parse } from 'cookie';
 
 
+/**
+ * Middleware to check if the user is authenticated
+ * 
+ * Before it routes, it sends a request to the server to check if the user is authenticated.
+ * This doesnt give the user any information about the user, it just checks if the user is authenticated.
+ * And if the user is not authenticated, it redirects the user to the login page.
+*/
+
 const routes = [
     '/documents',
     '/templates',
@@ -28,18 +36,20 @@ export async function middleware(req: NextRequest) {
         return NextResponse.next();
     }
 
-    const response = await fetch('http://localhost:3001/history/create', {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-            'Content-Type': 'application/json',
-            'Cookie': `connect.sid=${connectSid}`
-        }
-    })
-
     let authorized = false;
-    if (response.status === 200) {
-        authorized = true;
+        if (connectSid) {
+        const response = await fetch('http://localhost:3001/history/create', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+                'Cookie': `connect.sid=${connectSid}`
+            }
+        })
+        
+        if (response.status === 200) {
+            authorized = true;
+        }
     }
 
     if (authorized) {

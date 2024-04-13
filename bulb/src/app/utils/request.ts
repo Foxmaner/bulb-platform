@@ -1,4 +1,14 @@
 
+/*
+ * This file is responsible for making requests to the server.
+ * It has 4 methods: post, delete, put and get.
+ * Each method receives an object with the url, header and body.
+ * The header is optional and the body is optional too.
+ * The default header is 'Content-Type': 'application/json'.
+ * The default url is 'http://localhost:3001'.
+ * The default method is 'GET'.
+*/
+
 interface IRequestProps {
     url: string;
     header?: { [key: string]: string };
