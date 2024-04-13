@@ -78,16 +78,14 @@ export class MethodUserService extends mongoose.Model<User> {
     }
 
     getMeetings () {
-        /*const pipelineResult = this.model.aggregate([{
+        /*const pipelineResult = this.aggregate([{
             $match:{_id:this.model._id},
             $lookup:{from:"Meetings",localField:"accessibleMeetings",foreignField:"_id",as:"Joined meetings"},
             $replaceRoot:{newRoot:"Joined meetings"},
             $unset:["meetingHistory","mainDocumentSections","summaryDocumentSections"],
-        }]);*/
+        }]);
 
-        //this.accessibleMeetings;
-
-        console.log("this.accessibleMeetings", this.accessibleMeetings);
+        //this.accessibleMeetings;*/
 
         return res.status(200).json(this.accessibleMeetings);
     }

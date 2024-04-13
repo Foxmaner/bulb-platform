@@ -24,7 +24,7 @@ const connectDatabase = async () => {
 		mongoServer.stop();
 	});
 
-	return { client, uri };
+	return client;
 };
 
 const closeDatabase = async (mongoClient: typeof mongoose): Promise<void> => {

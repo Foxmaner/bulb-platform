@@ -13,9 +13,4 @@ export class MethodCompanyService extends mongoose.Model<Company> {
         return res.status(200);
     }
 
-    test() {
-        console.log(this.model);
-
-        return res.status(200).json({ message: "Test" });
-    }
 }

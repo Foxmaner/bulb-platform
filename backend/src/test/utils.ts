@@ -43,12 +43,9 @@ class TestDecorators {
                 let close: any;
 
                 beforeAll(async () => {
-                    const { client, uri } = await connectDatabase();
-                    connection = client;
+                    connection = await connectDatabase();
 
                     const port = process.env.PORT || 3000;
-
-                    console.log(`Testing Port is set to ${port}`);
 
                     const { httpServer, closeServer } = run();
                     close = closeServer;
@@ -60,8 +57,6 @@ class TestDecorators {
 
                 afterAll(async () => {
                     await closeDatabase(connection);
-                    await new Promise<void>((resolve) => setTimeout(() => resolve(), 500)); // avoid jest open handle error
-
                     await close();
                 });
 
@@ -92,8 +87,7 @@ class TestDecorators {
                 let connection: typeof mongoose;
 
                 beforeAll(async () => {
-                    const { client, uri } = await connectDatabase();
-                    connection = client;
+                    connection = await connectDatabase();
                 });
 
                 afterAll(async () => {
