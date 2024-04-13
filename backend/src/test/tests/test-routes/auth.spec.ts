@@ -7,10 +7,10 @@ class ExempelTest {
     @TestDecorators.test("signIn")
     async createExample(req: any) {
 
-        /*await req.post("/login").send({
+        await req.post("/login").send({
             password: 'testPassword',
             name: 'testUser' 
-        });*/
+        });
 
         const resp = await req.post("/history/create");
         
