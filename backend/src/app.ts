@@ -9,7 +9,6 @@ import session from "express-session";
 import cookieParser from "cookie-parser";
 import MongoStore from "connect-mongo";
 import passport from "passport";
-import csrf from "csurf";
 
 import { setupPassport } from "./config/passport-setup";
 
@@ -56,13 +55,13 @@ const run = (DB_URI: string) => {
         next();
     });
 
-   
     app.use(
         session({
             secret: ["secret123"],
             cookie: {
                 secure: process.env.NODE_ENV === "production" ? "true" : "auto",
-                sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
+                sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+                _expires: 1000 * 60 * 60,
             },
             resave: false,
             saveUninitialized: false,
@@ -80,23 +79,12 @@ const run = (DB_URI: string) => {
     app.use(passport.initialize());
     app.use(passport.session());
 
-    //app.use(csrf({ cookie: true }));
-    /*app.use(function (req: any, res, next) {
-        res.cookie('XSRF-TOKEN', req.csrfToken());
-        res.locals.csrfToken = req.csrfToken();
-        next();
-    });*/
-
     app.use("/auth", authRoutes);
-
-    app.use(function (req: any, res: any, next) {
-        res.locals.currentUser = req.user;
-        res.locals.session = req.session;
-        next();
-    });
 
     const verifySession = (req: any, res: any, next: any) => {
         if (req.isAuthenticated()) {
+
+            console.log(req.session)
             return next();
         } else {
             res.status(401).send("Unauthorized");
@@ -105,14 +93,28 @@ const run = (DB_URI: string) => {
 
     app.use(verifySession);
 
-    /*app.use((req: any, res, next) => {
-        res.locals.csrfToken = req.csrfToken();
+    app.use(function (req: any, res: any, next) {
+        res.locals.currentUser = req.user;
+        res.locals.session = req.session;
         next();
-    });*/
+    });
 
     // Middleware that verifies the token
-    app.post("/verify", (req, res) => {
-        res.status(200).send("Authorized");
+    app.post("/verify", (req: any, res) => {
+        if (!req.headers.referer) {
+            res.status(401).send("Invalid input");
+        }
+
+        req.session.cookie.path = req.headers.referer;
+
+        console.log("Session cookie:", req.session.cookie);
+        
+        req.session.save(err => {
+            if (err) {
+                console.error('Session save error:', err);
+            }
+            res.status(200).send("Authorized");
+        });
     });
 
     app.use("/example", exampleRoutes);
