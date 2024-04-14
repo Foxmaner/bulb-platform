@@ -5,21 +5,27 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 
 
+interface IPropsQuestionForm {
+    title?: string;
+    answer?: string;
+}
 
 
-export default function QuestionForm() {
+export default function QuestionForm({ title, answer }: IPropsQuestionForm) {
 
 
     return (
-        <div className="flex flex-col gap-1">
-            <Textarea 
-                variant="bordered"
-                radius="none"
-                labelPlacement="outside"
-                placeholder="Skriv din fråga här"
-                className="flex"
-                minRows={1}
-                />
+        <div className="flex flex-col gap-3">
+            {
+                title && (<Textarea 
+                    variant="bordered"
+                    radius="none"
+                    labelPlacement="outside"
+                    placeholder="Skriv din fråga här"
+                    className="flex"
+                    minRows={1}
+                />)
+            }
             
             <div className="flex">
                 <Textarea variant="bordered" 

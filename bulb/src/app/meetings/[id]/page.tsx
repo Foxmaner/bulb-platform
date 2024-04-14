@@ -5,15 +5,15 @@ import { FormEvent, useState } from "react";
 import Link from "next/link";
 import AddSection from "../../components/section";
 import QuestionForm from "app/components/questionForm";
-import { section } from "index";
+import { section, question, paragraph } from "index";
 import SectionForm from "app/components/sectionForm"
 
 
 export default function createPage() {
-    const [ sections, setSections ] = useState<section[]>([])
+    const [sections, setSections] = useState<section[]>([]);
 
     const addSection = () => {
-        setSections([...sections, {}])
+        setSections([...sections, { _id: "123" }])
     }
 
     return (
@@ -46,18 +46,34 @@ export default function createPage() {
                         <Button className="bg-white border-2 border-edge w-4 h-6 m-2">Format</Button>
                         <Button className="bg-white border-2 border-edge w-4 h-6 m-2">Help</Button>
                     </div>
-                    <ScrollShadow>
-                    {
-                        sections.map((section) => <SectionForm/>)
-                    }
-                    </ScrollShadow>
-                    <div className="flex w-11/12 py-5">
-                        <AddSection addSection={addSection} />
+                    <ScrollShadow hideScrollBar size={20}>
+                        <div className="w-full h-screen">
 
-                    </div>
+
+                            {
+                                sections.map((section: section) => <SectionForm data={section} />)
+                            }
+
+
+
+                            {(sections.length == 0) && (
+                                <div className="flex w-11/12 h-11/12 py-5">
+                                    <AddSection addSection={addSection} />
+                                </div>
+                            )
+                            }
+
+                        </div>
+                    </ScrollShadow>
+
+                </div>
+                <div className="flex flex-col-reverse gap-2">
+                    <Button className="bg-white border-2 border-edge w-4 h-6 m-2" onClick={addSection}>Nytt avsnitt</Button>
                 </div>
             </div>
+
         </div>
+
     );
 
 }

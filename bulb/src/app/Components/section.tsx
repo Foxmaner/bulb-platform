@@ -1,6 +1,8 @@
 import { useEffect, useState, useRef } from "react";
 
 import InputField from "./inputField";
+import QuestionForm from "./questionForm";
+import paragraphForm from "./paragraph";
 
 
 
@@ -11,11 +13,8 @@ interface IAddSection {
 
 export default function AddSection({ addSection }: IAddSection) {
     const [menuOpen, setMenuOpen] = useState(false);
-    //Måste berätta för Typescript att det är en sjukt nice div
-    const popupRef = useRef<HTMLDivElement>(null);
-    const [section, setSection] = useState([]);
     
-
+    const popupRef = useRef<HTMLDivElement>(null);
 
 
     const toggleMenu = () => {
@@ -39,7 +38,7 @@ export default function AddSection({ addSection }: IAddSection) {
     },[]);
 
     return (
-        <div ref={popupRef} className="relative w-full h-full flex justify-center">
+        <div className="relative w-full h-full flex justify-center">
             <div className="border-2 w-11/12 h-11/12 text-center border-dashed cursor-pointer" onClick={toggleMenu}>
                 <p className="text-3xl select-none">----Lägg till avsnitt----</p>
             </div>
