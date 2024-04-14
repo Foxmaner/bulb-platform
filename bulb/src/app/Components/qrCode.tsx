@@ -5,34 +5,44 @@ import { BsX } from "react-icons/bs";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from "@nextui-org/react";
 
 import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/react";
-
+import { useState } from "react";
 
 
 export default function Page({ qrData }: { qrData: string }) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [isCardVisible, setCardVisible] = useState(true); // Add this line
 
   return (
 
     <>
 
-     
-      <Card className="absolute bottom-0 right-0 m-5" onPress={onOpen} isPressable={true}>
-        <CardBody>
-          <div className="flex items-center space-x-4">
-            <QRCode value={qrData} className="w-20 h-20" />
-            <div className="flex flex-wrap">
-              <p className="text-xl font-bold underline w-1/2">Kod</p>
-              <Button className="absolute top-0 right-0 bg-transparent" isIconOnly radius="full">
-                <BsX size={50}/>
-              </Button>
-              <div className="bg-white">
-                <p className="text-center text-2xl font-bold underline ">{qrData}</p>
+      {!isCardVisible && ( // Add this line
+
+        <Button className="absolute bottom-0 right-0 m-5 bg-primary text-white" radius="full" variant="shadow" onClick={() => setCardVisible(true)}>
+          QR-kod
+        </Button>
+
+      )}
+
+
+      {isCardVisible && ( // Add this line
+        <Card className="absolute bottom-0 right-0 m-5" onPress={onOpen} isPressable={true}>
+          <CardBody>
+            <div className="flex items-center space-x-4">
+              <QRCode value={qrData} className="w-20 h-20" />
+              <div className="flex flex-wrap">
+                <p className="text-xl font-bold underline w-1/2">Kod</p>
+                <Button className="absolute top-0 right-0 bg-transparent" isIconOnly radius="full" onClick={() => setCardVisible(false)}>
+                  <BsX size={50} />
+                </Button>
+                <div className="bg-white">
+                  <p className="text-center text-2xl font-bold underline ">{qrData}</p>
+                </div>
               </div>
             </div>
-          </div>
-        </CardBody>
-      </Card>
-
+          </CardBody>
+        </Card>
+      )}
 
 
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="absolute top-1/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
