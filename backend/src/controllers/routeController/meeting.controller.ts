@@ -13,18 +13,12 @@ export class MeetingController {
 
         const resp = await user.getMeetings();
 
-        console.log("SEE WHAT THIS IS:")
-        console.log(resp.body)
-
-        if(process.env.DEBUG == "true"){
-            console.log(resp.body)
-        }
-
         if(resp.statusCode != 200){
             return res.status(resp.statusCode).json(resp.body)
         }
 
-        res.status(200).json({documents: resp.body});
+
+        res.status(200).json({ meetings: resp.body });
     }
     
     static async id(req: any, res: Response) {
@@ -65,10 +59,6 @@ export class MeetingController {
 
         const respDelete = await MeetingModel.delete(meeting);
 
-        if(process.env.DEBUG == "true"){
-            console.log(respDelete.body)
-        }
-
         if(respDelete.statusCode != 200){
             return res.status(respDelete.statusCode).json(respDelete.body)
         }
@@ -85,12 +75,8 @@ export class MeetingController {
             return res.status(respUser.statusCode).json(respUser.body)
         }
 
-        
         const resp = await user.createMeeting(req.body);        
 
-        if(process.env.DEBUG == "true"){
-            console.log(resp.body)
-        }
 
         if(resp.statusCode != 201){
             return res.status(resp.statusCode).json(resp.body)

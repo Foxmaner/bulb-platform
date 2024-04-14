@@ -13,8 +13,6 @@ export class MethodUserService extends mongoose.Model<User> {
     async addMeeting (meetingID: ObjectId) {
         await this.updateOne({ $push: { accessibleMeetings: meetingID } });
 
-        console.log("adding meeting", this.accessibleMeetings);
-
         return res.status(200).json({ message: "Meeting added" });
     }
 
@@ -45,7 +43,9 @@ export class MethodUserService extends mongoose.Model<User> {
             const Meeting = new MeetingModel({
                 name: props.name,
                 date: new Date(),
-                accessibleMembers: []
+                members: [
+                    { userID: this._id, accessLevel: 2 }
+                ]
             });
             await Meeting.save();
             
@@ -58,30 +58,10 @@ export class MethodUserService extends mongoose.Model<User> {
     }
 
     async getMeetings () {
-<<<<<<< Updated upstream
-        /*const pipelineResult = await MeetingModel.aggregate([
-            { $match: { _id: this._id } },
-            { $lookup: { from: "Meetings", localField: "accessibleMeetings", foreignField: "_id", as: "Joined meetings" } },
-            { $replaceRoot: { newRoot: { $arrayElemAt: ["$Joined meetings", 0] } } },
-            { $unset: ["meetingHistory", "mainDocumentSections", "summaryDocumentSections"] }
-        ]);
-
-        console.log(pipelineResult);*/
-=======
-
         const pipelineResult = await MeetingModel.aggregate([
-            { $match: { _id: this._id } },
-            { $lookup: { from: "Meetings", localField: "accessibleMeetings", foreignField: "_id", as: "Joined meetings" } },
-            { $replaceRoot: { newRoot: { $arrayElemAt: ["$Joined meetings", 0] } } },
-            { $unset: ["meetingHistory", "mainDocumentSections", "summaryDocumentSections"] }
+            { $addFields: { "members.userID": this._id } }
         ]);
->>>>>>> Stashed changes
-
-        const meetings = this.accessibleMeetings.array.forEach(async (accessible) => {
-            return await MeetingModel.findById(accessible);
-        });
-
-        return res.status(200).json(meetings);
+        return res.status(200).json(pipelineResult);
     }
 
     getMeeting(meetingID) {

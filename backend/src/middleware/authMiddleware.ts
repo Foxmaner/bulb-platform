@@ -20,8 +20,6 @@ const sessionMiddleware = session({
 const verifySession = (req: any, res: any, next: any) => {
     if (req.isAuthenticated()) {
 
-        console.log(req.session)
-
         return next();
     } else {
         res.status(401).send("Unauthorized");

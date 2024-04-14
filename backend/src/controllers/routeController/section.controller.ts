@@ -13,8 +13,6 @@ export default class SectionController {
 
         const resp = await meeting.addSection()
 
-        console.log(resp.body);
-
         return res.status(resp.statusCode).json(resp.body)
     }
 
@@ -27,8 +25,6 @@ export default class SectionController {
         const meeting = await MeetingModel.get(meetingId)
 
         const resp = await meeting.removeSection(meetingId)
-
-        console.log(resp.body);
 
         return res.status(resp.statusCode).json(resp.body)
     }

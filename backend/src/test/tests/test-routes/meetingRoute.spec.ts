@@ -23,6 +23,7 @@ class MeetingRouteTests {
 
         const resp = await req.get("/meeting/")
 
+
         expect(resp.body.meetings.length).toBe(2);
     }
 
@@ -73,9 +74,8 @@ class MeetingRouteTests {
         const resp = await req.post('/meeting/create').send({
             name:'Meeting 1'
         })
-        console.log(resp)
+
         const id = resp._body.meeting
-        console.log(id)
         const res = await req.get(`/meeting/${id}/`);
         expect(res._body.meeting.length).toBe(1)
     }

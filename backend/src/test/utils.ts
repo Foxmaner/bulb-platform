@@ -41,13 +41,18 @@ class TestDecorators {
                 let connection: typeof mongoose;
                 let req: any;
                 let closeServer: any;
+                let httpServer: any;
+                let io: any;
 
                 beforeAll(async () => {
                     connection = await connectDatabase();
 
                     const port = process.env.PORT || 3000;
 
-                    const { httpServer, closeServer, io } = run();
+                    const { httpServer: localHttpServer, closeServer: localCloseServer, io: localIo } = run();  // Correct destructuring with variable declaration
+                    httpServer = localHttpServer;
+                    closeServer = localCloseServer;
+                    io = localIo;
                     
                     httpServer.listen(process.env.PORT, () => {});
                     req = agent(httpServer);
