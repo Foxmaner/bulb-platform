@@ -9,7 +9,6 @@ export class MeetingController {
 
         const resp = await user.getMeetings();
 
-
         res.status(200).json(resp.body);
     }
     
@@ -19,8 +18,12 @@ export class MeetingController {
 
         const meetings = user.getMeetings();
         const meeting = meetings.body.find(meeting => meeting==req.params.id);
+        if(!meeting){
+            res.status(404).json({meeting : []})
+            return
+        }
 
-        res.status(200).json(meeting);
+        res.status(200).json({meeting : [meeting]});
         
     }
     
@@ -32,7 +35,7 @@ export class MeetingController {
         const resp = user.getMeetings();
 
         const meeting = resp.body.find(meeting => meeting==req.params.id);
-        const asd = await MeetingModel.delete(meeting);
+        await MeetingModel.delete(meeting);
         res.status(200).json({ message: "Success!" });
 
     }
@@ -42,7 +45,8 @@ export class MeetingController {
 
         const user = await UserModel.findById(userID);
         const resp = await user.createMeeting(req.body);
-        res.status(200).json({ message: "Success!" });
+        const id = resp.body._id.toString();
+        res.status(200).json({ message: "Success!", meeting: id });
     }
 
     static edit(req: Request, res: Response){

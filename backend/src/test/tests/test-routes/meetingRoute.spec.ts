@@ -24,7 +24,6 @@ class MeetingRouteTests {
         })
 
         const resp = await req.get("/meeting/")
-        console.log(resp._body)
         expect(resp._body.length).toBe(2);
     }
 
@@ -60,22 +59,26 @@ class MeetingRouteTests {
         })
 
         const res = await req.get("/meeting/asdasdsada");
-        expect(res._body.length).toBe(0)
+        expect(res.status).toBe(404)
+        expect(res._body.meeting.length).toBe(0)
     }
 
-    @TestDecorators.test("Get invalid meeting by ID")
+    @TestDecorators.test("Get valid meeting by ID")
     async getValidMeeting(req:any){
+
         await req.post("/login").send({
             password: 'testPassword',
             name: 'testUser',
         });
         
-        await req.post('/meeting/create').send({
+        const resp = await req.post('/meeting/create').send({
             name:'Meeting 1'
         })
-
-        const res = await req.get("/meeting/asdasdsada");
-        expect(res._body.length).toBe(0)
+        console.log(resp)
+        const id = resp._body.meeting
+        console.log(id)
+        const res = await req.get(`/meeting/${id}/`);
+        expect(res._body.meeting.length).toBe(1)
     }
 
 
