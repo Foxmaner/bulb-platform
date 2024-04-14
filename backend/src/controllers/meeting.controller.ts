@@ -57,4 +57,16 @@ export class MeetingController {
         
     }
 
+    static async toDocument(req : any, res : Response){
+        const userID = req.session.passport.user;
+        const meetingId = req.params.id
+        const meeting = MeetingModel.get(meetingId);
+        if (meeting.isMember(userID).status!=403){
+            meeting.setToDocument()
+            res.status(200).json({message : "Success!"})
+        }
+        
+        res.status(403).json({ message : "User not allowed to convert"})
+    }
+
 }

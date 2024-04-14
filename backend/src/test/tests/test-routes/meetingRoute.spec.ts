@@ -1,8 +1,4 @@
-import { User } from "index";
 import { TestDecorators } from "../../utils";
-import { CompanyModel, MeetingModel, UserModel } from "../../../models";
-import { access } from "fs/promises";
-
 
 @TestDecorators.describeRoutes("Testing meeting route")
 class MeetingRouteTests {
@@ -80,11 +76,7 @@ class MeetingRouteTests {
         const res = await req.get(`/meeting/${id}/`);
         expect(res._body.meeting.length).toBe(1)
     }
-
-
-
 }
 
-//Kanske ett problem men det ser inte ut som en user kan skapa ett möte två gånger, kör koden ovan 
 
 
