@@ -7,7 +7,7 @@ import { access } from "fs/promises";
 @TestDecorators.describeRoutes("Testing meeting route")
 class MeetingRouteTests {
 
-    @TestDecorators.test("Create a meeting and get meeting")
+    @TestDecorators.test("Get meetings")
     async getMeetings(req: any) {   
 
         await req.post("/login").send({
@@ -24,25 +24,64 @@ class MeetingRouteTests {
         })
 
         const resp = await req.get("/meeting/")
-        const meetings = resp.body.meetings;
-        expect(meetings.length).toBe(2)
+        console.log(resp._body)
+        expect(resp._body.length).toBe(2);
     }
+
+    @TestDecorators.test("Delete meetings")
+    async delete(req: any) {   
+
+        await req.post("/login").send({
+            password: 'testPassword',
+            name: 'testUser',
+        });
+        
+        await req.post('/meeting/create').send({
+            name:'Meeting 1'
+        })
+
+        const res = await req.get("/meeting/")
+
+        await req.delete(`/meeting/delete/${res._body[0]}`)
+        const resp = await req.get("/meeting/")
+
+        expect(resp._body.length).toBe(0);
+    }
+
+    @TestDecorators.test("Get invalid meeting by ID")
+    async getInvalidMeeting(req:any){
+        await req.post("/login").send({
+            password: 'testPassword',
+            name: 'testUser',
+        });
+        
+        await req.post('/meeting/create').send({
+            name:'Meeting 1'
+        })
+
+        const res = await req.get("/meeting/asdasdsada");
+        expect(res._body.length).toBe(0)
+    }
+
+    @TestDecorators.test("Get invalid meeting by ID")
+    async getValidMeeting(req:any){
+        await req.post("/login").send({
+            password: 'testPassword',
+            name: 'testUser',
+        });
+        
+        await req.post('/meeting/create').send({
+            name:'Meeting 1'
+        })
+
+        const res = await req.get("/meeting/asdasdsada");
+        expect(res._body.length).toBe(0)
+    }
+
+
 
 }
 
-/* //Lägga till möten i databasen
-        const user = await UserModel.findOne({ name : "testUser" });
-        
-        const meetingProps = {
-            name: "Meeting1",
-            date: new Date(),
-            completed: false
-        }
-        
-        console.log(user)
-        const meeting = await user.createMeeting(meetingProps);
-        //const meetings = await MeetingModel.list()
-        console.log(meeting)
-        user.addMeeting(meeting._id); */
+//Kanske ett problem men det ser inte ut som en user kan skapa ett möte två gånger, kör koden ovan 
 
 

@@ -11,15 +11,6 @@ export default class Utils {
     static sectionSchema () {
         return {
             section: {
-                id: {
-                    type: Number,
-                    required: true,
-                    unique: true,
-                    validate: {
-                        validator: Utils.integerValidator,
-                        message: "{VALUE} is not an integer value"
-                    }
-                },
                 title: String,
                 contains: {},
                 sectionHistory: [this.sectionHistorySchema()]
@@ -43,15 +34,7 @@ export default class Utils {
             meetingHistory: {
                 userID: Schema.Types.ObjectId,
                 date: Date,
-                sectionID: {
-                    type: Number,
-                    required: true,
-                    unique: true,
-                    validate: {
-                        validator: Utils.integerValidator,
-                        message: "{VALUE} is not an integer value"
-                    }
-                },
+                sectionID: Schema.Types.ObjectId,
                 added: Boolean
             }
         }

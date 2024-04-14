@@ -87,7 +87,7 @@ export class MethodUserService extends mongoose.Model<User> {
 
         //this.accessibleMeetings;*/
 
-        return res.status(200).json(this.accessibleMeetings);
+        return res.status(200).json(this.accessibleMeetings.map((meeting => meeting.toString())));
     }
 
     /*async addUserToMeeting (user: Member, meetingID: Schema.Types.ObjectId, res: Response) {

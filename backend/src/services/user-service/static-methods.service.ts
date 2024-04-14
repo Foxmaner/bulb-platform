@@ -1,6 +1,5 @@
 import { UserModel }  from '../../models';
 
-
 import mongoose from 'mongoose';
 
 import { User } from "index";
@@ -129,4 +128,3 @@ export class StaticUserService {
         return res.status(200).json(User);
     }
 }
-

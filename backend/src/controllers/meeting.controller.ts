@@ -1,8 +1,7 @@
 import { Request, Response } from 'express';
-import { UserModel } from '../models';
+import { MeetingModel, UserModel } from '../models';
 
 export class MeetingController {
-
     static async load(req: any, res: Response) {
         const userID = req.session.passport.user
 
@@ -10,26 +9,39 @@ export class MeetingController {
 
         const resp = await user.getMeetings();
 
-        console.log(resp.body);
 
-        return res.status(200).json(resp.body);
+        res.status(200).json(resp.body);
     }
     
-    static id(req: Request, res: Response) {
+    static async id(req: any, res: Response) {
+        const userID = req.session.passport.user;
+        const user = await UserModel.findById(userID);
+
+        const meetings = user.getMeetings();
+        const meeting = meetings.body.find(meeting => meeting==req.params.id);
+
+        res.status(200).json(meeting);
         
     }
     
-    static delete(req: Request, res: Response) {
-        
+    static async delete(req: any, res: Response) {
+        const userID = req.session.passport.user;
+        const user = await UserModel.findById(userID);
+
+        //Make sure user is allowed to delete meeting, maybe with accessLevel=1?
+        const resp = user.getMeetings();
+
+        const meeting = resp.body.find(meeting => meeting==req.params.id);
+        const asd = await MeetingModel.delete(meeting);
+        res.status(200).json({ message: "Success!" });
+
     }
 
     static async create(req: any, res: Response) {
         const userID = req.session.passport.user
 
         const user = await UserModel.findById(userID);
-
         const resp = await user.createMeeting(req.body);
-
         res.status(200).json({ message: "Success!" });
     }
 
