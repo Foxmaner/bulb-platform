@@ -3,7 +3,6 @@ import { MeetingController } from '../controllers';
 
 const routes: Router = Router();
 
-
 routes.get('/', MeetingController.load)
 
 routes.get('/:id', MeetingController.id)
@@ -15,7 +14,5 @@ routes.post('/create', MeetingController.create)
 routes.put('/edit/:id', MeetingController.edit)
 
 routes.post('/edit/post', MeetingController.editPost)
-
-
 
 export { routes as meetingRoutes }

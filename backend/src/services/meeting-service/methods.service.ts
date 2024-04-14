@@ -1,7 +1,7 @@
 import mongoose, { ObjectId } from "mongoose";
 
 
-import { UserModel } from "../../models";
+import { MeetingModel, UserModel } from "../../models";
 import { Meeting, Section } from "index";
 
 import { Response as res } from "../utils.service";
@@ -73,6 +73,23 @@ export class MethodMeetingService extends mongoose.Model<Meeting> {
     /**
      * Paragraph
      */
+    async getParagraph(sectionID, paragraphID) {
+        const paragraph =  await MeetingModel.aggregate([
+            { $match: { "sections._id": sectionID, "meeting._id": this._id } },
+            { $project: { _id: paragraphID } }
+        ]);
+
+        if (!paragraph) {
+            return res.status(404).json({ message: "No meeting" })
+        }
+
+        return res.status(200)
+    }
+
+    editParagraph(paragraphID) {
+
+    }
+
     addParagaraph (sectionID: number) {
         const newParagraph = {
             id: this.model.sections[sectionID].contains.length,

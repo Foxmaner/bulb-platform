@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { MeetingModel } from '../models';
+import { MeetingModel } from '../../models';
 
 
 

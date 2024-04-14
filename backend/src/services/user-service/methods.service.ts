@@ -58,16 +58,25 @@ export class MethodUserService extends mongoose.Model<User> {
     }
 
     getMeetings () {
-        /*const pipelineResult = this.aggregate([{
-            $match:{_id:this.model._id},
+
+        const pipelineResult = this.aggregate([{
+            $match:{_id:this._id},
             $lookup:{from:"Meetings",localField:"accessibleMeetings",foreignField:"_id",as:"Joined meetings"},
             $replaceRoot:{newRoot:"Joined meetings"},
             $unset:["meetingHistory","mainDocumentSections","summaryDocumentSections"],
         }]);
 
+        console.log(pipelineResult);
+
         //this.accessibleMeetings;*/
 
-        return res.status(200).json(this.accessibleMeetings.map((meeting => meeting.toString())));
+        return res.status(200).json(pipelineResult);
+    }
+
+    getMeeting(meetingID) {
+        const meeting = new MeetingModel.findById(meetingID);
+
+        return res.status(200).json(meeting);
     }
 
     /*async addUserToMeeting (user: Member, meetingID: Schema.Types.ObjectId, res: Response) {

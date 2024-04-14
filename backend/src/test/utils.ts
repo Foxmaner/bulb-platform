@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+import ioc from "socket.io-client"
 
 import "reflect-metadata";
 
@@ -40,15 +40,14 @@ class TestDecorators {
             describe(description, () => {
                 let connection: typeof mongoose;
                 let req: any;
-                let close: any;
+                let closeServer: any;
 
                 beforeAll(async () => {
                     connection = await connectDatabase();
 
                     const port = process.env.PORT || 3000;
 
-                    const { httpServer, closeServer } = run();
-                    close = closeServer;
+                    const { httpServer, closeServer, io } = run();
                     
                     httpServer.listen(process.env.PORT, () => {});
                     req = agent(httpServer);
@@ -57,7 +56,7 @@ class TestDecorators {
 
                 afterAll(async () => {
                     await closeDatabase(connection);
-                    await close();
+                    await closeServer();
                 });
 
                 beforeEach(async () => {
@@ -80,6 +79,57 @@ class TestDecorators {
             });
         };
     }
+
+    static describeSocket<T>(description: string) {
+        return (constructor: new () => T) => {
+            describe(description, () => {
+                let connection: typeof mongoose;
+                let req: any;
+                let closeServer: any;
+                let socket: any;
+                let io: any;
+
+                beforeAll(async () => {
+                    connection = await connectDatabase();
+
+                    const port = process.env.PORT || 3000;
+
+                    const { httpServer, closeServer, io } = run();
+                    
+                    httpServer.listen(process.env.PORT, () => {});
+                    req = agent(httpServer);
+                    socket = await ioc(`http://localhost:${port}`);
+
+                    socket.on("connect");
+                });
+
+                afterAll(async () => {
+                    await io.close();
+                    await closeDatabase(connection);
+                    await closeServer();
+                });
+
+                beforeEach(async () => {
+                    await clearDatabase(connection);
+                });
+
+                const instance = new constructor();
+                const cls = constructor.prototype;
+
+                const tests: Array<TestFnProps> =
+                    Reflect.getMetadata("tests", cls) || [];
+
+                tests.forEach((testProps: TestFnProps) => {
+                    const { testName, originalMethod } = testProps;
+
+                    test.only(testName, async () => {
+                        await originalMethod.apply(instance, [socket, req]);
+                    });
+                });
+            });
+        };
+    }
+
 
     static describeModels<T>(description: string) {
         return (constructor: new () => T) => {
