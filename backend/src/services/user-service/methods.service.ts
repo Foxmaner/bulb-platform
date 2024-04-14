@@ -57,20 +57,21 @@ export class MethodUserService extends mongoose.Model<User> {
         }
     }
 
-    getMeetings () {
+    async getMeetings () {
+        /*const pipelineResult = await MeetingModel.aggregate([
+            { $match: { _id: this._id } },
+            { $lookup: { from: "Meetings", localField: "accessibleMeetings", foreignField: "_id", as: "Joined meetings" } },
+            { $replaceRoot: { newRoot: { $arrayElemAt: ["$Joined meetings", 0] } } },
+            { $unset: ["meetingHistory", "mainDocumentSections", "summaryDocumentSections"] }
+        ]);
 
-        const pipelineResult = this.aggregate([{
-            $match:{_id:this._id},
-            $lookup:{from:"Meetings",localField:"accessibleMeetings",foreignField:"_id",as:"Joined meetings"},
-            $replaceRoot:{newRoot:"Joined meetings"},
-            $unset:["meetingHistory","mainDocumentSections","summaryDocumentSections"],
-        }]);
+        console.log(pipelineResult);*/
 
-        console.log(pipelineResult);
+        const meetings = this.accessibleMeetings.array.forEach(async (accessible) => {
+            return await MeetingModel.findById(accessible);
+        });
 
-        //this.accessibleMeetings;*/
-
-        return res.status(200).json(pipelineResult);
+        return res.status(200).json(meetings);
     }
 
     getMeeting(meetingID) {

@@ -11,16 +11,19 @@ class MeetingRouteTests {
             name: 'testUser',
         });
         
-        await req.post('/meeting/create').send({
+        const resp1 = await req.post('/meeting/create').send({
             name:'Meeting 1'
         })
+        expect(resp1.statusCode).toBe(201)
 
-        await req.post('/meeting/create').send({
+        const resp2 = await req.post('/meeting/create').send({
             name:'Meeting 2'
         })
+        expect(resp2.statusCode).toBe(201)
 
         const resp = await req.get("/meeting/")
-        expect(resp._body.length).toBe(2);
+
+        expect(resp.body.meetings.length).toBe(2);
     }
 
     @TestDecorators.test("Delete meetings")

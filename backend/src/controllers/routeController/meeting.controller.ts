@@ -4,13 +4,17 @@ import { MeetingModel, UserModel } from '../../models';
 export class MeetingController {
     static async load(req: any, res: Response) {
         const userID = req.session.passport.user
-        const user = await UserModel.get(userID);
+        const respUser = await UserModel.get(userID);
+        const user = respUser.body;
 
-        if(user.statusCode != 200){
-            return res.status(user.statusCode).json(user.body)
+        if(respUser.statusCode != 200){
+            return res.status( respUser.statusCode).json( respUser.body)
         }
 
-        const resp = await user.body.getMeetings();
+        const resp = await user.getMeetings();
+
+        console.log("SEE WHAT THIS IS:")
+        console.log(resp.body)
 
         if(process.env.DEBUG == "true"){
             console.log(resp.body)
@@ -25,13 +29,14 @@ export class MeetingController {
     
     static async id(req: any, res: Response) {
         const userID = req.session.passport.user;
-        const user = await UserModel.get(userID);
+        const respUser = await UserModel.get(userID);
+        const user = respUser.body;
 
-        if(user.statusCode != 200){
-            return res.status(user.statusCode).json(user.body)
+        if(respUser.statusCode != 200){
+            return res.status(respUser.statusCode).json(respUser.body)
         }
 
-        const meetings = user.body.getMeetings();
+        const meetings = user.getMeetings();
         const meeting = meetings.body.find(meeting => meeting==req.params.id);
         
         if(!meeting){
@@ -42,14 +47,15 @@ export class MeetingController {
     
     static async delete(req: any, res: Response) {
         const userID = req.session.passport.user;
-        const user = await UserModel.get(userID);
+        const respUser = await UserModel.get(userID);
+        const user = respUser.body;
 
-        if(user.statusCode != 200){
-            return res.status(user.statusCode).json(user.body)
+        if(respUser.statusCode != 200){
+            return res.status(respUser.statusCode).json(respUser.body)
         }
 
         //Make sure user is allowed to delete meeting, maybe with accessLevel=1?
-        const resp = user.body.getMeetings();
+        const resp = user.getMeetings();
 
         const meeting = resp.body.find(meeting => meeting==req.params.id);
 
@@ -72,13 +78,15 @@ export class MeetingController {
     static async create(req: any, res: Response) {
         const userID = req.session.passport.user
 
-        const user = await UserModel.get(userID);
+        const respUser = await UserModel.get(userID);
+        const user = respUser.body;
 
-        if(user.statusCode != 200){
-            return res.status(user.statusCode).json(user.body)
+        if(respUser.statusCode != 200){
+            return res.status(respUser.statusCode).json(respUser.body)
         }
 
-        const resp = await user.body.createMeeting(req.body);
+        
+        const resp = await user.createMeeting(req.body);        
 
         if(process.env.DEBUG == "true"){
             console.log(resp.body)

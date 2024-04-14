@@ -13,6 +13,14 @@ function connectionHandler(socket : Socket) : void {
     socket.on('join_room', SocketController.join_room)
 
     socket.on("section_create", SocketController.create_section);
+
+    socket.on('section_delete', SocketController.delete_section);
+
+    socket.on('paragraph_create', SocketController.create_paragraph);
+
+    socket.on('paragraph_delete', SocketController.delete_paragraph)
+
+    socket.on('paragraph_edit', SocketController.edit_paragraph);
 }
 
 export { connectionHandler };
