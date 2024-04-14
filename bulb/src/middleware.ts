@@ -32,7 +32,7 @@ export async function middleware(req: NextRequest) {
 
     const pathname = req.nextUrl.pathname.toLocaleLowerCase();
 
-    if (!routes.some(route => pathname.startsWith(route))){
+    if (!routes.some(route => pathname.startsWith(route) && pathname !== "/")){
         return NextResponse.next();
     }
 

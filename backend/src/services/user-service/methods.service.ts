@@ -10,26 +10,6 @@ import { Response as res } from "../utils.service";
 
 export class MethodUserService extends mongoose.Model<User> {
 
-    signIn (token: string) {
-        this.token = token;
-
-        return res.status(200).json({ token, message: "User signed in" });
-    }
-
-    signOut () {
-        this.token = null;
-
-        return res.status(200).json({ message: "User signed out" });
-    }
-
-    getToken () {
-        if (!this.token) {
-            return res.status(404).json({ message: "User is not signed in" });
-        }
-
-        res.status(200).json({ token: this.model.token });
-    }
-
     async addMeeting (meetingID: ObjectId) {
         await this.updateOne({ $push: { accessibleMeetings: meetingID } });
 

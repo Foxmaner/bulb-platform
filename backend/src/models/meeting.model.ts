@@ -28,7 +28,7 @@ class MeetingModel extends BaseModel<Meeting, typeof StaticMeetingService, typeo
             mainDocumentSections: { type: [Utils.sectionSchema()], default: [] },
             summaryDocumentSections: { type: {}, default: [] },
             meetingHistory: { type: [Utils.meetingHistorySchema()], default: [] },
-            members: { type: [MeetingModel.MemberSchema()], default: [] }
+            members: { type: [MeetingModel.memberSchema()], default: [] }
         };
         
         super({
@@ -44,7 +44,7 @@ class MeetingModel extends BaseModel<Meeting, typeof StaticMeetingService, typeo
         return len > 2 && len < 64;
     }
 
-    static MemberSchema(){
+    static memberSchema(){
         return {
             userID: Schema.Types.ObjectId,
             expiryDate: {},

@@ -11,15 +11,6 @@ export default class Utils {
     static sectionSchema () {
         return {
             section: {
-                id: {
-                    type: Number,
-                    required: true,
-                    unique: true,
-                    validate: {
-                        validator: Utils.integerValidator,
-                        message: "{VALUE} is not an integer value"
-                    }
-                },
                 title: String,
                 contains: {},
                 sectionHistory: [this.sectionHistorySchema()]
