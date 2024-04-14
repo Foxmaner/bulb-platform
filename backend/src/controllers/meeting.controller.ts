@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { UserModel } from '../models';
+import { MeetingModel, UserModel } from '../models';
 
 export class MeetingController {
 
@@ -12,17 +12,35 @@ export class MeetingController {
 
         console.log(resp.body);
 
-        return res.status(200).json(resp.body);
+        return res.status(resp.statusCode).json({meetings : resp.body});
     }
     
-    static id(req: Request, res: Response) {
-        
+    static async id(req: any, res: Response) {
+        const id = req.params.id;
+
+        const resp = await MeetingModel.get(id);
+
+        console.log(resp.body);
+
+        return res.status(resp.statusCode).json(resp.body);
     }
     
-    static delete(req: Request, res: Response) {
-        
+    //Not working
+    static async delete(req: Request, res: Response) {
+        const id = req.params.id;
+
+        //somethign not correct
+        const resp = await MeetingModel.delete(id);
+
+        console.log(resp.body);
+
+        if(resp.statusCode == 200){
+            return res.status(200).json({ message: "Deleted" });
+        }
+        return res.status(resp.statusCode).json({ message: "Failed to delete" });
     }
 
+    //Sometimes doesn't work. dont know cause
     static async create(req: any, res: Response) {
         const userID = req.session.passport.user
 
@@ -30,7 +48,9 @@ export class MeetingController {
 
         const resp = await user.createMeeting(req.body);
 
-        res.status(200).json({ message: "Success!" });
+        console.log(resp.body);
+    
+        res.status(resp.statusCode).json(resp.body);
     }
 
     static edit(req: Request, res: Response){
