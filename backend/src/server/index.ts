@@ -1,6 +1,6 @@
 import { Socket } from 'socket.io';
 
-import { SocketController } from '../controllers';
+import { SocketController, CursorController } from '../controllers';
 
 
 function connectionHandler(socket : Socket) : void {
@@ -21,6 +21,8 @@ function connectionHandler(socket : Socket) : void {
     socket.on('paragraph_delete', SocketController.delete_paragraph)
 
     socket.on('paragraph_edit', SocketController.edit_paragraph);
+
+    socket.on('cursor_move', CursorController.cursor_move);
 }
 
 export { connectionHandler };
