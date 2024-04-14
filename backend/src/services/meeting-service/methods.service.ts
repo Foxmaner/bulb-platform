@@ -83,6 +83,15 @@ export class MethodMeetingService extends mongoose.Model<Meeting> {
         return res.status(200).json({ message: "Paragraph edited" });
     }
 
+    async pushParagraphHistory(history, sectionID, paragraphID) {
+        this.updateOne({
+            $match: { "sections_id": sectionID, "sections.contains._id": paragraphID },
+            $push: { paragraphHistory: history } 
+        });
+
+        return res.status(200).json({ message: "History added" });
+    }
+
     addParagaraph (sectionID: number) {
         const newParagraph = {
             id: this.sections[sectionID].contains.length,
