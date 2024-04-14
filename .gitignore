@@ -3,16 +3,20 @@
 
 ### NextJS ###
 # dependencies
-/node_modules
+*/node_modules
+bulb/node_modules
+*/dist
 /.pnp
 .pnp.js
 
 # testing
-/coverage
+*/coverage
 
 # next.js
 /.next/
 /out/
+
+/databas/.env
 
 # production
 /build
