@@ -10,27 +10,15 @@ import { Response as res } from "../utils.service";
 export class MethodMeetingService extends mongoose.Model<Meeting> {
 
     isMember (userID: ObjectId) {
-        if (!this.model.members.includes(userID)) {
+        if (!this.members.includes(userID)) {
             return res.status(403).json({ message: "User is not a member of this meeting" });
         }
 
         return res.status(200);
     }
 
-    async setToDocument () {
-        this.model.completed = true;
-
-        return res.status(200);
-    }
-
-    async setToMeeting () {
-        this.model.completed = false;
-
-        return res.status(200);
-    }
-
     async addMember (userID: ObjectId) {
-        this.model.members.push(userID);
+        this.members.push(userID);
 
         const resp = await UserModel.get(userID);
 
@@ -38,7 +26,7 @@ export class MethodMeetingService extends mongoose.Model<Meeting> {
             return res.status(404).json({ message: "User not found" });
         }
 
-        resp.user.addMeeting(this.model._id, res);
+        resp.user.addMeeting(this._id, res);
 
         if (resp.statusCode !== 200) {
             return res.status(500).json({ message: "Error adding meeting to user" });
@@ -52,20 +40,20 @@ export class MethodMeetingService extends mongoose.Model<Meeting> {
      */
     addSection () {
         const newSection: Section = {
-            id: this.model.sections.length,
+            id: this.sections.length,
             title: "Untitled Section",
             contains: [],
             sectionHistory: []
         }
 
-        this.model.sections.push(newSection);
+        this.updateOne({ $push: { sections: newSection } });
 
         return res.status(200).json(newSection);
     }
 
     removeSection (sectionID: number) {
-        const newSections = this.model.sections.filter((section: Section) => section.id !== sectionID);
-        this.model.sections = newSections;
+        const newSections = this.sections.filter((section: Section) => section.id !== sectionID);
+        this.sections = newSections;
 
         return res.status(200).json({ message: "Section removed" });
     }
@@ -86,25 +74,31 @@ export class MethodMeetingService extends mongoose.Model<Meeting> {
         return res.status(200)
     }
 
-    editParagraph(paragraphID) {
+    async editPargraphText(text, sectionID, paragraphID) {
+        this.updateOne({
+            $match: { "sections_id": sectionID, "sections.contains._id": paragraphID },
+            $set: { text: text } 
+        });
 
+        return res.status(200).json({ message: "Paragraph edited" });
     }
 
     addParagaraph (sectionID: number) {
         const newParagraph = {
-            id: this.model.sections[sectionID].contains.length,
+            id: this.sections[sectionID].contains.length,
+            text: "",
             paragraphHistory: [],
             comments: []
         }
 
-        this.model.sections[sectionID].contains.push(newParagraph);
+        this.sections[sectionID].contains.push(newParagraph);
 
         return res.status(200).json(newParagraph);
     }
 
     removeParagraph (sectionID: number, paragraphID: number) {
-        const newParagraphs = this.model.sections[sectionID].contains.filter((paragraph: any) => paragraph.id !== paragraphID);
-        this.model.sections[sectionID].contains = newParagraphs;
+        const newParagraphs = this.sections[sectionID].contains.filter((paragraph: any) => paragraph.id !== paragraphID);
+        this.sections[sectionID].contains = newParagraphs;
 
         return res.status(200).json({ message: "Paragraph removed" });
     }
@@ -114,45 +108,45 @@ export class MethodMeetingService extends mongoose.Model<Meeting> {
     */
     addQuestion (sectionID: number) {
         const newQuestion = {
-            id: this.model.sections[sectionID].contains.length,
+            id: this.sections[sectionID].contains.length,
             questionHistory: [],
             comments: []
         }
 
-        this.model.sections[sectionID].contains.push(newQuestion);
+        this.sections[sectionID].contains.push(newQuestion);
 
         return res.status(200).json(newQuestion);
     }
 
     removeQuestion (sectionID: number, questionID: number) {
-        const newQuestions = this.model.sections[sectionID].contains.filter((question: any) => question.id !== questionID);
-        this.model.sections[sectionID].contains = newQuestions;
+        const newQuestions = this.sections[sectionID].contains.filter((question: any) => question.id !== questionID);
+        this.sections[sectionID].contains = newQuestions;
 
         return res.status(200).json({ message: "Question removed" });
     }
 
     addAnswer (sectionID: number, questionID: number, answer: any) {
-        this.model.sections[sectionID].contains[questionID].responses.push(answer);
+        this.sections[sectionID].contains[questionID].responses.push(answer);
 
         return res.status(200).json({ message: "Answer added" });
     }
 
     removeAnswer (sectionID: number, questionID: number, answerID: number) {
-        const newAnswers = this.model.sections[sectionID].contains[questionID].responses.filter((answer: any) => answer.id !== answerID);
-        this.model.sections[sectionID].contains[questionID].responses = newAnswers;
+        const newAnswers = this.sections[sectionID].contains[questionID].responses.filter((answer: any) => answer.id !== answerID);
+        this.sections[sectionID].contains[questionID].responses = newAnswers;
 
         return res.status(200).json({ message: "Answer removed" });
     }
 
     async addComment (sectionID: number, paragraphID: number, comment: any) {
-        this.model.sections[sectionID].contains[paragraphID].comments.push(comment);
+        this.sections[sectionID].contains[paragraphID].comments.push(comment);
 
         return res.status(200).json({ message: "Comment added" });
     }
 
     async removeComment (sectionID: number, paragraphID: number, commentID: number) {
-        const newComments = this.model.sections[sectionID].contains[paragraphID].comments.filter((comment: any) => comment.id !== commentID);
-        this.model.sections[sectionID].contains[paragraphID].comments = newComments;
+        const newComments = this.sections[sectionID].contains[paragraphID].comments.filter((comment: any) => comment.id !== commentID);
+        this.sections[sectionID].contains[paragraphID].comments = newComments;
 
         return res.status(200).json({ message: "Comment removed" });
     }
