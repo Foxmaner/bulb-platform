@@ -1,7 +1,6 @@
 import { TestDecorators } from "../../utils";
 
 
-
 @TestDecorators.describeSocket("Meeting Socket tests")
 class MeetingTest {
     @TestDecorators.test("Use meeting")
