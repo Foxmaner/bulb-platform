@@ -5,50 +5,50 @@ class MeetingRouteTests {
 
     @TestDecorators.test("Get meetings")
     async getMeetings(req: any) {   
-
+        let res :any
         await req.post("/login").send({
             password: 'testPassword',
             name: 'testUser',
         });
         
-        const resp1 = await req.post('/meeting/create').send({
+        res = await req.post('/meeting/create').send({
             name:'Meeting 1'
         })
-        expect(resp1.statusCode).toBe(201)
+        expect(res.statusCode).toBe(201)
 
-        const resp2 = await req.post('/meeting/create').send({
+        res = await req.post('/meeting/create').send({
             name:'Meeting 2'
         })
-        expect(resp2.statusCode).toBe(201)
+        expect(res.statusCode).toBe(201)
 
-        const resp = await req.get("/meeting/")
-
-
-        expect(resp.body.meetings.length).toBe(2);
+        res = await req.get("/meeting/")
+        expect(res.body.meetings.length).toBe(2);
     }
 
     @TestDecorators.test("Delete meetings")
     async delete(req: any) {   
-
+        let res: any
         await req.post("/login").send({
             password: 'testPassword',
             name: 'testUser',
         });
         
-        await req.post('/meeting/create').send({
+        const resp = await req.post('/meeting/create').send({
             name:'Meeting 1'
         })
+        res = await req.get("/meeting/")
+        expect(res.body.meetings.length).toBe(1);
 
-        const res = await req.get("/meeting/")
-
-        await req.delete(`/meeting/delete/${res._body[0]}`)
-        const resp = await req.get("/meeting/")
-
-        expect(resp._body.length).toBe(0);
+        res = await req.delete(`/meeting/delete/${resp.body.meeting._id}`)
+        expect(res.statusCode).toBe(200)
+        
+        res = await req.get("/meeting/")
+        expect(res.body.meetings.length).toBe(0);
     }
 
     @TestDecorators.test("Get invalid meeting by ID")
     async getInvalidMeeting(req:any){
+        let res : any
         await req.post("/login").send({
             password: 'testPassword',
             name: 'testUser',
@@ -58,9 +58,8 @@ class MeetingRouteTests {
             name:'Meeting 1'
         })
 
-        const res = await req.get("/meeting/asdasdsada");
+        res = await req.get("/meeting/asdasdsada");
         expect(res.status).toBe(404)
-        expect(res._body.meeting.length).toBe(0)
     }
 
     @TestDecorators.test("Get valid meeting by ID")
@@ -75,9 +74,11 @@ class MeetingRouteTests {
             name:'Meeting 1'
         })
 
-        const id = resp._body.meeting
+        const id = resp.body.meeting._id
+
         const res = await req.get(`/meeting/${id}/`);
-        expect(res._body.meeting.length).toBe(1)
+        expect(res.statusCode).toBe(200)
+        expect(res.body.meeting._id).toBe(id)
     }
 }
 

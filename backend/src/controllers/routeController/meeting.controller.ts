@@ -13,26 +13,36 @@ export class MeetingController {
 
         const resp = await user.getMeetings();
 
+        if(process.env.DEBUG == "true"){
+            console.log(resp.body)
+        }
+
         if(resp.statusCode != 200){
             return res.status(resp.statusCode).json(resp.body)
         }
 
-
-        res.status(200).json({ meetings: resp.body });
+        res.status(200).json({meetings: resp.body});
     }
     
     static async id(req: any, res: Response) {
         const userID = req.session.passport.user;
         const respUser = await UserModel.get(userID);
         const user = respUser.body;
+        const meetingId = req.params.id
 
         if(respUser.statusCode != 200){
             return res.status(respUser.statusCode).json(respUser.body)
         }
 
-        const meetings = user.getMeetings();
-        const meeting = meetings.body.find(meeting => meeting==req.params.id);
-        
+        const resp = await user.getMeetings();
+        const userMeetings = resp.body;
+
+        if(process.env.DEBUG == "true"){
+            console.log(resp.body)
+        }
+
+        const meeting = userMeetings.find(meeting => meeting._id == meetingId);
+
         if(!meeting){
             return res.status(404).json({message : "meeting not found"})
         }
@@ -43,21 +53,29 @@ export class MeetingController {
         const userID = req.session.passport.user;
         const respUser = await UserModel.get(userID);
         const user = respUser.body;
+        const meetingId = req.params.id
 
         if(respUser.statusCode != 200){
             return res.status(respUser.statusCode).json(respUser.body)
         }
 
         //Make sure user is allowed to delete meeting, maybe with accessLevel=1?
-        const resp = user.getMeetings();
+        const resp = await user.getMeetings();
+        const userMeetings = resp.body;
 
-        const meeting = resp.body.find(meeting => meeting==req.params.id);
+        console.log("WEIDOADHJERF")
+        console.log(meetingId)
+
+        const meeting = userMeetings.find(meeting => meeting._id == meetingId);
 
         if(!meeting){
             return res.status(404).json({message : "meeting not found"})
         }
-
         const respDelete = await MeetingModel.delete(meeting);
+
+        if(process.env.DEBUG == "true"){
+            console.log(respDelete.body)
+        }
 
         if(respDelete.statusCode != 200){
             return res.status(respDelete.statusCode).json(respDelete.body)
@@ -67,7 +85,6 @@ export class MeetingController {
 
     static async create(req: any, res: Response) {
         const userID = req.session.passport.user
-
         const respUser = await UserModel.get(userID);
         const user = respUser.body;
 
@@ -77,14 +94,15 @@ export class MeetingController {
 
         const resp = await user.createMeeting(req.body);        
 
+        if(process.env.DEBUG == "true"){
+            console.log(resp.body)
+        }
 
         if(resp.statusCode != 201){
             return res.status(resp.statusCode).json(resp.body)
         }
 
-        const id = resp.body._id.toString();
-
-        res.status(201).json({ message: "meeting created", meeting: id });
+        res.status(201).json({ message: "meeting created", meeting: resp.body });
     }
 
     static edit(req: Request, res: Response){
