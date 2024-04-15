@@ -3,14 +3,17 @@
 import { Button, ScrollShadow } from "@nextui-org/react";
 import { FormEvent, useState } from "react";
 import Link from "next/link";
-import AddSection from "../../components/section";
+import AddSection from "../../components/defaultAddsection";
 import QuestionForm from "app/components/questionForm";
-import { section, question, paragraph } from "index";
 import SectionForm from "app/components/sectionForm"
+
+import { Section } from "index"; 
+
+import { useSectionContext } from "context/sectionProvider";
 
 
 export default function createPage() {
-    const [sections, setSections] = useState<section[]>([]);
+    const { sections, setSections } = useSectionContext();
 
     const addSection = () => {
         setSections([...sections, { _id: "123" }])
@@ -51,7 +54,7 @@ export default function createPage() {
 
 
                             {
-                                sections.map((section: section) => <SectionForm data={section} />)
+                                sections.map((section: Section) => <SectionForm data={section} />)
                             }
 
 

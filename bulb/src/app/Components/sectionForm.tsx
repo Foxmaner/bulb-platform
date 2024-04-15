@@ -7,12 +7,12 @@ import { useEffect, useState, useRef } from "react";
 import ParagraphForm from "./paragraph";
 
 import QuestionForm from "./questionForm";
-import { paragraph, question, section } from "index";
+import { Section, Paragraph} from "index";
 import { title } from "process";
 
 
 interface SectionFormProps {
-    data: section
+    data: Section
 }
 
 export default function SectionForm({ data }: SectionFormProps) {
@@ -24,7 +24,7 @@ export default function SectionForm({ data }: SectionFormProps) {
         setMenuOpen(!menuOpen);
     };
 
-    const [paragraphs, setParagraphs] = useState<paragraph[]>(data.paragraphs || [])
+    const [paragraphs, setParagraphs] = useState<Paragraph[]>(data.paragraphs || [])
 
     useEffect(() => {
         const handler = (event: MouseEvent) => {
@@ -68,7 +68,7 @@ export default function SectionForm({ data }: SectionFormProps) {
                     {(menuOpen) && (
                         <div ref={popupRef} className="flex z-10 justify-center absolute mt-2 w-96 h-auto rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
 
-                            <div className="flex flex-col py-1">
+                            <div className="flex flex-col justify-center py-1">
                                 <p className="flex text-lg text-primaryText select-none">Lägg till stycke</p>
                                 <button onClick={() => addParagraph()} className="block px-4 py-2 text-lg text-primaryText hover:bg-gray-100">
                                     Stycke

@@ -1,5 +1,6 @@
 'use client';
 
+import { SectionProvider } from 'context/sectionProvider';
 import { useEffect, useState } from 'react';
 
 
@@ -17,12 +18,13 @@ export default function LayoutPage({ children }: layoutProps) {
     }, []);
 
     return (
-
         <div className="relative">
             {isClient && (
                 <>
                     <div className='relative z-10'>
-                        {children}
+                        <SectionProvider>
+                            {children}
+                        </SectionProvider>
                     </div>
                     <div className="absolute top-0 left-0 -z-1 w-screen h-screen">
                         <svg width="100%" height="100%" fill="none" xmlns="http://www.w3.org/2000/svg">

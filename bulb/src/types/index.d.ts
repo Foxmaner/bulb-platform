@@ -3,18 +3,13 @@ declare module "index"{
 
     interface Example{}
 
-    type section = {
+    type Section = {
         _id: string,
         paragraphs?: paragraph[]
-        questions? : question[]
     }
 
-    type paragraph = {
+    type Paragraph = {
         title?: string;
-    }
-    type question = {
-        title?: string
-        answer?: string
     }
 }
 
