@@ -6,6 +6,7 @@ import { User } from "index";
 
 import { Response as res } from '../utils.service';
 
+
 export class StaticUserService {
 
     static async findOrCreate(props: User) {
@@ -19,11 +20,11 @@ export class StaticUserService {
                 oAuthID: props.oAuthID,
                 oAuthProvider: props.oAuthProvider,
                 name: props.name,
-                accesLevel: 0
+                accesLevel: "generic",
             });
             await user.save();
 
-            return res.status(200).json({ user });
+            return res.status(201).json({ user });
         } catch (error: any) {
             console.error(error);
 
@@ -39,7 +40,7 @@ export class StaticUserService {
                 return res.status(409).json({ error: 'User already exists' });
             }
 
-            props.accesLevel = 0;
+            props.accesLevel = "generic";
 
             const user = new UserModel(props);
             await user.save();
@@ -60,7 +61,7 @@ export class StaticUserService {
                 return res.status(409).json({ error: 'User already exists' });
             }
 
-            props.accesLevel = 1;
+            props.accesLevel = "admin";
 
             const user = new UserModel(props);
             await user.save();
@@ -101,12 +102,12 @@ export class StaticUserService {
             return res.status(400).json({ message: "Invalid ObjectID." });
         }
 
-        const User = await UserModel.findById(id);
-        if (!User) {
+        const user = await UserModel.findById(id);
+        if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
 
-        return res.status(200).json(User);
+        return res.status(200).json({ user });
     }
 
     static async getByOAuthID(oAuthID: string) {

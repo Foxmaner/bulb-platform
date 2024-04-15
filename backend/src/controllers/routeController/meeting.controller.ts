@@ -1,11 +1,14 @@
 import { Request, Response } from 'express';
 import { MeetingModel, UserModel } from '../../models';
 
+
 export class MeetingController {
+
     static async load(req: any, res: Response) {
+
         const userID = req.session.passport.user
         const respUser = await UserModel.get(userID);
-        const user = respUser.body;
+        const user = respUser.body.user;
 
         if(respUser.statusCode != 200){
             return res.status(401).json(respUser.body)
@@ -52,30 +55,47 @@ export class MeetingController {
     static async delete(req: any, res: Response) {
         const userID = req.session.passport.user;
         const respUser = await UserModel.get(userID);
-        const user = respUser.body;
+
+        const user = respUser.body.user;
         const meetingId = req.params.id
 
         if(respUser.statusCode != 200){
             return res.status(401).json(respUser.body)
         }
 
-        //Make sure user is allowed to delete meeting, maybe with accessLevel=1?
-        const resp = await user.getMeetings();
-        const userMeetings = resp.body;
-
-        const meeting = userMeetings.find(meeting => meeting._id == meetingId);
-
-        if(!meeting){
-            return res.status(404).json({message : "meeting not found"})
+        const respMeeting = await MeetingModel.get(meetingId);
+        const meeting = respMeeting.body.meeting;
+        if (!meeting) {
+            return res.status(respMeeting.statusCode).json(respMeeting.body);
         }
-        const respDelete = await MeetingModel.delete(meeting);
+
+        const respUserRemoveMeeting = await user.removeMeeting(meetingId);
+
+        if(respUserRemoveMeeting.statusCode != 200){
+            return res.status(respUserRemoveMeeting.statusCode).json(respUserRemoveMeeting.body)
+        }
+
+        const ownerResp = await meeting.getOwner();
+
+        if (!ownerResp) {
+            return res.status(500).json({ message: "Internal Error" });
+        }
+
+        let respMeetingRemove;
+
+        if (ownerResp.body.owner._id.equals(user._id)){
+            respMeetingRemove =  await meeting.removeAllUsers();
+            await MeetingModel.findByIdAndDelete(meetingId);
+        } else {
+            respMeetingRemove = await meeting.removeMember(userID);
+        }
 
         if(process.env.DEBUG == "true"){
-            console.log(respDelete.body)
+            console.log(respMeetingRemove.body)
         }
 
-        if(respDelete.statusCode != 200){
-            return res.status(respDelete.statusCode).json(respDelete.body)
+        if(respMeetingRemove.statusCode != 200){
+            return res.status(respMeetingRemove.statusCode).json(respMeetingRemove.body)
         }
         res.status(200).json({ message: "Success!" });
     }
@@ -83,13 +103,14 @@ export class MeetingController {
     static async create(req: any, res: Response) {
         const userID = req.session.passport.user
         const respUser = await UserModel.get(userID);
-        const user = respUser.body;
+        const user = respUser.body.user;
 
         if(respUser.statusCode != 200){
             return res.status(401).json( respUser.body)
         }
 
         const resp = await user.createMeeting(req.body);        
+        
 
         if(process.env.DEBUG == "true"){
             console.log(resp.body)

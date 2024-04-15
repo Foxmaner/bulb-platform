@@ -6,6 +6,7 @@ import BaseModel from "./base.model";
 import { Meeting } from "index";
 
 import Utils from "./utils";
+import { MemberAccessLevel } from "accessLevels";
 
 
 class MeetingModel extends BaseModel<Meeting, typeof StaticMeetingService, typeof MethodMeetingService> {
@@ -27,7 +28,7 @@ class MeetingModel extends BaseModel<Meeting, typeof StaticMeetingService, typeo
             },
             mainDocumentSections: { type: [Utils.sectionSchema()], default: [] },
             summaryDocumentSections: { type: {}, default: [] },
-            meetingHistory: { type: [Utils.meetingHistorySchema()], default: [] },
+            meetingHistory: { type: [MeetingModel.meetingHistorySchema()], default: [] },
             members: { type: [MeetingModel.memberSchema()], default: [] }
         };
         
@@ -48,16 +49,30 @@ class MeetingModel extends BaseModel<Meeting, typeof StaticMeetingService, typeo
         return {
             userID: Schema.Types.ObjectId,
             expiryDate: {},
-            accessLevel: {
-                type: Number,
+            role: {
+                type: String,
+                enum: ['reviewer', 'editor', 'owner'],
                 required: true,
-                validate: {
-                    validator: Utils.integerValidator,
-                    message: "{VALUE} is not an integer value"
+                // Define a custom getter to map strings to numbers
+                get: role => {
+                    const map: { [key in MemberAccessLevel]: number } = { 'reviewer': 0, 'editor': 1, 'owner': 2 };
+                    return map[role];
                 }
             }
         } 
     }
+
+    static meetingHistorySchema() {
+        return {
+            meetingHistory: {
+                userID: Schema.Types.ObjectId,
+                date: Date,
+                sectionID: Schema.Types.ObjectId,
+                added: Boolean
+            }
+        }
+    }
+
 }
 
 const meeting = new MeetingModel().model;

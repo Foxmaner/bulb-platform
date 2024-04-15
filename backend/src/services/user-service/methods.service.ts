@@ -16,9 +16,8 @@ export class MethodUserService extends mongoose.Model<User> {
         return res.status(200).json({ message: "Meeting added" });
     }
 
-    removeMeeting (meetingID: ObjectId) {
-        const newMeetings =  this.accessibleMeetings.filter((id: ObjectId) => id !== meetingID);
-        this.accessibleMeetings = newMeetings;
+    async removeMeeting (meetingID: ObjectId) {
+        await this.updateOne({ $pull: { accessibleMeetings: meetingID }});
 
         return res.status(200).json({ message: "Meeting removed" });
     }
@@ -31,7 +30,7 @@ export class MethodUserService extends mongoose.Model<User> {
         return res.status(200).json({ message: "Company changed" });
     }
 
-    changeAccessLevel (newLevel: number) {
+    changeAccessLevel (newLevel: string) {
         this.accesLevel = newLevel;
 
         return res.status(200).json({ message: "Access level changed" });
@@ -44,7 +43,7 @@ export class MethodUserService extends mongoose.Model<User> {
                 name: props.name,
                 date: new Date(),
                 members: [
-                    { userID: this._id, accessLevel: 2 }
+                    { userID: this._id, role: "owner" }
                 ]
             });
             await Meeting.save();
