@@ -6,25 +6,26 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import ParagraphForm from "./paragraph";
 
-import QuestionForm from "./questionForm";
 import { Section, Paragraph} from "index";
 import { title } from "process";
+import { useMeetingContext } from "../context/meetingProvider";
 
 
 interface SectionFormProps {
-    data: Section
+    data: Section // title, _id, paragraphs
 }
 
 export default function SectionForm({ data }: SectionFormProps) {
     const [menuOpen, setMenuOpen] = useState(false);
+
     //Måste berätta för Typescript att det är en sjukt nice div
     const popupRef = useRef<HTMLDivElement>(null);
+    const { meeting, setMeeting } = useMeetingContext();
 
     const toggleMenu = () => {
         setMenuOpen(!menuOpen);
     };
 
-    const [paragraphs, setParagraphs] = useState<Paragraph[]>(data.paragraphs || [])
 
     useEffect(() => {
         const handler = (event: MouseEvent) => {
@@ -39,10 +40,37 @@ export default function SectionForm({ data }: SectionFormProps) {
             document.removeEventListener("mousedown", handler);
         };
     }, []);
+    
 
+    
+    /**
+    *  setMeeting(
+    *   ...meting = shallow copy
+    *     sections: meetings.section.map... = loopar igenom sections kollar id = id. id kommer från backend senare i tiden
+    *    Om id:t, dvs data i functionfältet )
+    *  Går igenom alla sektioner i mötet och letar efter samma id som denna sektion
+    *  Då kan vi lägga till qtt stycken vi vill i denna sektion
+    *  Och bara returnera den sektionenerna
+    */
     const addParagraph = (title?: string) => {
-        setParagraphs([...paragraphs, { title: title }])
+        setMeeting({
+            ...meeting,
+            sections: meeting.sections.map(section => {
+                if (section._id === data._id) {
+                    const newPargraph = { 
+                        title: title 
+                    }
+                    
+                    return {
+                        ...section,
+                        paragraphs: [...(section.paragraphs || []), newPargraph]
+                    }
+                }
+                return section;
+            })
+        })
     }
+
 
     return (
         <div className="flex flex-col gap-2">
@@ -56,7 +84,7 @@ export default function SectionForm({ data }: SectionFormProps) {
                 style={{ fontWeight: 'bold', fontSize: '16px' }}
             />
             {
-                paragraphs?.map((paragraph) => <ParagraphForm title={paragraph.title} />)
+                data.paragraphs?.map((paragraph: Paragraph, index: number) => <ParagraphForm key={index} title={paragraph.title} />)
             }
             <div className="flex flex-col w-full h-full">
                 <div ref={popupRef} className="relative w-full h-full flex justify-center">
@@ -69,7 +97,7 @@ export default function SectionForm({ data }: SectionFormProps) {
                         <div ref={popupRef} className="flex z-10 justify-center absolute mt-2 w-96 h-auto rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
 
                             <div className="flex flex-col justify-center py-1">
-                                <p className="flex text-lg text-primaryText select-none">Lägg till stycke</p>
+                                <p className="block text-center text-lg text-bold text-primaryText select-none">Lägg till stycke</p>
                                 <button onClick={() => addParagraph()} className="block px-4 py-2 text-lg text-primaryText hover:bg-gray-100">
                                     Stycke
                                 </button>
