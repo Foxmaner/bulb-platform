@@ -11,6 +11,10 @@ routes.delete('/delete/:id', MeetingController.delete)
 
 routes.post('/create', MeetingController.create)
 
+routes.get('/:filter', MeetingController.filter)
+
+routes.post('/:id/publish', MeetingController.publish)
+
 routes.put('/edit/:id', MeetingController.edit)
 
 routes.post('/edit/post', MeetingController.editPost)

@@ -8,7 +8,7 @@ export class MeetingController {
         const user = respUser.body;
 
         if(respUser.statusCode != 200){
-            return res.status( respUser.statusCode).json( respUser.body)
+            return res.status(401).json(respUser.body)
         }
 
         const resp = await user.getMeetings();
@@ -31,7 +31,7 @@ export class MeetingController {
         const meetingId = req.params.id
 
         if(respUser.statusCode != 200){
-            return res.status(respUser.statusCode).json(respUser.body)
+            return res.status(401).json(respUser.body)
         }
 
         const resp = await user.getMeetings();
@@ -56,15 +56,12 @@ export class MeetingController {
         const meetingId = req.params.id
 
         if(respUser.statusCode != 200){
-            return res.status(respUser.statusCode).json(respUser.body)
+            return res.status(401).json(respUser.body)
         }
 
         //Make sure user is allowed to delete meeting, maybe with accessLevel=1?
         const resp = await user.getMeetings();
         const userMeetings = resp.body;
-
-        console.log("WEIDOADHJERF")
-        console.log(meetingId)
 
         const meeting = userMeetings.find(meeting => meeting._id == meetingId);
 
@@ -89,7 +86,7 @@ export class MeetingController {
         const user = respUser.body;
 
         if(respUser.statusCode != 200){
-            return res.status(respUser.statusCode).json(respUser.body)
+            return res.status(401).json( respUser.body)
         }
 
         const resp = await user.createMeeting(req.body);        
@@ -99,10 +96,34 @@ export class MeetingController {
         }
 
         if(resp.statusCode != 201){
-            return res.status(resp.statusCode).json(resp.body)
+            return res.status(400).json(resp.body)
         }
 
         res.status(201).json({ message: "meeting created", meeting: resp.body });
+    }
+
+    static async filter(req: any, res: Response){
+        const userID = req.session.passport.user
+        const respUser = await UserModel.get(userID);
+        const user = respUser.body;
+        const filter = req.params.filter
+
+        if(respUser.statusCode != 200){
+            return res.status(401).json( respUser.body)
+        }
+
+    }
+
+    static async publish(req: any, res: Response){
+        const userID = req.session.passport.user
+        const respUser = await UserModel.get(userID);
+        const user = respUser.body;
+        const meetingId = req.params.id
+
+        if(respUser.statusCode != 200){
+            return res.status(401).json( respUser.body)
+        }
+
     }
 
     static edit(req: Request, res: Response){
