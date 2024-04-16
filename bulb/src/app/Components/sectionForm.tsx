@@ -1,6 +1,13 @@
 
 'use client';
-import { Button, ButtonGroup, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Textarea } from "@nextui-org/react";
+import {
+    Button, ButtonGroup, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Textarea, Modal,
+    ModalContent,
+    ModalHeader,
+    ModalBody,
+    ModalFooter,
+    useDisclosure
+} from "@nextui-org/react";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
@@ -17,7 +24,7 @@ interface SectionFormProps {
 
 export default function SectionForm({ data }: SectionFormProps) {
     const [menuOpen, setMenuOpen] = useState(false);
-
+    const { isOpen, onOpen, onOpenChange } = useDisclosure();
     //Måste berätta för Typescript att det är en sjukt nice div
     const popupRef = useRef<HTMLDivElement>(null);
     const { meeting, setMeeting } = useMeetingContext();
@@ -72,20 +79,21 @@ export default function SectionForm({ data }: SectionFormProps) {
     }
 
     const deleteParagraph = (index: number) => {
-
-        setMeeting({
-            ...meeting,
-            sections: meeting.sections.map(section => {
-                if (section._id === data._id) {
-                    return {
-                        ...section,
-                        paragraphs: section.paragraphs?.filter((_, i) => i !== index)
-                    };
-                }
-                return section;
+        const isConfirmed = window.confirm("Är du säker på att du vill ta bort stycket?");
+        if (isConfirmed) {
+            setMeeting({
+                ...meeting,
+                sections: meeting.sections.map(section => {
+                    if (section._id === data._id) {
+                        return {
+                            ...section,
+                            paragraphs: section.paragraphs?.filter((_, i) => i !== index)
+                        };
+                    }
+                    return section;
+                })
             })
-        })
-
+        }
     };
 
 
@@ -110,7 +118,7 @@ export default function SectionForm({ data }: SectionFormProps) {
                             size="sm"
                             radius="full"
                             color="danger"
-                        >Delete </Button>
+                            >Delete </Button>
                     </div>
                 )
 
@@ -119,28 +127,37 @@ export default function SectionForm({ data }: SectionFormProps) {
 
             <div className="flex flex-col w-full h-full">
                 <div ref={popupRef} className="relative w-full h-full flex justify-center">
-                    <div className="border-2 w-11/12 h-11/12 text-center border-dashed cursor-pointer" onClick={toggleMenu}>
+                    <div className="border-2 w-11/12 h-11/12 text-center border-dashed cursor-pointer" onClick={onOpen}>
                         <p className="text-3xl select-none">+</p>
                     </div>
 
 
-                    {(menuOpen) && (
-                        <div ref={popupRef} className="flex z-10 justify-center absolute mt-2 w-96 h-auto rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
 
-                            <div className="flex flex-col justify-center py-1">
-                                <p className="block text-center text-lg text-bold text-primaryText select-none">Lägg till stycke</p>
-                                <button onClick={() => addParagraph()} className="block px-4 py-2 text-lg text-primaryText hover:bg-gray-100">
-                                    Stycke
-                                </button>
-                                <button onClick={() => addParagraph("Paragraf Rubrik")} className="block px-4 py-2 text-lg text-primaryText hover:bg-gray-100">
-                                    Stycke med underrubrik
-                                </button>
-                                <button className="block px-4 py-2 text-lg text-primaryText hover:bg-gray-100">
-                                    Bild
-                                </button>
-                            </div>
-                        </div>
-                    )}
+                    <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+                        <ModalContent>
+                            {(onClose) => (
+                                <>
+                                    <ModalBody>
+                                        <p className="block text-center text-lg text-bold text-primaryText select-none">Lägg till stycke</p>
+                                        <button onClick={() => {addParagraph(); onClose()}} className="block px-4 py-2 text-lg text-primaryText hover:bg-gray-100">
+                                            Stycke
+                                        </button>
+                                        <button onClick={() => {addParagraph("Paragraf Rubrik"); onClose()}} className="block px-4 py-2 text-lg text-primaryText hover:bg-gray-100">
+                                            Stycke med underrubrik
+                                        </button>
+                                        <button className="block px-4 py-2 text-lg text-primaryText hover:bg-gray-100">
+                                            Bild
+                                        </button>
+                                    </ModalBody>
+                                    <ModalFooter>
+                                        <Button color="danger" variant="light" onPress={onClose}>
+                                            Stäng
+                                        </Button>
+                                    </ModalFooter>
+                                </>
+                            )}
+                        </ModalContent>
+                    </Modal>
                 </div>
             </div>
         </div>

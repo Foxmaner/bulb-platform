@@ -7,7 +7,7 @@ import AddSection from "../../components/defaultAddsection";
 
 import SectionForm from "app/components/sectionForm"
 
-import { Section } from "index"; 
+import { Section } from "index";
 
 import { useMeetingContext } from "../../context/meetingProvider";
 
@@ -22,8 +22,10 @@ export default function MeetingPage() {
             paragraphs: []
         }
 
-        setMeeting({...meeting, sections: [...meeting.sections, newSection]})
+        setMeeting({ ...meeting, sections: [...meeting.sections, newSection] })
     }
+
+
 
     return (
 
@@ -37,9 +39,17 @@ export default function MeetingPage() {
                         </Link>
 
                     </div>
+                    {/*Försöker fixa med katalogen här men har inte lyckats*/}
                     <div className="bg-secondaryGrey h-1 w-full"></div>
                     <div className="flex justify-center py-2">
-                        <p className="">Catalog</p>
+                        <p className="text-xl">Catalog</p>
+                        <ul>
+                        {
+                            meeting.sections.map((section: Section, index: number) => (
+                            <li key={index}>
+                                {section.title}</li>))
+                        }
+                        </ul>
                     </div>
                 </div>
 
@@ -52,14 +62,14 @@ export default function MeetingPage() {
                         <div className="flex flex-row bg-secondaryGrey h-1 w-11/12"></div>
                     </div>
                     <div className="flex flex-row gap-2">
-                   
-                        <Button variant="solid" className="bg-primaryGrey border-2 border-edge"onClick={addSection}>Nytt avsnitt</Button>
+
+                        <Button variant="solid" className="bg-primaryGrey border-2 border-edge" onClick={addSection}>Nytt avsnitt</Button>
                         <Button className="bg-white border-2 border-edge w-4 h-6 m-2">File</Button>
                         <Button className="bg-white border-2 border-edge w-4 h-6 m-2">Edit</Button>
                         <Button className="bg-white border-2 border-edge w-4 h-6 m-2">Insert</Button>
                         <Button className="bg-white border-2 border-edge w-4 h-6 m-2">Format</Button>
                         <Button className="bg-white border-2 border-edge w-4 h-6 m-2">Help</Button>
-                        
+
                     </div>
                     <ScrollShadow hideScrollBar size={20}>
                         <div className="w-full h-screen">
@@ -78,7 +88,7 @@ export default function MeetingPage() {
                     </ScrollShadow>
 
                 </div>
-                
+
             </div>
 
         </div>
