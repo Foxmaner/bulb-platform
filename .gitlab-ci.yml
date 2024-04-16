@@ -45,7 +45,8 @@ cache:
     files:
       - package-lock.json
   paths:
-    - .npm/ # Moves npm cache inside project per GitLab restrictions
+    - ./bulb/npm/ # Moves npm cache inside project per GitLab restrictions
+    - bulb/node_modules/
 test:
   # Uses official Cypress docker image for dependencies
   # https://docs.cypress.io/guides/continuous-integration/introduction#Official-Cypress-Docker-Images
