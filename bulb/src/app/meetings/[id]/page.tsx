@@ -20,10 +20,7 @@ export default function createPage() {
           </div>
           <div className="bg-secondaryGrey h-1 w-full"></div>
         </div>
-<<<<<<< HEAD
     );
-=======
->>>>>>> b902189 (börjat på en inloggningssida)
 
         <div className="bg-secondaryGrey h-5/6 w-1 content-center"></div>
 
