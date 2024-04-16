@@ -1,7 +1,5 @@
 import PageHeader from "../components/pageHeader";
-
 import MeetingsView from "app/components/meetingList";
-
 
 export default function meetingPage() {
   return (

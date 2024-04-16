@@ -45,3 +45,4 @@ next-env.d.ts
 
 #Cypress
 screenshots
+/node_modules
