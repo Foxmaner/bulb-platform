@@ -34,19 +34,7 @@ unit-test:
 
 
 
-# For recording and parallelization to work you must set your CYPRESS_RECORD_KEY
-# in GitLab repo → Settings → CI/CD → Variables
-variables:
-  CYPRESS_RECORD_KEY: $CYPRESS_RECORD_KEY
-# Caches dependencies using npm lock file as key
-# https://docs.cypress.io/guides/continuous-integration/introduction#Caching
-cache:
-  key:
-    files:
-      - package-lock.json
-  paths:
-    - ./bulb/npm/ # Moves npm cache inside project per GitLab restrictions
-    - bulb/node_modules/
+
 test:
   # Uses official Cypress docker image for dependencies
   # https://docs.cypress.io/guides/continuous-integration/introduction#Official-Cypress-Docker-Images
