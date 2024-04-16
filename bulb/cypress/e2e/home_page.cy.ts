@@ -1,14 +1,4 @@
 /// <reference types = "cypress" />
-
-describe('Home Page', () => {
-  beforeEach(() => {
-    cy.visit('http://localhost:3000/')
-  })
-  it('should display the login page', () => {
-    cy.get('button').contains('Login with Google')
-  })
-})
-/** 
 describe('The Home Page', () => {
   it('successfully loads', () => {
     cy.visit('http://localhost:3000/') // change URL to match your dev URL
@@ -21,6 +11,20 @@ describe('The Home Page', () => {
   })
 })
 
+/** 
+
+describe('Home Page', () => {
+  beforeEach(() => {
+    cy.visit('http://localhost:3000/')
+  })
+  it('should display the login page', () => {
+    cy.screenshot('my-screenshot'); // Take a screenshot
+
+    cy.get('button').contains('Login with Google')
+    cy.screenshot('my-screenshot2'); // Take a screenshot
+
+  })
+})
 describe('The Home Page', () => {
   it('successfully loads', () => {
     cy.visit('http://localhost:3000/') // change URL to match your dev URL

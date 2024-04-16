@@ -6,6 +6,7 @@ export default defineConfig({
     baseUrl: 'http://localhost:3000',
     defaultCommandTimeout: 20000,
     taskTimeout: 30000,
+    screenshotsFolder: 'cypress/screenshots',
 
   },
 })
