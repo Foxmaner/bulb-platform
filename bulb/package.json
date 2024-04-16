@@ -13,7 +13,7 @@
     "cypress:open": "cypress open",
     "e2e": "start-server-and-test dev http://localhost:3000 \"cypress open --e2e --record --key 1b55db46-7328-4c3c-9d5f-39021cb38c0e\"",
     "ci:cy-run": "start-server-and-test ci:start-server http://localhost:3000 cy:run",
-    "e2e:headless": "start-server-and-test dev http://localhost:3000 \"cypress run --browser chrome --e2e --record --key 1b55db46-7328-4c3c-9d5f-39021cb38c0e\"",
+    "e2e:headless": "start-server-and-test dev http://localhost:3000 \"cypress run --browser edge --e2e --record --key 1b55db46-7328-4c3c-9d5f-39021cb38c0e\"",
     "e2e:local": "start-server-and-test dev http://localhost:3000 \"cypress run --e2e",
     "component": "cypress open --component",
     "component:headless": "cypress run --component"
