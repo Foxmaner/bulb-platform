@@ -23,7 +23,16 @@ export default function PageHeader({ userName }: { userName: string }) {
                 <h2 className="text-black">Good afternoon, {userName}</h2>
             </div>
 
-        <h2 className="text-black m-1">Good afternoon, {userName}</h2>
+      <div className="flex justify-between border-2 border-primaryBorder w-full items-center overflow-hidden">
+        <div className="flex items-start">
+          <h1 className="text-black font-bold text-7xl mx-5">
+            {capitalizeFirstLetter(pathName)}
+          </h1>
+        </div>
+        <div className="flex-shrink-0">
+          <Image src="/placeholder.jpg" alt="" height={122} width={400}></Image>
+        </div>
+      </div>
 
             <div className="flex justify-between border-2 border-primaryBorder w-full items-center" >
                 <div className="flex items-start" >
