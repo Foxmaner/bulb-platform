@@ -26,12 +26,16 @@ const protectedRoutes = [
 ];
 
 export async function middleware(req: NextRequest) {
+    
+    if(process.env.LOGIN === "FALSE"){
+        return NextResponse.next();
+    }
     const cookieHeader = req.headers.get("cookie") || '';
     const cookies = parse(cookieHeader);
     const connectSid = cookies['connect.sid'];
 
     const pathname = req.nextUrl.pathname.toLocaleLowerCase();
-
+    
     if (!routes.some(route => pathname.startsWith(route) && pathname !== "/")){
         return NextResponse.next();
     }

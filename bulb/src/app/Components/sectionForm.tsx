@@ -6,7 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import ParagraphForm from "./paragraph";
 
-import { Section, Paragraph} from "index";
+import { Section, Paragraph } from "index";
 import { title } from "process";
 import { useMeetingContext } from "../context/meetingProvider";
 
@@ -40,9 +40,9 @@ export default function SectionForm({ data }: SectionFormProps) {
             document.removeEventListener("mousedown", handler);
         };
     }, []);
-    
 
-    
+
+
     /**
     *  setMeeting(
     *   ...meting = shallow copy
@@ -57,10 +57,10 @@ export default function SectionForm({ data }: SectionFormProps) {
             ...meeting,
             sections: meeting.sections.map(section => {
                 if (section._id === data._id) {
-                    const newPargraph = { 
-                        title: title 
+                    const newPargraph = {
+                        title: title
                     }
-                    
+
                     return {
                         ...section,
                         paragraphs: [...(section.paragraphs || []), newPargraph]
@@ -70,6 +70,23 @@ export default function SectionForm({ data }: SectionFormProps) {
             })
         })
     }
+
+    const deleteParagraph = (index: number) => {
+
+        setMeeting({
+            ...meeting,
+            sections: meeting.sections.map(section => {
+                if (section._id === data._id) {
+                    return {
+                        ...section,
+                        paragraphs: section.paragraphs?.filter((_, i) => i !== index)
+                    };
+                }
+                return section;
+            })
+        })
+
+    };
 
 
     return (
@@ -84,8 +101,22 @@ export default function SectionForm({ data }: SectionFormProps) {
                 style={{ fontWeight: 'bold', fontSize: '16px' }}
             />
             {
-                data.paragraphs?.map((paragraph: Paragraph, index: number) => <ParagraphForm key={index} title={paragraph.title} />)
-            }
+                data.paragraphs?.map((paragraph: Paragraph, index: number) => (
+                    <div key={index}>
+                        <ParagraphForm title={paragraph.title} />
+                        <Button
+                            onClick={() => deleteParagraph(index)}
+                            variant="light"
+                            size="sm"
+                            radius="full"
+                            color="danger"
+                        >Delete </Button>
+                    </div>
+                )
+
+
+                )}
+
             <div className="flex flex-col w-full h-full">
                 <div ref={popupRef} className="relative w-full h-full flex justify-center">
                     <div className="border-2 w-11/12 h-11/12 text-center border-dashed cursor-pointer" onClick={toggleMenu}>
