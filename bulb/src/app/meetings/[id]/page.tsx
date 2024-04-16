@@ -1,17 +1,34 @@
-'use client'
+"use client";
 
-import { Button } from "@nextui-org/react";
-import { FormEvent } from "react";
+import { Button, ScrollShadow, ButtonGroup } from "@nextui-org/react";
+import { FormEvent, useState } from "react";
 import Link from "next/link";
-import AddSection from "../../components/section";
+import AddSection from "../../components/defaultAddsection";
+
+import SectionForm from "app/components/sectionForm"
+
+import { Section } from "index"; 
+
+import { useMeetingContext } from "../../context/meetingProvider";
 
 
-export default function createPage() {
+export default function MeetingPage() {
+    const { meeting, setMeeting } = useMeetingContext();
+
+    const addSection = () => {
+        const newSection = {
+            _id: '',
+            title: '',
+            paragraphs: []
+        }
+
+        setMeeting({...meeting, sections: [...meeting.sections, newSection]})
+    }
 
     return (
 
         <div className="flex w-screen h-screen content-center justify-center items-center">
-            <div className="flex flex-row gap-10 bg-white w-[calc(90%)] h-[calc(90%)] ">
+            <div className="flex flex-row gap-10 bg-white w-[calc(95%)] h-[calc(95%)] ">
                 {/*Vänstra div den med loggan*/}
                 <div className="flex flex-col text-black">
                     <div className='p-5'>
@@ -21,6 +38,9 @@ export default function createPage() {
 
                     </div>
                     <div className="bg-secondaryGrey h-1 w-full"></div>
+                    <div className="flex justify-center py-2">
+                        <p className="">Catalog</p>
+                    </div>
                 </div>
 
                 <div className="bg-secondaryGrey h-5/6 w-1 content-center"></div>
@@ -32,18 +52,37 @@ export default function createPage() {
                         <div className="flex flex-row bg-secondaryGrey h-1 w-11/12"></div>
                     </div>
                     <div className="flex flex-row gap-2">
+                   
+                        <Button variant="solid" className="bg-primaryGrey border-2 border-edge"onClick={addSection}>Nytt avsnitt</Button>
                         <Button className="bg-white border-2 border-edge w-4 h-6 m-2">File</Button>
                         <Button className="bg-white border-2 border-edge w-4 h-6 m-2">Edit</Button>
                         <Button className="bg-white border-2 border-edge w-4 h-6 m-2">Insert</Button>
                         <Button className="bg-white border-2 border-edge w-4 h-6 m-2">Format</Button>
                         <Button className="bg-white border-2 border-edge w-4 h-6 m-2">Help</Button>
+                        
                     </div>
+                    <ScrollShadow hideScrollBar size={20}>
+                        <div className="w-full h-screen">
+                            {
+                                meeting.sections.map((section: Section, index: number) => <SectionForm key={index} data={section} />)
+                            }
+                            {
+                                (meeting.sections.length == 0) && (
+                                    <div className="flex w-11/12 h-11/12 py-5">
+                                        <AddSection addSection={addSection} />
+                                    </div>
+                                )
+                            }
 
-                    <div className="flex w-11/12 py-5">
-                        <AddSection/>
-                    </div>
+                        </div>
+                    </ScrollShadow>
+
                 </div>
+                
             </div>
+
         </div>
+
     );
+
 }
