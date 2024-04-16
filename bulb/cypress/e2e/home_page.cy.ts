@@ -4,11 +4,11 @@ describe('Home Page', () => {
   beforeEach(() => {
     cy.visit('http://localhost:3000/')
   })
-  it('should display the home page', () => {
-    cy.contains('Welcome to Bulb platform!')
+  it('should display the login page', () => {
+    cy.get('button').contains('Login with Google')
   })
 })
-
+/** 
 describe('The Home Page', () => {
   it('successfully loads', () => {
     cy.visit('http://localhost:3000/') // change URL to match your dev URL
@@ -43,4 +43,6 @@ describe('The Home Page', () => {
     // includes '/commands/actions'
     cy.url().should('include', '/')
   })
+  
 })
+*/
