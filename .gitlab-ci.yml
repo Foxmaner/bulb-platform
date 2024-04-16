@@ -64,3 +64,5 @@ test:
     # https://docs.cypress.io/guides/guides/parallelization
     - npm run e2e:headless
     
+  only:
+    - testFix
