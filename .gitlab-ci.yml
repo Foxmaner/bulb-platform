@@ -63,6 +63,10 @@ test:
     # https://docs.cypress.io/guides/cloud/projects#Set-up-a-project-to-record
     # https://docs.cypress.io/guides/guides/parallelization
     - npm run e2e:headless
+  
+artifacts:
+  paths:
+      - bulb
     
   only:
     - testFix
