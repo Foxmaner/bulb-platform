@@ -47,7 +47,7 @@ cache:
   paths:
     - ./bulb/npm/ # Moves npm cache inside project per GitLab restrictions
     - bulb/node_modules/
-    - .cache/Cypress
+    - /root/.cache/Cypress
 test:
   # Uses official Cypress docker image for dependencies
   # https://docs.cypress.io/guides/continuous-integration/introduction#Official-Cypress-Docker-Images
