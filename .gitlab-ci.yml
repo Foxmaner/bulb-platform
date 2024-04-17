@@ -51,12 +51,7 @@ variables:
   CYPRESS_CACHE_FOLDER: '$CI_PROJECT_DIR/bulb/cache/Cypress'
 # Caches dependencies using npm lock file as key
 # https://docs.cypress.io/guides/continuous-integration/introduction#Caching
-cache:
-  key: ${CI_COMMIT_REF_SLUG}
-  paths:
-    - ./bulb/npm/ # Moves npm cache inside project per GitLab restrictions
-    - bulb/node_modules/
-    - /root/.cache/Cypress
+
 test:
   # Uses official Cypress docker image for dependencies
   # https://docs.cypress.io/guides/continuous-integration/introduction#Official-Cypress-Docker-Images
