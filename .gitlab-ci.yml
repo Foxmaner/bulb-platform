@@ -1,7 +1,7 @@
 stages:
   - lint
+  - unit-test
   - test
-  - e2e-test
 
 
 lint:
@@ -23,7 +23,7 @@ lint:
 
 unit-test:
   image: node:latest
-  stage: test
+  stage: unit-test
   before_script:
     - cd bulb
     - npm install
@@ -51,7 +51,7 @@ test:
   # Uses official Cypress docker image for dependencies
   # https://docs.cypress.io/guides/continuous-integration/introduction#Official-Cypress-Docker-Images
   image: cypress/browsers:node-20.9.0-chrome-118.0.5993.88-1-ff-118.0.2-edge-118.0.2088.46-1
-  stage: e2e-test
+  stage: test
   script:
     - cd bulb
     - npm install
