@@ -11,7 +11,7 @@ import { usePathname } from "next/navigation";
 import { Switch } from "@nextui-org/react";
 import sidebarImg from "../../../public/sidbarImg.svg";
 
-export default function sidebar() {
+export default function Sidebar() {
   const pathname = usePathname();
 
   //Detta för att inte visa sideBar på Skapasidan, en sk fulfix.

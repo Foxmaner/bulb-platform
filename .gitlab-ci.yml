@@ -1,3 +1,12 @@
+cache:
+  key:
+    files:
+      - package-lock.json
+  paths:
+    - ./bulb/npm/ # Moves npm cache inside project per GitLab restrictions
+    - bulb/node_modules/
+    - /root/.cache/Cypress
+
 stages:
   - lint
   - unit-test
@@ -40,14 +49,7 @@ variables:
   CYPRESS_RECORD_KEY: $CYPRESS_RECORD_KEY
 # Caches dependencies using npm lock file as key
 # https://docs.cypress.io/guides/continuous-integration/introduction#Caching
-cache:
-  key:
-    files:
-      - package-lock.json
-  paths:
-    - ./bulb/npm/ # Moves npm cache inside project per GitLab restrictions
-    - bulb/node_modules/
-    - /root/.cache/Cypress
+
 test:
   # Uses official Cypress docker image for dependencies
   # https://docs.cypress.io/guides/continuous-integration/introduction#Official-Cypress-Docker-Images
