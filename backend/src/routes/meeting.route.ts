@@ -11,12 +11,18 @@ routes.delete('/delete/:id', MeetingController.delete)
 
 routes.post('/create', MeetingController.create)
 
-routes.get('/:filter', MeetingController.filter)
+//new name shoud be in body
+routes.post('rename/:id', MeetingController.renameMeeting)
 
-routes.post('/:id/publish', MeetingController.publish)
+routes.post('acesslevel/:id', MeetingController.changeAcessLevel)
 
-routes.put('/edit/:id', MeetingController.edit)
+//loadAdvanced has filter, sort, and type in body
+routes.post('advanced', MeetingController.advancedLoad)
 
-routes.post('/edit/post', MeetingController.editPost)
+
+
+
+
+routes.post('/publish/:id', MeetingController.publish)
 
 export { routes as meetingRoutes }
