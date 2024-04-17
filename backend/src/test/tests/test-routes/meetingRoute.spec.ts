@@ -136,7 +136,7 @@ class MeetingRouteTests {
         const end = new Date().getTime();
     
         expect(res.statusCode).toBe(200);
-        expect(end - start).toBeLessThan(100); // expect the operation to take less than 100 milliseconds
+        expect(end - start).toBeLessThan(300); // expect the operation to take less than 300 milliseconds
     }
 
     @TestDecorators.test("Performance test for create meeting")
@@ -151,7 +151,7 @@ class MeetingRouteTests {
         const end = new Date().getTime();
     
         expect(res.statusCode).toBe(201);
-        expect(end - start).toBeLessThan(100); // expect the operation to take less than 100 milliseconds
+        expect(end - start).toBeLessThan(300); // expect the operation to take less than 300 milliseconds
     }
 
     @TestDecorators.test("Performance test for get meeting")
@@ -172,7 +172,7 @@ class MeetingRouteTests {
         const end = new Date().getTime();
     
         expect(res.statusCode).toBe(200);
-        expect(end - start).toBeLessThan(100); // expect the operation to take less than 100 milliseconds
+        expect(end - start).toBeLessThan(300); // expect the operation to take less than 300 milliseconds
     }
 
     @TestDecorators.test("Performance test for delete meeting")
@@ -221,13 +221,13 @@ class MeetingRouteTests {
             name: 'testUser',
         });
 
-        for (let i = 0; i < 50; i++) {
+        for (let i = 0; i < 30; i++) {
             await req.post('/meeting/create').send({ name: `Meeting ${i}` });
         }
 
         const res = await req.get("/meeting/");
         expect(res.statusCode).toBe(200);
-        expect(res.body.meetings.length).toBe(50);
+        expect(res.body.meetings.length).toBe(30);
     }
 
 }

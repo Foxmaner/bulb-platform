@@ -30,7 +30,7 @@ export class MeetingController {
     static async id(req: any, res: Response) {
         const userID = req.session.passport.user;
         const respUser = await UserModel.get(userID);
-        const user = respUser.body;
+        const user = respUser.body.user;
         const meetingId = req.params.id
 
         if(respUser.statusCode != 200){
@@ -65,8 +65,9 @@ export class MeetingController {
 
         const respMeeting = await MeetingModel.get(meetingId);
         const meeting = respMeeting.body.meeting;
+
         if (!meeting) {
-            return res.status(respMeeting.statusCode).json(respMeeting.body);
+            return res.status(404).json({ message : "meeting not found" });
         }
 
         const respUserRemoveMeeting = await user.removeMeeting(meetingId);
@@ -133,6 +134,18 @@ export class MeetingController {
             return res.status(401).json( respUser.body)
         }
 
+        //this function doesn't exist
+        const resp = await user.getMeetingsByFilter(filter);
+
+        if(process.env.DEBUG == "true"){
+            console.log(resp.body)
+        }
+
+        if(resp.statusCode != 200){
+            return res.status(resp.statusCode).json(resp.body)
+        }
+
+        res.status(200).json({meetings: resp.body});
     }
 
     static async publish(req: any, res: Response){
@@ -143,8 +156,28 @@ export class MeetingController {
 
         if(respUser.statusCode != 200){
             return res.status(401).json( respUser.body)
+        }        
+
+        const resp = await user.getMeetings();
+        const userMeetings = resp.body;
+
+        const meeting = userMeetings.find(meeting => meeting._id == meetingId);
+
+        if(!meeting){
+            return res.status(404).json({message : "meeting not found"})
         }
 
+        const respPublish = await MeetingModel.publish()
+
+        if(process.env.DEBUG == "true"){
+            console.log(respPublish.body)
+        }
+
+        if(resp.statusCode != 200){
+            return res.status(respPublish.statusCode).json(resp.Publish.body)
+        }
+        
+        res.status(200).json({message : "meeting posted"});
     }
 
     static edit(req: Request, res: Response){
