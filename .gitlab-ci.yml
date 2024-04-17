@@ -1,7 +1,7 @@
 stages:
   - lint
+  - unit-test
   - test
-  - e2e-test
 
 
 lint:
@@ -23,10 +23,10 @@ lint:
 
 unit-test:
   image: node:latest
-  stage: test
+  stage: unit-test
   before_script:
     - cd bulb
-    - npm ci
+    - npm install
   script:
     - npm run test:ci
   coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
@@ -38,25 +38,19 @@ unit-test:
 # in GitLab repo → Settings → CI/CD → Variables
 variables:
   CYPRESS_RECORD_KEY: $CYPRESS_RECORD_KEY
+  npm_config_cache: '$CI_PROJECT_DIR/bulb/.npm'
+  #CYPRESS_CACHE_FOLDER: '$CI_PROJECT_DIR/bulb/cache/Cypress'
 # Caches dependencies using npm lock file as key
 # https://docs.cypress.io/guides/continuous-integration/introduction#Caching
-cache:
-  key:
-    files:
-      - package-lock.json
-  paths:
-    - .npm/ # Moves npm cache inside project per GitLab restrictions
+
 test:
   # Uses official Cypress docker image for dependencies
   # https://docs.cypress.io/guides/continuous-integration/introduction#Official-Cypress-Docker-Images
   image: cypress/browsers:node-20.9.0-chrome-118.0.5993.88-1-ff-118.0.2-edge-118.0.2088.46-1
   stage: test
-  rules:
-    - when: never
-  parallel: 1
   script:
     - cd bulb
-    - npm ci
+    - npm install
     #- npm ci --cache .npm --prefer-offline
     # Starts web server for E2E tests - replace with your own server invocation
     # https://docs.cypress.io/guides/continuous-integration/introduction#Boot-your-server
@@ -64,3 +58,7 @@ test:
     # https://docs.cypress.io/guides/cloud/projects#Set-up-a-project-to-record
     # https://docs.cypress.io/guides/guides/parallelization
     - npm run e2e:headless
+    
+    
+  only:
+    - testFix

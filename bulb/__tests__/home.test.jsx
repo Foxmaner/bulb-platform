@@ -6,7 +6,7 @@ describe('Page', () => {
   it('Render heading', () => {
     render(<Page />)
  
-    const heading = screen.getByText("Welcome to Bulb platform!")
+    const heading = screen.getByText("Login with Google")
  
     expect(heading).toBeInTheDocument()
   })
