@@ -41,7 +41,7 @@ variables:
 # Caches dependencies using npm lock file as key
 # https://docs.cypress.io/guides/continuous-integration/introduction#Caching
 cache:
-  key:
+  key: ${CI_COMMIT_REF_SLUG}
     files:
       - package-lock.json
   paths:
