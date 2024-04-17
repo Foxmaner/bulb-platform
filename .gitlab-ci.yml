@@ -38,7 +38,7 @@ unit-test:
 # in GitLab repo → Settings → CI/CD → Variables
 variables:
   CYPRESS_RECORD_KEY: $CYPRESS_RECORD_KEY
-  #npm_config_cache: '$CI_PROJECT_DIR/bulb/.npm'
+  npm_config_cache: '$CI_PROJECT_DIR/bulb/.npm'
   #CYPRESS_CACHE_FOLDER: '$CI_PROJECT_DIR/bulb/cache/Cypress'
 # Caches dependencies using npm lock file as key
 # https://docs.cypress.io/guides/continuous-integration/introduction#Caching
