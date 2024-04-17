@@ -37,7 +37,7 @@ unit-test:
 # For recording and parallelization to work you must set your CYPRESS_RECORD_KEY
 # in GitLab repo → Settings → CI/CD → Variables
 variables:
-  CYPRESS_RECORD_KEY: $CYPRESS_RECORD_KEY
+  CYPRESS_RECORD_KEY: 
   npm_config_cache: '$CI_PROJECT_DIR/.npm'
   CYPRESS_CACHE_FOLDER: '$CI_PROJECT_DIR/cache/Cypress'
 # Caches dependencies using npm lock file as key
