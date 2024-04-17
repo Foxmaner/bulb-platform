@@ -15,8 +15,10 @@ declare module "index" {
     }
 
     type Paragraph = {
-        title?: string;
-        text: string;
+        _id: string,
+        title?: string,
+        text: string,
+        useTitle?: boolean
     }
 
 

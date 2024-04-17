@@ -23,11 +23,14 @@ interface SectionFormProps {
 }
 
 export default function SectionForm({ data }: SectionFormProps) {
+    //Detta är till för att lägga till Rubriker i katalogen
+    const [value, setValue] = useState("");
     const [menuOpen, setMenuOpen] = useState(false);
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
-    //Måste berätta för Typescript att det är en sjukt nice div
+    //Måste berätta för Typescript att det är en sjukt nice 
     const popupRef = useRef<HTMLDivElement>(null);
     const { meeting, setMeeting } = useMeetingContext();
+    const [ title, setTitle ] = useState<string>(data.title || "")
 
     const toggleMenu = () => {
         setMenuOpen(!menuOpen);
@@ -59,13 +62,16 @@ export default function SectionForm({ data }: SectionFormProps) {
     *  Då kan vi lägga till qtt stycken vi vill i denna sektion
     *  Och bara returnera den sektionenerna
     */
-    const addParagraph = (title?: string) => {
+    const addParagraph = (useTitle?: boolean) => {
         setMeeting({
             ...meeting,
             sections: meeting.sections.map(section => {
                 if (section._id === data._id) {
-                    const newPargraph = {
-                        title: title
+                    const newPargraph: Paragraph = {
+                        title:"",
+                        text: "",
+                        _id: "123",
+                        useTitle
                     }
 
                     return {
@@ -95,8 +101,32 @@ export default function SectionForm({ data }: SectionFormProps) {
             })
         }
     };
+    //Fortsätt här, fixa så att det blir samma som för paragraphs
+    const addSectionTitle = (title: string) => {
+        setTitle(title);
 
+        setMeeting({
+            ...meeting,
+            sections: meeting.sections.map(section => {
+                if (section._id === data._id) {
+                    
+                    const newSection = {
+                        title: title
+                    }
+                    const currSection = section.paragraphs?.filter((section, i) => data._id !== section._id)
 
+                    return {
+                        ...section,
+                        section: [...(section.paragraphs || []), currSection]
+                    }
+                }
+                return section;
+            })
+        })
+    }
+
+    //Skapa en onChange för titel och koppla det till section
+    //För att visa titel i katalog
     return (
         <div className="flex flex-col gap-2">
             <Textarea
@@ -111,7 +141,7 @@ export default function SectionForm({ data }: SectionFormProps) {
             {
                 data.paragraphs?.map((paragraph: Paragraph, index: number) => (
                     <div key={index}>
-                        <ParagraphForm title={paragraph.title} />
+                        <ParagraphForm data={paragraph} />
                         <Button
                             onClick={() => deleteParagraph(index)}
                             variant="light"
@@ -142,7 +172,7 @@ export default function SectionForm({ data }: SectionFormProps) {
                                         <button onClick={() => {addParagraph(); onClose()}} className="block px-4 py-2 text-lg text-primaryText hover:bg-gray-100">
                                             Stycke
                                         </button>
-                                        <button onClick={() => {addParagraph("Paragraf Rubrik"); onClose()}} className="block px-4 py-2 text-lg text-primaryText hover:bg-gray-100">
+                                        <button onClick={() => {addParagraph(true); onClose()}} className="block px-4 py-2 text-lg text-primaryText hover:bg-gray-100">
                                             Stycke med underrubrik
                                         </button>
                                         <button className="block px-4 py-2 text-lg text-primaryText hover:bg-gray-100">

@@ -47,7 +47,9 @@ export default function MeetingPage() {
                         {
                             meeting.sections.map((section: Section, index: number) => (
                             <li key={index}>
-                                {section.title}</li>))
+                                {section.title}
+                                
+                                </li>))
                         }
                         </ul>
                     </div>
