@@ -84,7 +84,9 @@ const run = () => {
         }
     };
 
-    app.use(verifySession);
+    if (process.env.VERIFICATION !== "false") {
+        app.use(verifySession);
+    }
 
     app.use(function (req: any, res: any, next) {
         res.locals.currentUser = req.user;
