@@ -1,3 +1,12 @@
+cache:
+  key:
+    files:
+      - package-lock.json
+  paths:
+    - ./bulb/npm/ # Moves npm cache inside project per GitLab restrictions
+    - bulb/node_modules/
+    - /root/.cache/Cypress
+
 stages:
   - lint
   - unit-test
