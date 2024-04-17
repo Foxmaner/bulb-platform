@@ -37,7 +37,7 @@ function setupPassport(app: any) {
 
     console.log("NODE_ENV is set to", process.env.NODE_ENV);
 
-    if (process.env.NODE_ENV === "test") {
+    if (process.env.NODE_ENV === "testing") {
         passport.serializeUser((user, done) => done(null, user.id))
         passport.deserializeUser(async (id, done) => {
             const resp = await UserModel.get(id);
@@ -69,7 +69,7 @@ function setupPassport(app: any) {
             res.status(500).send('Authentication failed');
         });
 
-    } else if (process.env.NODE_ENV === "dev") {
+    } else if (process.env.NODE_ENV === "development") {
         passport.serializeUser((user, done) => done(null, user.id))
         passport.deserializeUser(async (id, done) => {
             const resp = await UserModel.get(id);

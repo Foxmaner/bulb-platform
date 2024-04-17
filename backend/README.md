@@ -23,3 +23,11 @@ npm test                                    // To run all
 npm test -- -i <file>                       // To run file (OBS, file conv; example.spec.ts)
 npm test -- -i <file> -t 'this is my test'  // To run specific test
 ```
+
+## Environment file
+You may write an environment file (.env, in this directory) to specify the following functionality in the program:
+DB_URI=[mongodb+srv://<username>:<password>@cluster0.3q5ijpk.mongodb.net/] where <username> is your username and <password> is your password for MongoDB.
+NODE_ENV=[(development)/testing/production], designates the environment being run. 
+VERIFICATION=[(true)/false], sets if login/verification is required. Some functionality may not work with this disabled.
+
+Default values are given in parenthesis, if appliccable.
