@@ -70,7 +70,7 @@ export default function SectionForm({ data }: SectionFormProps) {
                     const newPargraph: Paragraph = {
                         title:"",
                         text: "",
-                        _id: "123",
+                        _id: "",
                         useTitle
                     }
 

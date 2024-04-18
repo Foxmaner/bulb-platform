@@ -12,7 +12,7 @@ interface IParagraphFormProps {
 }
 
 export default function ParagraphForm({ data }: IParagraphFormProps) {
-    const [ title, setTitle ] = useState<string>(data.title || "")
+    const [title, setTitle] = useState<string>(data.title || "")
     const { meeting, setMeeting } = useMeetingContext();
     const [titleValue, setTitleValue] = useState("");
 
@@ -22,19 +22,19 @@ export default function ParagraphForm({ data }: IParagraphFormProps) {
         setMeeting({
             ...meeting,
             sections: meeting.sections.map(section => {
-                if (section._id === data._id) {
-                    
-                    const newPargraph = {
-                        title: title
-                    }
-                    const currParagraph = section.paragraphs?.filter((paragraph, i) => data._id !== paragraph._id)
 
-                    return {
-                        ...section,
-                        paragraphs: [...(section.paragraphs || []), currParagraph]
+                section.paragraphs?.map(paragraph => {
+                    if (paragraph.id === data._id) {
+                        console.log("Hej")
+                        paragraph.title = title
+                        return {
+                            ...section,
+                        }
                     }
-                }
-                return section;
+                })
+
+
+                return section
             })
         })
     }
@@ -49,7 +49,7 @@ export default function ParagraphForm({ data }: IParagraphFormProps) {
                         labelPlacement="outside"
                         placeholder="Underrubrik"
                         className="flex"
-                        value={title || ""}
+                        value={title}
                         onValueChange={addParagraphTitle}
                         minRows={1}
                     />

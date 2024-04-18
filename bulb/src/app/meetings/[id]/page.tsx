@@ -19,7 +19,7 @@ export default function MeetingPage() {
         //testa det här sen
         const id = meeting.sections.length
         const newSection = {
-            _id: '',
+            _id: "",
             title: '',
             paragraphs: []
         }
@@ -48,9 +48,16 @@ export default function MeetingPage() {
                         <ul className="flex flex-col py-2">
                             {
                                 meeting.sections.map((section: Section, index: number) => (
-                                    <Button variant="light" className="" key={index}>
-                                        {section.title}
-                                    </Button>
+                                    <div>
+                                        <Button variant="light" className="" key={index}>
+                                            {section.title}
+                                        </Button>
+                                        {section.paragraphs?.map((paragraph: Paragraph, paragraphIndex: number) =>
+                                            <Button variant="light" className="" key={paragraphIndex}>
+                                                {paragraph.title}
+                                            </Button>
+                                        )}
+                                    </div>
                                 ))}
                         </ul>
                     </div>
