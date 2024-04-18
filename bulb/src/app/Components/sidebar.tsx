@@ -10,6 +10,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Switch } from "@nextui-org/react";
 import sidebarImg from "../../../public/sidbarImg.svg";
+import Menu from "./menu";
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -42,52 +43,7 @@ export default function Sidebar() {
       <div className="p-5">
         <h2 className="text-gray-800 font-bold mb-1">Meny</h2>
         <ul>
-          <Link
-            href="/meetings"
-            className={`text-gray-500 font-bold text-lg flex items-center mb-1 ${
-              pathname.includes("/meetings") || pathname === "/"
-                ? "text-primary"
-                : ""
-            }`}
-          >
-            {" "}
-            <BsCalendarEvent
-              color={`${
-                pathname.includes("/meetings") || pathname === "/"
-                  ? "#831843"
-                  : "#6b7280"
-              }`}
-            />{" "}
-            Meetings
-          </Link>
-          <Link
-            href="/documents"
-            className={`text-gray-500 font-bold text-lg flex items-center mb-1 ${
-              pathname.includes("/documents") ? "text-primary" : ""
-            }`}
-          >
-            {" "}
-            <BsFileEarmarkTextFill
-              color={`${
-                pathname.includes("/documents") ? "#831843" : "#6b7280"
-              }`}
-            />{" "}
-            Documents
-          </Link>
-          <Link
-            href="/templates"
-            className={`text-gray-500 font-bold text-lg flex items-center mb-2 ${
-              pathname.includes("/templates") ? "text-primary" : ""
-            }`}
-          >
-            {" "}
-            <BsFileEarmarkTextFill
-              color={`${
-                pathname.includes("/templates") ? "#831843" : "#6b7280"
-              }`}
-            />{" "}
-            Templates
-          </Link>
+          <Menu />
         </ul>
       </div>
 
