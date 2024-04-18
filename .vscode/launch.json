@@ -1,0 +1,25 @@
+{
+    "version": "0.2.0",
+    "compounds": [
+        {
+            "name": "Dev",
+            "configurations": ["Backend", "Frontend"]
+        }
+    ],
+    "configurations": [
+        {
+            "type": "node-terminal",
+            "request": "launch",
+            "name": "Backend",
+            "cwd": "${workspaceFolder}/backend",
+            "command": "npm start",
+        },
+        {
+            "command": "npx next dev",
+            "cwd": "${workspaceFolder}/bulb",
+            "name": "Frontend",
+            "request": "launch",
+            "type": "node-terminal"
+        }
+    ]
+}
