@@ -28,6 +28,8 @@ import dotenv from "dotenv";
 
 import { connectDatabase } from "./config/connection";
 
+//import { connectDatabase } from "./config/test-connection";
+
 
 dotenv.config();
 

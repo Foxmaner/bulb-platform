@@ -1,7 +1,27 @@
 /// <reference types = "cypress" />
+
+describe('signIn', () => {
+  it('createExample', () => {
+    cy.request({
+      method: 'POST',
+      url: '/login',
+      body: {
+        password: 'testPassword',
+        name: 'testUser',
+      },
+    }).then((response) => {
+      expect(response.status).to.eq(200);
+      // Add more assertions as needed
+    });
+  });
+});
+
+/*
+
+
 describe('Home Page', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:3000/')
+    cy.request
   })
   it('should display the login page', () => {
     cy.screenshot('my-screenshot'); // Take a screenshot
@@ -12,7 +32,6 @@ describe('Home Page', () => {
   })
 })
 
-/** 
 
 
 

@@ -6,7 +6,7 @@ dotenv.config();
 const port = process.env.PORT || 3001;
 const db_uri = process.env.DB_URI;
 
-process.env.NODE_ENV = 'dev';
+process.env.NODE_ENV = 'test';
 
 const { httpServer } = app.run(db_uri)
 
