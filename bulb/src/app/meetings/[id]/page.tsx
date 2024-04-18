@@ -48,12 +48,12 @@ export default function MeetingPage() {
                         <ul className="flex flex-col py-2">
                             {
                                 meeting.sections.map((section: Section, index: number) => (
-                                    <div>
-                                        <Button variant="light" className="" key={index}>
+                                    <div className="flex flex-col">
+                                        <Button variant="ghost" className="w-36" key={index}>
                                             {section.title}
                                         </Button>
                                         {section.paragraphs?.map((paragraph: Paragraph, paragraphIndex: number) =>
-                                            <Button variant="light" className="" key={paragraphIndex}>
+                                            <Button variant="ghost" className="w-36" key={paragraphIndex}>
                                                 {paragraph.title}
                                             </Button>
                                         )}

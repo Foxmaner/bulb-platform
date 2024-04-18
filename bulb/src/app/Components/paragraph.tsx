@@ -24,17 +24,18 @@ export default function ParagraphForm({ data }: IParagraphFormProps) {
             sections: meeting.sections.map(section => {
 
                 section.paragraphs?.map(paragraph => {
-                    if (paragraph.id === data._id) {
-                        console.log("Hej")
+                    if (paragraph._id === data._id) {
+                        
+                        
                         paragraph.title = title
                         return {
                             ...section,
+                            paragraphs: [(section.paragraphs || []), paragraph]
                         }
                     }
                 })
 
-
-                return section
+                return section;
             })
         })
     }

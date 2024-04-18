@@ -131,7 +131,7 @@ export default function SectionForm({ data }: SectionFormProps) {
                 radius="none"
                 labelPlacement="outside"
                 placeholder="Titel"
-                className="flex w-11/12"
+                className="flex w-11/12 grow-0 overflow-hidden"
                 value={title}
                 onValueChange={addSectionTitle}
                 minRows={1}
