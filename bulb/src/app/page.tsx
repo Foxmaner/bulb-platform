@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import SignInButton from "./Components/SignInBtn";
+import { Button } from "@nextui-org/react";
 import loginImage from "../../public/login.svg";
 import loginImage2 from "../../public/login2.svg";
 import loginImage3 from "../../public/login3.svg";
@@ -19,9 +19,9 @@ export default function Home() {
           <Image src={loginImage4} alt="Login Image" />
         </div>
 
-        {/* Login-ruta */}
+        {/* Behov-ruta */}
         {/* TODO: göra rutan större för större skärmar */}
-        <div className="border-white border-2 z-20">
+        <div className="border-white border-2 z-20 flex flex-col">
           <div className="bg-white border-primary border-4 flex flex-col">
             {/* East Sweden Medtech */}
             <div className="p-5">
@@ -30,17 +30,20 @@ export default function Home() {
               </h1>
               <div className="bg-primary h-1 w-2/5"></div>
             </div>
-            {/* Login */}
-            <div className="px-5 pt- self-center">
-              <h1 className="text-primary font-bold">Login</h1>
+            {/* Behov */}
+            {/* DET SER INTE BRA UT */}
+            <div className="p-10 self-center">
+              <h1 className="text-primary text-center text-2xl">
+                {/* Det ska egentligen en summa istället för 1400 */}
+                Just nu finns det <br /> 1400 <br /> behov inom vården
+              </h1>
             </div>
             <div className="bg-gray-300 h-1 mx-7"></div>
-            {/* Google login (vet inte om man ska ha href eller inte) */}
-            <Link href="/meetings">
-              <div className="px-7 pt-10 pb-16">
-                <SignInButton />
-              </div>
-            </Link>
+
+            <div className="text-center p-10">
+              <Link href="/loginPage" className="font-bold">Logga in </Link>
+              för att se behov
+            </div>
           </div>
         </div>
 

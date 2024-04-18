@@ -25,7 +25,7 @@ export function Sidebar() {
   }
 
   //Detta för att inte visa sideBar på Hemsidan, en sk fulfix.
-  if (pathname === "/") {
+  if (pathname === "/" || pathname.includes("/loginPage")) {
     return <></>;
   }
 
