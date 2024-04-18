@@ -93,7 +93,7 @@ export default function SectionForm({ data }: SectionFormProps) {
                     if (section._id === data._id) {
                         return {
                             ...section,
-                            paragraphs: section.paragraphs?.filter((_, i) => i !== index)
+                            paragraphs: section.paragraphs?.filter((section, i) => i !== index)
                         };
                     }
                     return section;
@@ -110,14 +110,12 @@ export default function SectionForm({ data }: SectionFormProps) {
             sections: meeting.sections.map(section => {
                 if (section._id === data._id) {
                     
-                    const newSection = {
-                        title: title
-                    }
-                    const currSection = section.paragraphs?.filter((section, i) => data._id !== section._id)
-
+                    
+                    section.title = title;
+                    
                     return {
                         ...section,
-                        section: [...(section.paragraphs || []), currSection]
+                        
                     }
                 }
                 return section;
@@ -125,8 +123,7 @@ export default function SectionForm({ data }: SectionFormProps) {
         })
     }
 
-    //Skapa en onChange för titel och koppla det till section
-    //För att visa titel i katalog
+    
     return (
         <div className="flex flex-col gap-2">
             <Textarea
@@ -135,6 +132,8 @@ export default function SectionForm({ data }: SectionFormProps) {
                 labelPlacement="outside"
                 placeholder="Titel"
                 className="flex w-11/12"
+                value={title}
+                onValueChange={addSectionTitle}
                 minRows={1}
                 style={{ fontWeight: 'bold', fontSize: '16px' }}
             />

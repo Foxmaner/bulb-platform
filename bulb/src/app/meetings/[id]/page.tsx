@@ -7,7 +7,7 @@ import AddSection from "../../components/defaultAddsection";
 
 import SectionForm from "app/components/sectionForm"
 
-import { Section } from "index";
+import { Section, Paragraph } from "index";
 
 import { useMeetingContext } from "../../context/meetingProvider";
 
@@ -16,6 +16,8 @@ export default function MeetingPage() {
     const { meeting, setMeeting } = useMeetingContext();
 
     const addSection = () => {
+        //testa det här sen
+        const id = meeting.sections.length
         const newSection = {
             _id: '',
             title: '',
@@ -41,16 +43,15 @@ export default function MeetingPage() {
                     </div>
                     {/*Försöker fixa med katalogen här men har inte lyckats*/}
                     <div className="bg-secondaryGrey h-1 w-full"></div>
-                    <div className="flex justify-center py-2">
+                    <div className="flex flex-col justify-center py-2">
                         <p className="text-xl">Catalog</p>
-                        <ul>
-                        {
-                            meeting.sections.map((section: Section, index: number) => (
-                            <li key={index}>
-                                {section.title}
-                                
-                                </li>))
-                        }
+                        <ul className="flex flex-col py-2">
+                            {
+                                meeting.sections.map((section: Section, index: number) => (
+                                    <Button variant="light" className="" key={index}>
+                                        {section.title}
+                                    </Button>
+                                ))}
                         </ul>
                     </div>
                 </div>
