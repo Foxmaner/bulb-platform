@@ -1,7 +1,7 @@
 import { Socket } from 'socket.io';
 import { SocketController,  } from '../controllers';
 
-function connectionHandler(socket: Socket): void {
+function connectionHandler(socket: any): void {
     console.log(`User connected with ID: ${socket.id}`);
 
     socket.on('disconnect', () => {
@@ -14,9 +14,14 @@ function connectionHandler(socket: Socket): void {
 
     socket.on('cursor_movement', (data) => {
         SocketController.cursor_move(socket, data);
-    })
+    });
+
+    socket.on('notes_movement', (data) =>{
+        SocketController.notes_move(socket,data);
+    });
 
     socket.on("section_create", (data) => {
+        console.log("asdasdass");
         SocketController.create_section(socket, data);
     });
 

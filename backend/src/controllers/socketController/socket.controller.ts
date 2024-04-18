@@ -20,7 +20,13 @@ export class SocketController {
         socket.broadcast.emit('cursor_moved',  out);
     } 
 
+    static async notes_move(socket: Socket, data: ICursor){
+        const out = {notesPosition: data};
+        socket.broadcast.emit('notes_moved', out);
+    }
+
     static async create_section(socket : Socket, data: ISection){
+        console.log(`${socket.id} created section in meeting ${data}`)
         const meeting = await MeetingModel.get(data.meetingId);
         const section = meeting.addSection();
         //@ts-ignore

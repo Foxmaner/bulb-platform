@@ -45,6 +45,7 @@ class TestDecorators {
                 let io: any;
 
                 beforeAll(async () => {
+                    
                     connection = await connectDatabase();
 
                     const port = process.env.PORT || 3000;
@@ -98,18 +99,22 @@ class TestDecorators {
                 beforeAll(async () => {
                     connection = await connectDatabase();
 
-                    const port = process.env.PORT || 3000;
+                    const port = process.env.PORT || 3001;
+
+                    console.log(port)
 
                     const { httpServer: localHttpServer, closeServer: localCloseServer, io: localIo } = run();  // Correct destructuring with variable declaration
                     httpServer = localHttpServer;
                     closeServer = localCloseServer;
                     io = localIo;
-                    
-                    httpServer.listen(process.env.PORT, () => {});
-                    req = agent(httpServer);
-                    socket = await ioc(`http://localhost:${port}`);
 
-                    socket.on("connect");
+                    httpServer.listen(port, () => {});
+                    req = agent(httpServer);
+                    socket = ioc(`http://localhost:${port}`);
+
+                    socket.on("connect", () => {
+                        console.log("Connected");
+                    });
                 });
 
                 afterAll(async () => {
