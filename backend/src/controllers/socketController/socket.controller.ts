@@ -14,10 +14,10 @@ export class SocketController {
         socket.broadcast.to(roomID).emit('user_joined', socket.id);
     }
 
-    static async cursor_move(socket: Socket, data: ICursor){
+    static async cursor_move(socket: Socket, data: ICursor, meetingID){
         const user = socket.id;
         const out = { user: user, cursorPosition: data };
-        socket.broadcast.emit('cursor_moved',  out);
+        socket.broadcast.to(meetingID).emit('cursor_moved',  out);
     } 
 
     static async notes_move(socket: Socket, data: ICursor){
@@ -25,22 +25,24 @@ export class SocketController {
         socket.broadcast.emit('notes_moved', out);
     }
 
-    static async create_section(socket : Socket, data: ISection){
-        console.log(`${socket.id} created section in meeting ${data}`)
-        const meeting = await MeetingModel.get(data.meetingId);
+    static async create_section(socket : Socket, data){
+
+        const respMeeting = await MeetingModel.get(data.meetingID);
+        
+        const meeting = respMeeting.body;
         const section = meeting.addSection();
-        //@ts-ignore
-        socket.broadcast.to()('new section', section._body.id);
+        console.log(meeting);
+        socket.broadcast.to(data.meetingID).emit('section_created', {data:"section created"});
     }
 
-    static async delete_section(socket, data: ISection){
-        const meeting = await MeetingModel.get(data.meetingId);
+    static async delete_section(socket, data){
+        const meeting = await MeetingModel.get(data.meetingID);
         meeting.removeSection();
         socket.emit('section removed', { message: "Section removed" });
     }
 
-    static async create_paragraph(socket, data: IParagraph){
-        const meeting = await MeetingModel.get(data.meetingId);
+    static async create_paragraph(socket, data){
+        const meeting = await MeetingModel.get(data.meetingID);
         meeting.addParagaraph(data.sectionId);
         socket.emit('create paragraph', { message: "Paragraph added" });
     }

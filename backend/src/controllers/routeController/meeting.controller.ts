@@ -49,7 +49,7 @@ export class MeetingController {
         if(!meeting){
             return res.status(404).json({message : "meeting not found"})
         }
-        res.status(200).json({meeting : meeting});
+        res.status(200).json({meeting});
     }
     
     static async delete(req: any, res: Response) {

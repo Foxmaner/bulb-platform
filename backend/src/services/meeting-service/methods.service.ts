@@ -77,23 +77,23 @@ export class MethodMeetingService extends mongoose.Model<Meeting> {
 
     /**
      * Section
-     */
-    addSection () {
+    */
+    async addSection () {
         const newSection: Section = {
-            id: this.sections.length,
             title: "Untitled Section",
             contains: [],
             sectionHistory: []
         }
 
-        this.updateOne({ $push: { sections: newSection } });
+        await this.updateOne({ $push: { mainDocumentSections: newSection } });
 
         return res.status(200).json(newSection);
     }
 
-    removeSection (sectionID: number) {
-        const newSections = this.sections.filter((section: Section) => section.id !== sectionID);
-        this.sections = newSections;
+    async removeSection (sectionID: number) {
+        await this.updateOne(
+            { $pull: { mainDocumentSections: { _id: sectionID } } }
+        );
 
         return res.status(200).json({ message: "Section removed" });
     }

@@ -37,7 +37,6 @@ declare module "index" {
     }
 
     type Section = {
-        id: Integer,
         title: string,
         contains: (Paragraph | Question | Image)[],
         sectionHistory: []

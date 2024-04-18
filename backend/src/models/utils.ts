@@ -11,6 +11,7 @@ export default class Utils {
     static sectionSchema () {
         return {
             section: {
+                _id: Schema.Types.ObjectId,
                 title: String,
                 contains: {},
                 sectionHistory: [this.sectionHistorySchema()]

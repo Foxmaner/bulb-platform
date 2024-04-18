@@ -93,15 +93,24 @@ class TestDecorators {
                 let httpServer: any;
                 let req: any;
                 let closeServer: any;
-                let socket: any;
                 let io: any;
+
+                const openSocket = async () => {
+                    const port = process.env.PORT || 3001;
+
+                    const socket = ioc(`http://localhost:${port}`);
+
+                    socket.on("connect", () => {
+                        console.log("Connected");
+                    });
+
+                    return socket;
+                }
 
                 beforeAll(async () => {
                     connection = await connectDatabase();
 
                     const port = process.env.PORT || 3001;
-
-                    console.log(port)
 
                     const { httpServer: localHttpServer, closeServer: localCloseServer, io: localIo } = run();  // Correct destructuring with variable declaration
                     httpServer = localHttpServer;
@@ -110,16 +119,17 @@ class TestDecorators {
 
                     httpServer.listen(port, () => {});
                     req = agent(httpServer);
-                    socket = ioc(`http://localhost:${port}`);
 
-                    socket.on("connect", () => {
-                        console.log("Connected");
-                    });
                 });
 
                 afterAll(async () => {
-                    await io.close();
-                    await closeDatabase(connection);
+                    await new Promise((resolve, reject) => {
+                        setTimeout(() => {
+                          resolve({id: 3});
+                        }, 500);
+                    });
+                    //await io.close();
+                    //await closeDatabase(connection);
                     await closeServer();
                 });
 
@@ -137,7 +147,7 @@ class TestDecorators {
                     const { testName, originalMethod } = testProps;
 
                     test.only(testName, async () => {
-                        await originalMethod.apply(instance, [socket, req]);
+                        await originalMethod.apply(instance, [openSocket, req]);
                     });
                 });
             });
