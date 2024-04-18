@@ -3,7 +3,7 @@ import { usePathname } from "next/navigation";
 import { BsCalendarEvent, BsFileEarmarkTextFill } from "react-icons/bs";
 import Link from "next/link";
 
-export default function meetingMenu() {
+export default function Menu() {
   const [isVisable, setIsVisable] = useState(false);
 
   const toggleVisibility = () => {
