@@ -1,6 +1,9 @@
 import MongoStore from "connect-mongo";
 import session from "express-session";
 
+import dotenv from "dotenv";
+
+dotenv.config()
 
 const sessionMiddleware = session({
     secret: ["secret123"],

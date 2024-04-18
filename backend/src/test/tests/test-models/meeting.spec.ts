@@ -63,7 +63,7 @@ class MeetingTests {
 
 		meeting.members.push({
 			userID: creator,
-            accessLevel: Utils.memberAccessLevelTypeConverter("owner")
+            //accessLevel: Utils.memberAccessLevelTypeConverter("owner")
 		})
 
 		expect(resp.statusCode).toBe(201);
@@ -84,7 +84,7 @@ class MeetingTests {
 		const owner: Member = {
 			userID: user._id,
 			expiryDate: undefined as never,
-			accessLevel: 3
+			role: 3
 		}
 
 		const params: Meeting = {

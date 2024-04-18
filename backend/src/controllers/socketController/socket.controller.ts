@@ -2,13 +2,13 @@ import { Paragraph } from "index";
 import { MeetingModel } from "../../models";
 import diff_match_patch from 'diff-match-patch';
 import { IParagraph, ISection, IParagraphEdit } from "socket";
+import { Socket } from "socket.io";
 
 const dmp = new diff_match_patch();
 
 export class SocketController {
 
-
-    static join_room(socket, roomID) {
+    static join_room(socket : Socket, roomID) {
         socket.join(roomID);
 		console.log(`User ${socket.id} joined room ${roomID}`);
     }

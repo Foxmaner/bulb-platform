@@ -27,7 +27,7 @@ import {
 
 import dotenv from "dotenv";
 
-import { connectDatabase } from "./config/connection";
+import { connectDatabase } from "./config/test-connection";
 import { 
     verifySession, 
     verifySocket, 
@@ -83,8 +83,8 @@ const run = () => {
     app.use("/template", templateRoutes);
     app.use("/wordcloud", wordcloudRoutes); 
 
-    io.use(wrap(sessionMiddleware))
-    io.use(verifySocket);
+    //io.use(wrap(sessionMiddleware))
+    //io.use(verifySocket);
     io.on('connection', connectionHandler);
 
     const closeServer = () => {
