@@ -41,7 +41,7 @@ import {
 dotenv.config();
 
 const run = () => {
-    connectDatabase();
+    //connectDatabase();
 
     const app = express();
     const httpServer = createServer(app);

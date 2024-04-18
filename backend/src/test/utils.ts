@@ -89,6 +89,7 @@ class TestDecorators {
         return (constructor: new () => T) => {
             describe(description, () => {
                 let connection: typeof mongoose;
+                let httpServer: any;
                 let req: any;
                 let closeServer: any;
                 let socket: any;
@@ -99,7 +100,10 @@ class TestDecorators {
 
                     const port = process.env.PORT || 3000;
 
-                    const { httpServer, closeServer, io } = run();
+                    const { httpServer: localHttpServer, closeServer: localCloseServer, io: localIo } = run();  // Correct destructuring with variable declaration
+                    httpServer = localHttpServer;
+                    closeServer = localCloseServer;
+                    io = localIo;
                     
                     httpServer.listen(process.env.PORT, () => {});
                     req = agent(httpServer);
