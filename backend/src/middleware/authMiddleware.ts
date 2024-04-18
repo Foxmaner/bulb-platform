@@ -1,67 +1,62 @@
-import { NextFunction, Request, Response } from "express";
-import * as jwt from "jsonwebtoken";
-import dotenv from "dotenv";
-
-import { getSession } from "next-auth/react"
-
-import jwksClient from "jwks-rsa";
+import MongoStore from "connect-mongo";
+import session from "express-session";
 
 
-dotenv.config();
-
-const client = jwksClient({
-    jwksUri: "https://www.googleapis.com/oauth2/v3/certs",
+const sessionMiddleware = session({
+    secret: ["secret123"],
+    cookie: {
+        secure: process.env.NODE_ENV === "production" ? "true" : "auto",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        _expires: 1000 * 60 * 60,
+    },
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+        mongoUrl: process.env.DB_URI,
+        collectionName: "sessions",
+    }),
 });
 
+const verifySession = (req: any, res: any, next: any) => {
+    if (req.isAuthenticated()) {
 
-function getKey(header, callback) {
-    client.getSigningKey(header.kid, (err, key) => {
-        if (err || !key) {
-            callback(err, null);
-            return;
-        }
-        const signingKey = key.getPublicKey();
-        callback(null, signingKey);
-    });
-}
-
-async function verifyGoogleSignUp(
-    req: Request,
-    res: Response,
-    next: NextFunction
-) {
-    const token = req.headers["authorization"]?.split(" ")[1].trim();
-    
-    console.log("Token:", token);
-    
-    if (!token) {
-        return res.status(403).send("A token is required for authentication");
+        return next();
+    } else {
+        res.status(401).send("Unauthorized");
     }
+};
 
-    jwt.verify(token, getKey, { algorithms: ["RS256"] }, (err, decoded) => {
-        if (err) {
-            console.log("Token cannot be verified", err);
-            return res.status(401).send("Invalid Token");
-        }
-
-        next();
-    });
-}
-
-async function verifyToken(
-    req: Request,
-    res: Response,
-    next: NextFunction
-) {
-
-    const token = await getSession({ req });
-
-    if (!token) {
-        return res.status(403).send("A token is required for authentication");
+const verifySocket = (socket, next) => {
+    if (!socket.request.session || !socket.request.session.user){
+        console.log("Not authorized")
+        next(new Error("Not authorized"));
     }
-
     next();
 }
 
-export { verifyGoogleSignUp, verifyToken }
+const wrap = expressMiddleware => (socket, next) =>
+    expressMiddleware(socket.request, {}, next);
 
+const updateSessionPath = (req: any, res) => {
+    if (!req.headers.referer) {
+        res.status(401).send("Invalid input");
+    }
+
+    req.session.cookie.path = req.headers.referer;
+    
+    req.session.save(err => {
+        if (err) {
+            console.error('Session save error:', err);
+        }
+        res.status(200).send("Authorized");
+    });
+}
+
+const corsConfig = {
+    origin: "http://localhost:3000",
+    credentials: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: 'Content-Type,Authorization'
+}
+
+export { verifySession, verifySocket, wrap, sessionMiddleware, corsConfig, updateSessionPath }

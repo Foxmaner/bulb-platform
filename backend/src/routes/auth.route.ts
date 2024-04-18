@@ -1,14 +1,34 @@
-import { Router } from 'express';
-import AuthController from '../controllers/auth.controller'
+import { Router } from "express";
+import passport from "passport";
 
-import { verifyGoogleSignUp } from '../middleware/authMiddleware'
-
-
-const authRoutes: Router = Router();
-
-authRoutes.post('/callback/google/signUp', verifyGoogleSignUp, AuthController.signUp)
-    
-authRoutes.post('/signIn', AuthController.signUp) 
+const router: Router = Router();
 
 
-export { authRoutes }
+router.get(
+    "/google",
+    passport.authenticate("google", {
+        scope: [ 'email', 'profile' ],
+    })
+);
+
+router.get(
+    "/google/redirect",
+    passport.authenticate('google', { 
+        failureRedirect: 'http://localhost:3000/auth/signIn',
+        successRedirect: 'http://localhost:3000/meetings'
+    })
+);
+
+router.post('/logout', (req: any, res, next) => {
+    req.session.destroy(err => {
+        if (err) {
+            return next(err);
+        }
+        req.logout(() => {
+            res.clearCookie('connect.sid', { path: '/' });
+            res.status(200).send('Logged out');
+        });
+    });
+});
+
+export { router as authRoutes };

@@ -1,7 +1,8 @@
+import { Template } from "index";
+import mongoose from "mongoose";
 
 
-import BaseService from "../base.service";
 
 
-export class MethodTemplateService<T> extends BaseService<T> {
+export class MethodTemplateService extends mongoose.Model<Template> {
 }

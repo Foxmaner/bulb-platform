@@ -18,8 +18,7 @@ const connectDatabase = async () => {
 	
 	const client = await mongoose.connect(uri);
 
-	process.env.TEST_ENV = "true";
-	process.env.MONGO_URI = uri;
+	process.env.DB_URI = uri;
 
 	client.connection.on("close", () => {
 		mongoServer.stop();
@@ -32,8 +31,8 @@ const closeDatabase = async (mongoClient: typeof mongoose): Promise<void> => {
 	await mongoClient.disconnect();
 };
 
-const clearDatabase = async (clearDatabase: typeof mongoose): Promise<void> => {
-	await clearDatabase.connection.dropDatabase();
+const clearDatabase = async (mongoClient: typeof mongoose): Promise<void> => {
+	await mongoClient.connection.dropDatabase();
 };
 
 export { connectDatabase, closeDatabase, clearDatabase };

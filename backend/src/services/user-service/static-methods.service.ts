@@ -1,14 +1,36 @@
 import { UserModel }  from '../../models';
 
-
 import mongoose from 'mongoose';
 
 import { User } from "index";
-import BaseService from '../base.service';
 
 import { Response as res } from '../utils.service';
 
-export class StaticUserService<T> extends BaseService<T> {
+
+export class StaticUserService {
+
+    static async findOrCreate(props: User) {
+        try {
+            const existingUser = await UserModel.findOne({ oAuthID: props.oAuthID });
+            if (existingUser) {
+                return res.status(200).json({ user: existingUser });
+            }
+
+            const user = new UserModel({
+                oAuthID: props.oAuthID,
+                oAuthProvider: props.oAuthProvider,
+                name: props.name,
+                accesLevel: "generic",
+            });
+            await user.save();
+
+            return res.status(201).json({ user });
+        } catch (error: any) {
+            console.error(error);
+
+            return res.status(500).json({ error: error.message });
+        }
+    }
 
     static async create(props: User) {
 
@@ -18,7 +40,7 @@ export class StaticUserService<T> extends BaseService<T> {
                 return res.status(409).json({ error: 'User already exists' });
             }
 
-            props.accesLevel = 0;
+            props.accesLevel = "generic";
 
             const user = new UserModel(props);
             await user.save();
@@ -39,7 +61,7 @@ export class StaticUserService<T> extends BaseService<T> {
                 return res.status(409).json({ error: 'User already exists' });
             }
 
-            props.accesLevel = 1;
+            props.accesLevel = "admin";
 
             const user = new UserModel(props);
             await user.save();
@@ -80,12 +102,12 @@ export class StaticUserService<T> extends BaseService<T> {
             return res.status(400).json({ message: "Invalid ObjectID." });
         }
 
-        const User = await UserModel.findById(id);
-        if (!User) {
+        const user = await UserModel.findById(id);
+        if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
 
-        return res.status(200).json(User);
+        return res.status(200).json({ user });
     }
 
     static async getByOAuthID(oAuthID: string) {
@@ -107,4 +129,3 @@ export class StaticUserService<T> extends BaseService<T> {
         return res.status(200).json(User);
     }
 }
-

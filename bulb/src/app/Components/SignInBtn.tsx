@@ -1,19 +1,21 @@
 "use client";
 
-import { signIn } from "next-auth/react";
+import Link from "next/link";
+
 
 const SignInButton = () => {
-  return (
-    <div className="flex flex-col">
-        <button
-          className="bg-slate-600 px-4 py-2 text-white m-2"
-          onClick={() => signIn("google", { callbackUrl: "/meetings" })}
-          type="button"
-        >
-          Google
-        </button>
-    </div>
-  );
+
+	const handleOAuth = () => {
+		window.open(`http://localhost:3001/auth/google`, "_self");
+	};
+
+    return (
+        <div className="flex flex-col">
+			<button onClick={handleOAuth} className="bg-slate-600 px-4 py-2 text-white m-2">
+				Login with Google
+			</button>
+        </div>
+    );
 };
 
 export default SignInButton;

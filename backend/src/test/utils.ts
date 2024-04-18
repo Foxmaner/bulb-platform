@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import ioc from "socket.io-client"
 
 import "reflect-metadata";
 
@@ -8,7 +9,7 @@ import {
     connectDatabase,
 } from "../config/test-connection";
 
-import { httpServer } from "../app";
+import { run } from "../app";
 
 import { agent } from 'supertest';
 
@@ -39,27 +40,28 @@ class TestDecorators {
             describe(description, () => {
                 let connection: typeof mongoose;
                 let req: any;
-                let server: any;
+                let closeServer: any;
+                let httpServer: any;
+                let io: any;
 
                 beforeAll(async () => {
                     connection = await connectDatabase();
 
                     const port = process.env.PORT || 3000;
 
-                    if (!port) {
-                        throw new Error("Port is not set in .env file");
-                    } 
-
-                    console.log(`Port is set to ${port}`);
-
-                    server = httpServer.listen(process.env.PORT, () => {});
-                    req = agent(server);
+                    const { httpServer: localHttpServer, closeServer: localCloseServer, io: localIo } = run();  // Correct destructuring with variable declaration
+                    httpServer = localHttpServer;
+                    closeServer = localCloseServer;
+                    io = localIo;
+                    
+                    httpServer.listen(process.env.PORT, () => {});
+                    req = agent(httpServer);
+                    
                 });
 
                 afterAll(async () => {
                     await closeDatabase(connection);
-                    
-                    server.close();
+                    await closeServer();
                 });
 
                 beforeEach(async () => {
@@ -82,6 +84,57 @@ class TestDecorators {
             });
         };
     }
+
+    static describeSocket<T>(description: string) {
+        return (constructor: new () => T) => {
+            describe(description, () => {
+                let connection: typeof mongoose;
+                let req: any;
+                let closeServer: any;
+                let socket: any;
+                let io: any;
+
+                beforeAll(async () => {
+                    connection = await connectDatabase();
+
+                    const port = process.env.PORT || 3000;
+
+                    const { httpServer, closeServer, io } = run();
+                    
+                    httpServer.listen(process.env.PORT, () => {});
+                    req = agent(httpServer);
+                    socket = await ioc(`http://localhost:${port}`);
+
+                    socket.on("connect");
+                });
+
+                afterAll(async () => {
+                    await io.close();
+                    await closeDatabase(connection);
+                    await closeServer();
+                });
+
+                beforeEach(async () => {
+                    await clearDatabase(connection);
+                });
+
+                const instance = new constructor();
+                const cls = constructor.prototype;
+
+                const tests: Array<TestFnProps> =
+                    Reflect.getMetadata("tests", cls) || [];
+
+                tests.forEach((testProps: TestFnProps) => {
+                    const { testName, originalMethod } = testProps;
+
+                    test.only(testName, async () => {
+                        await originalMethod.apply(instance, [socket, req]);
+                    });
+                });
+            });
+        };
+    }
+
 
     static describeModels<T>(description: string) {
         return (constructor: new () => T) => {
@@ -110,7 +163,6 @@ class TestDecorators {
                     const { testName, originalMethod } = testProps;
 
                     test.only(testName, async () => {
-
                         await originalMethod.apply(instance, []);
                     });
                 });
@@ -118,5 +170,6 @@ class TestDecorators {
         };
     }
 }
+
 
 export { TestDecorators };

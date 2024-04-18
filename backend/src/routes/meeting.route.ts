@@ -1,21 +1,28 @@
 import express, { Express, Request, Response, Router } from 'express';
-import { UserModel } from '../models';
-import MeetingController from '../controllers/meeting.controller';
+import { MeetingController } from '../controllers';
 
-const meetingRoutes: Router = Router();
+const routes: Router = Router();
+
+routes.get('/', MeetingController.load)
+
+routes.get('/:id', MeetingController.id)
+
+routes.delete('/delete/:id', MeetingController.delete)
+
+routes.post('/create', MeetingController.create)
+
+//new name shoud be in body
+routes.post('rename/:id', MeetingController.renameMeeting)
+
+routes.post('acesslevel/:id', MeetingController.changeAcessLevel)
+
+//loadAdvanced has filter, sort, and type in body
+routes.post('advanced', MeetingController.advancedLoad)
 
 
-meetingRoutes.get('/', MeetingController.load)
-
-meetingRoutes.get('/:id', MeetingController.id)
-
-meetingRoutes.delete('/delete/:id', MeetingController.delete)
-
-meetingRoutes.post('/create', MeetingController.create)
-
-meetingRoutes.put('/edit/:id', MeetingController.edit)
-
-meetingRoutes.post('/edit/post', MeetingController.editPost)
 
 
-export { meetingRoutes }
+
+routes.post('/publish/:id', MeetingController.publish)
+
+export { routes as meetingRoutes }

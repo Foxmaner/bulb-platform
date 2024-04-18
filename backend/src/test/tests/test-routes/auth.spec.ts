@@ -1,34 +1,27 @@
 import { TestDecorators } from "../../utils";
 
-import jwt from "jsonwebtoken";
 
+import { UserModel, MeetingModel } from "../../../models";
 
 @TestDecorators.describeRoutes("Auth tests")
 class ExempelTest {
 
-    static async generateFakeToken() {
-
-        if (process.env.JWT_SECRET === undefined) {
-            throw new Error("JWT_SECRET not defined");
-        }
-
-        const token = jwt.sign({}, process.env.JWT_SECRET)
-
-        return token;
-    }
-
     @TestDecorators.test("signIn")
     async createExample(req: any) {
-        const testToken = await ExempelTest.generateFakeToken();
-
-        const resp = await req.post("/auth/signIn")
-        .set('Authorization', `Bearer ${testToken}`)
-        .send({
-          email: "test@gmail.com",
-          name: "test user"
+        await req.post("/login").send({
+            password: 'testPassword',
+            name: 'testUser',
         });
+        
+        const resp = await req.post("/meeting/create").send({
+            name: 'testMeeting',
+        })
 
+        expect(resp.status).toBe(200);
+        
+        const respMeeting = await req.get("/meeting") 
 
-        expect(resp.statusCode).toBe(200);
+        expect(respMeeting.status).toBe(200);
+        expect(respMeeting.body.length).toBe(1);
     }
 }

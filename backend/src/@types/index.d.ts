@@ -110,7 +110,7 @@ declare module "index" {
     type Member = {
         userID: ObjectId,
         expiryDate: Date | never,
-        accessLevel: Integer
+        role: Integer
     }
 }
 

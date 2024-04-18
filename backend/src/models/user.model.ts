@@ -5,9 +5,9 @@ import BaseModel from "./base.model";
 import Utils from "./utils";
 
 import { User } from "index";
+import { UserAccessLevel } from "accessLevels";
 
 import { MethodUserService, StaticUserService } from "../services";
-
 
 class UserModel extends BaseModel<User, typeof StaticUserService, typeof MethodUserService> {
     constructor() {
@@ -15,7 +15,8 @@ class UserModel extends BaseModel<User, typeof StaticUserService, typeof MethodU
         const userSchema = {
             oAuthID: {
                 type: String,
-                required: true
+                required: true,
+                unique: true
             },
             oAuthProvider: {
                 type: String,
@@ -26,12 +27,13 @@ class UserModel extends BaseModel<User, typeof StaticUserService, typeof MethodU
                 required: true
             },
             accesLevel: {
-                type: Number,
+                type: String,
+                enum: ['generic', 'admin'],
                 required: true,
-                unique: true,
-                validate: {
-                    validator: Utils.integerValidator,
-                    message: "{VALUE} is not an integer value"
+                // Define a custom getter to map strings to numbers
+                get: role => {
+                    const map: { [key in UserAccessLevel]: number } = { generic: 0, admin: 1 };
+                    return map[role];
                 }
             },
             companyID:  {
@@ -41,8 +43,10 @@ class UserModel extends BaseModel<User, typeof StaticUserService, typeof MethodU
                     message: () => "Couldn't identify the company, the ObjectId is invalid."
                 }
             },
-            accessibleMeetings: [Schema.Types.ObjectId],
-            token: String
+            accessibleMeetings: {
+                type: [Schema.Types.ObjectId],
+                required: false
+            }
         }
 
         super({

@@ -1,15 +1,11 @@
 import mongoose, { ObjectId } from 'mongoose';
 
-import { Request, Response } from 'express';
-
 import { TemplateModel } from '../../models';
-
-import BaseService from '../base.service';
 
 import { Response as res } from '../utils.service';
 
 
-export class StaticTemplateService<T> extends BaseService<T> {
+export class StaticTemplateService {
     static async delete(id: ObjectId) {
         try {
             const result = await TemplateModel.deleteOne({ _id: id });

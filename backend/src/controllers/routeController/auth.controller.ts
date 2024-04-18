@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-import { UserModel } from '../models';
+import { UserModel } from '../../models';
 
 
 
@@ -21,8 +21,6 @@ export default class ExampleController {
     static async signUp(req: Request, res: Response) {
     
         const resp = await UserModel.getByOAuthID(req.body.id);
-
-        console.log('body:', req.body);
 
         if (resp.statusCode === 200) {
             res.status(200).json({message: 'Already exists'});

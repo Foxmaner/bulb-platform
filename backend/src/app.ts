@@ -1,61 +1,97 @@
- import express, { Express } from "express";
-import { Server } from 'socket.io';
-import { connectionHandler } from "./socket";
-import cors from 'cors';
-import { createServer } from 'http';
-import {verifyToken} from "./middleware/authMiddleware";
+import express, { Express } from "express";
+import { Server } from "socket.io";
+import { connectionHandler } from "./server";
+import { createServer } from "http";
 
-import { authRoutes, exampleRoutes, 
-        historyRoutes, imageRoutes, meetingRoutes, 
-        paragraphRoutes, sectionRoutes, templateRoutes, 
-        wordcloudRoutes } from './routes';
 
-//import { connectDatabase } from "./config/test-connection";
+import cors from "cors";
+import session from "express-session";
+import cookieParser from "cookie-parser";
+import MongoStore from "connect-mongo";
+import passport from "passport";
+
+import { setupPassport } from "./config/passport-setup";
+
+import {
+    authRoutes,
+    exampleRoutes,
+    historyRoutes,
+    imageRoutes,
+    meetingRoutes,
+    paragraphRoutes,
+    sectionRoutes,
+    templateRoutes,
+    wordcloudRoutes,
+} from "./routes";
+
+
+import dotenv from "dotenv";
+
 import { connectDatabase } from "./config/connection";
+import { 
+    verifySession, 
+    verifySocket, 
+    wrap, 
+    sessionMiddleware,
+    corsConfig,
+    updateSessionPath
+} from "./middleware/authMiddleware";
 
 
-connectDatabase();
+dotenv.config();
 
-const corsOrigin = "http://localhost:3000";
+const run = () => {
+    connectDatabase();
 
-const app = express();
-const httpServer = createServer(app);
-const io = new Server(httpServer, {
-    cors: {
-        origin: corsOrigin,
-        methods: ["GET", "POST"]
-    }
-});
+    const app = express();
+    const httpServer = createServer(app);
+    const io = new Server(httpServer, {});
+    app.use(cors(corsConfig));
 
+    app.use(express.json());
+    app.use(express.urlencoded({ extended: true }));
+    
+    app.use(sessionMiddleware);
 
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+    setupPassport(app);
 
-app.use((req, res, next) => {
-    console.log('Accessed route:', req.originalUrl);
-    next();
-});
+    app.use(cookieParser());
+    app.use(passport.authenticate("session"));
+    app.use(passport.initialize());
+    app.use(passport.session());
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+    app.use("/auth", authRoutes);
 
+    app.use(verifySession);
 
-app.use("/auth", authRoutes);
+    app.use(function (req: any, res: any, next) {
+        res.locals.currentUser = req.user;
+        res.locals.session = req.session;
 
-// Middleware that verifies the token
-app.use(verifyToken);
+        next();
+    });
 
+    // Middleware that verifies the token
+    app.post("/verify", updateSessionPath);
 
-app.use("/example", exampleRoutes);
-app.use("/history", historyRoutes);
-app.use("/image", imageRoutes);
-app.use("/meeting", meetingRoutes);
-app.use("/paragraph", paragraphRoutes);
-app.use("/section", sectionRoutes);
-app.use("/template", templateRoutes);
-app.use("/wordcloud", wordcloudRoutes);
+    app.use("/example", exampleRoutes);
+    app.use("/history", historyRoutes);
+    app.use("/image", imageRoutes);
+    app.use("/meeting", meetingRoutes);
+    app.use("/paragraph", paragraphRoutes);
+    app.use("/section", sectionRoutes);
+    app.use("/template", templateRoutes);
+    app.use("/wordcloud", wordcloudRoutes); 
 
-io.on('connection', connectionHandler);
+    io.use(wrap(sessionMiddleware))
+    io.use(verifySocket);
+    io.on('connection', connectionHandler);
 
-export { httpServer };
+    const closeServer = () => {
+        httpServer.close();
+    };
+
+    return { httpServer, closeServer, io };
+};
+
+export { run };

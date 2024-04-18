@@ -1,9 +1,23 @@
 import type { NextRequest } from 'next/server';
-import { getSession } from 'next-auth/react';
 import { NextResponse } from 'next/server';
 
-import { getToken } from 'next-auth/jwt';
+import { parse } from 'cookie';
 
+
+/**
+ * Middleware to check if the user is authenticated
+ * 
+ * Before it routes, it sends a request to the server to check if the user is authenticated.
+ * This doesnt give the user any information about the user, it just checks if the user is authenticated.
+ * And if the user is not authenticated, it redirects the user to the login page.
+*/
+
+const routes = [
+    '/documents',
+    '/templates',
+    '/meetings',
+    '/auth/signin'
+]
 
 const protectedRoutes = [
     '/documents',
@@ -12,19 +26,36 @@ const protectedRoutes = [
 ];
 
 export async function middleware(req: NextRequest) {
-    const requestForNextAuth = {
-        headers: {
-            cookie: req.headers.get('cookie') ?? undefined,
-        }, 
-    };
-
-    const session = await getSession({ req: requestForNextAuth });
+    const cookieHeader = req.headers.get("cookie") || '';
+    const cookies = parse(cookieHeader);
+    const connectSid = cookies['connect.sid'];
 
     const pathname = req.nextUrl.pathname.toLocaleLowerCase();
 
-    if (session) {
-        if (pathname.startsWith('/auth/signIn')) {
-            return NextResponse.redirect(new URL('/document', req.nextUrl.origin));
+    if (!routes.some(route => pathname.startsWith(route) && pathname !== "/")){
+        return NextResponse.next();
+    }
+
+    let authorized = false;
+    if (connectSid) { // Check if both connect.sid
+        const response = await fetch('http://localhost:3001/verify', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+                'Cookie': `connect.sid=${connectSid}`,
+                'Referer': pathname
+            }
+        });
+        
+        if (response.status === 200) {
+            authorized = true;
+        }
+    }
+
+    if (authorized) {
+        if (pathname === '/auth/signin') {
+            return NextResponse.redirect(new URL('/meetings', req.nextUrl.origin));
         }
 
         return NextResponse.next();
@@ -36,3 +67,4 @@ export async function middleware(req: NextRequest) {
 
     return NextResponse.next();
 }
+

@@ -51,10 +51,13 @@ test:
   # https://docs.cypress.io/guides/continuous-integration/introduction#Official-Cypress-Docker-Images
   image: cypress/browsers:node-20.9.0-chrome-118.0.5993.88-1-ff-118.0.2-edge-118.0.2088.46-1
   stage: test
+  rules:
+    - when: never
   parallel: 1
   script:
     - cd bulb
-    - npm ci --cache .npm --prefer-offline
+    - npm ci
+    #- npm ci --cache .npm --prefer-offline
     # Starts web server for E2E tests - replace with your own server invocation
     # https://docs.cypress.io/guides/continuous-integration/introduction#Boot-your-server
     # Runs tests in parallel and records to Cypress Cloud

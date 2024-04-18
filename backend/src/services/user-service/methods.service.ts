@@ -1,45 +1,23 @@
-import { ObjectId, Schema } from "mongoose";
+import mongoose, { ObjectId } from "mongoose";
 
-import { Response } from "express";
-import BaseService from "../base.service";
-import { Member, Meeting } from "index";
+
+import { User } from "index";
 
 import { MeetingModel } from "../../models";
 
 import { Response as res } from "../utils.service";
 
 
-export class MethodUserService<T> extends BaseService<T> {
+export class MethodUserService extends mongoose.Model<User> {
 
-    signIn (token: string) {
-        this.model.token = token;
-
-        return res.status(200).json({ token, message: "User signed in" });
-    }
-
-    signOut () {
-        this.model.token = null;
-
-        return res.status(200).json({ message: "User signed out" });
-    }
-
-    getToken () {
-        if (!this.model.token) {
-            return res.status(404).json({ message: "User is not signed in" });
-        }
-
-        res.status(200).json({ token: this.model.token });
-    }
-
-    addMeeting (meetingID: ObjectId) {
-        this.model.accessibleMeetings.push(meetingID);
+    async addMeeting (meetingID: ObjectId) {
+        await this.updateOne({ $push: { accessibleMeetings: meetingID } });
 
         return res.status(200).json({ message: "Meeting added" });
     }
 
-    removeMeeting (meetingID: ObjectId) {
-        const newMeetings =  this.model.accessibleMeetings.filter((id: ObjectId) => id !== meetingID);
-        this.model.accessibleMeetings = newMeetings;
+    async removeMeeting (meetingID: ObjectId) {
+        await this.updateOne({ $pull: { accessibleMeetings: meetingID }});
 
         return res.status(200).json({ message: "Meeting removed" });
     }
@@ -47,21 +25,30 @@ export class MethodUserService<T> extends BaseService<T> {
     changeCompany (companyID: ObjectId) {
         // Needs to add if last user of current company otherwise delete company...
 
-        this.model.companyID = companyID;
+        this.companyID = companyID;
 
         return res.status(200).json({ message: "Company changed" });
     }
 
-    changeAccessLevel (newLevel: number) {
-        this.model.accesLevel = newLevel;
+    changeAccessLevel (newLevel: string) {
+        this.accesLevel = newLevel;
 
         return res.status(200).json({ message: "Access level changed" });
     }
 
-    async createMeeting(props: Meeting) {
+    async createMeeting(props: { name: string }) {
         try {
-            const Meeting = new MeetingModel(props);
+
+            const Meeting = new MeetingModel({
+                name: props.name,
+                date: new Date(),
+                members: [
+                    { userID: this._id, role: "owner" }
+                ]
+            });
             await Meeting.save();
+            
+            await this.addMeeting(Meeting._id);
 
             return res.status(201).json(Meeting);
         } catch (error: any) {
@@ -69,14 +56,17 @@ export class MethodUserService<T> extends BaseService<T> {
         }
     }
 
-    getMeetings () {
-        const pipelineResult = this.model.aggregate([{
-            $match:{_id:this.model._id},
-            $lookup:{from:"Meetings",localField:"accessibleMeetings",foreignField:"_id",as:"Joined meetings"},
-            $replaceRoot:{newRoot:"Joined meetings"},
-            $unset:["meetingHistory","mainDocumentSections","summaryDocumentSections"],
-        }]);
+    async getMeetings () {
+        const pipelineResult = await MeetingModel.aggregate([
+            { $addFields: { "members.userID": this._id } }
+        ]);
         return res.status(200).json(pipelineResult);
+    }
+
+    getMeeting(meetingID) {
+        const meeting = new MeetingModel.findById(meetingID);
+
+        return res.status(200).json(meeting);
     }
 
     /*async addUserToMeeting (user: Member, meetingID: Schema.Types.ObjectId, res: Response) {

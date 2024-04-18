@@ -1,5 +1,5 @@
 import express, { Express, Request, Response, Router } from 'express';
-import WordcloudController from '../controllers/wordcloud.controller';
+import WordcloudController from '../controllers/routeController/wordcloud.controller';
 
 
 const wordcloudRoutes: Router = Router();

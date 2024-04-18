@@ -13,13 +13,14 @@ class CompanyTests {
 			name: "Company 1"
 		};
 		
-		const resp = await CompanyModel.create(params);
+		await CompanyModel.create(params);
 
 		// Check if the company was created
 		const companies = await CompanyModel.find();
 
 		expect(companies.length).toBe(1);
 		expect(companies[0].name).toBe("Company 1");
+
 	}
 
 	@TestDecorators.test("Create a company with invalid input")
