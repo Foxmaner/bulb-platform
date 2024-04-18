@@ -88,9 +88,9 @@ export class MeetingController {
         
         const resp = await user.createMeeting(req.body);        
 
-        if(process.env.DEBUG == "true"){
-            console.log(resp.body)
-        }
+        // if(process.env.DEBUG == "true"){
+        //     console.log(resp.body)
+        // }
 
         if(resp.statusCode != 201){
             return res.status(resp.statusCode).json(resp.body)
@@ -98,7 +98,7 @@ export class MeetingController {
 
         const id = resp.body._id.toString();
 
-        res.status(201).json({ message: "meeting created", meeting: id });
+        res.status(201).json({ message: "meeting created", meeting: resp.body });
     }
 
     static edit(req: Request, res: Response){
