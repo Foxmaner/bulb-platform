@@ -14,4 +14,9 @@ declare module "socket" {
         parahraphId: string,
         patches: string,
     }
+
+    interface ICursor{
+        xPos: string,
+        yPos: string,
+    }
 }

@@ -1,22 +1,30 @@
 import { Paragraph } from "index";
 import { MeetingModel } from "../../models";
 import diff_match_patch from 'diff-match-patch';
-import { IParagraph, ISection, IParagraphEdit } from "socket";
+import { IParagraph, ISection, IParagraphEdit, ICursor } from "socket";
 import { Socket } from "socket.io";
 
 const dmp = new diff_match_patch();
 
 export class SocketController {
 
-    static join_room(socket : Socket, roomID) {
+    static join_room(socket : Socket, roomID : string) {
         socket.join(roomID);
 		console.log(`User ${socket.id} joined room ${roomID}`);
+        socket.broadcast.to(roomID).emit('user_joined', socket.id);
     }
 
-    static async create_section(socket, data: ISection){
+    static async cursor_move(socket: Socket, data: ICursor){
+        const user = socket.id;
+        const out = { user: user, cursorPosition: data };
+        socket.broadcast.emit('cursor_moved',  out);
+    } 
+
+    static async create_section(socket : Socket, data: ISection){
         const meeting = await MeetingModel.get(data.meetingId);
         const section = meeting.addSection();
-        socket.emit('new section', section._body.id);
+        //@ts-ignore
+        socket.broadcast.to()('new section', section._body.id);
     }
 
     static async delete_section(socket, data: ISection){

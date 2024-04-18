@@ -83,7 +83,7 @@ const run = () => {
     app.use("/template", templateRoutes);
     app.use("/wordcloud", wordcloudRoutes); 
 
-    //io.use(wrap(sessionMiddleware))
+    io.use(wrap(sessionMiddleware))
     //io.use(verifySocket);
     io.on('connection', connectionHandler);
 
