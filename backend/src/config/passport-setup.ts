@@ -35,7 +35,7 @@ function setupPassport(app: any) {
         throw new Error("NODE_ENV is not defined");
     }
 
-    console.log("NODE_ENV is set to", process.env.NODE_ENV);
+    console.log("NODE_ENV is set TEST=", process.env.NODE_ENV === "test");
 
     if (process.env.NODE_ENV === "test") {
         passport.serializeUser((user, done) => done(null, user.id))
@@ -60,9 +60,7 @@ function setupPassport(app: any) {
             });
         }));
 
-        app.post('/login', passport.authenticate('local', {
-            failWithError: true
-         }), (req, res) => {
+        app.post('/login', passport.authenticate('local', { failWithError: true }), (req, res) => {
             res.status(200).send('Logged in');
         }, (err, req, res, next) => { 
             console.error('Error during authentication', err);

@@ -11,3 +11,11 @@ process.env.NODE_ENV = 'test';
 const { httpServer } = app.run(db_uri)
 
 httpServer.listen(port, () => console.log(`server listening on port : ${port}`));
+
+process.on('SIGINT', () => {
+    console.log('Shutting down server...');
+    httpServer.close(() => {
+      console.log('Server closed');
+      process.exit(0);
+    });
+});
