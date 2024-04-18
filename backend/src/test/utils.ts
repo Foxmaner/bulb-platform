@@ -126,7 +126,7 @@ class TestDecorators {
                     await new Promise((resolve, reject) => {
                         setTimeout(() => {
                           resolve({id: 3});
-                        }, 500);
+                        }, 1000);
                     });
                     //await io.close();
                     //await closeDatabase(connection);

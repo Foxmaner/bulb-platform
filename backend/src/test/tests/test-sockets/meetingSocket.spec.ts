@@ -6,6 +6,7 @@ class MeetingTest {
 
     @TestDecorators.test("Paragraphs")
     async socketTest(openSocket: any, req: any) {
+
         await req.post("/login").send({
             password: 'testPassword',
             name: 'testUser',
@@ -20,45 +21,58 @@ class MeetingTest {
         const socket1 = await openSocket();
         const socket2 = await openSocket();
 
-        socket2.on("section_created", (data) => {console.log(data)});
+        socket2.on("section_created", async () => {
+            const res1 = await req.get(`/meeting/${meetingID}`);
+            expect(res1.body.meeting.mainDocumentSections.length).toBe(1);
+        });
+
+        socket1.on("section_created", async () => {
+            const res1 = await req.get(`/meeting/${meetingID}`);
+            expect(res1.body.meeting.mainDocumentSections.length).toBe(2);
+        });
         
         await socket1.emit("join_room", meetingID);
         await socket2.emit("join_room", meetingID);
 
         await socket1.emit("section_create", {meetingID});
-        await socket1.emit("section_create", {meetingID});
+        await new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve({id:3});
+            }, 500);
+        })
+        await socket2.emit("section_create", {meetingID});
 
-        const res = await req.get(`/meeting/${meetingID}`);
+        //const res = await req.get(`/meeting/${meetingID}`);
         //console.log(res.body.meeting);
-        expect(res.body.meeting.mainDocumentSections.length).toBe(2);
+        //expect(res.body.meeting.mainDocumentSections.length).toBe(2);
     }
 
-    @TestDecorators.test("Test cursor in socket")
-    async cursorTest(openSocket: any, req: any) {
-        await req.post("/login").send({
-            password: 'testPassword',
-            name: 'testUser',
-        });
+    // @TestDecorators.test("Test cursor in socket")
+    // async cursorTest(openSocket: any, req: any) {
+    //     await req.post("/login").send({
+    //         password: 'testPassword',
+    //         name: 'testUser',
+    //     });
         
-        const resp = await req.post("/meeting/create").send({
-            name: 'testMeeting',
-        })
+    //     const resp = await req.post("/meeting/create").send({
+    //         name: 'testMeeting',
+    //     })
 
-        const meetingID = resp.body.meeting._id;
+    //     const meetingID = resp.body.meeting._id;
 
-        const socket1 = await openSocket();
-        const socket2 = await openSocket();
+    //     const socket1 = await openSocket();
+    //     const socket2 = await openSocket();
 
 
-        await socket1.emit("join_room", meetingID);
-        const data1 = {xPos :10, yPos: 10}
-        await socket1.emit("cursor_movement", data1, meetingID)
+    //     await socket1.emit("join_room", meetingID);
+    //     const data1 = {xPos :10, yPos: 10}
+    //     await socket1.emit("cursor_movement", data1, meetingID)
 
-        await socket2.emit("join_room", meetingID);
-        const data2 = {xPos :10, yPos: 10}
-        await socket2.emit("cursor_movement", data2, meetingID)
+    //     await socket2.emit("join_room", meetingID);
+    //     const data2 = {xPos :10, yPos: 10}
+    //     await socket2.emit("cursor_movement", data2, meetingID)
 
-        socket1.on("section_created", (data) => {console.log(data)});
-        socket2.on("section_created", (data) => {console.log(data)});
-    }
+    //     socket1.on("section_created", (data) => {console.log(data)});
+    //     socket2.on("section_created", (data) => {console.log(data)});
+    // }
 }

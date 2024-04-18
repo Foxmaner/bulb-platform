@@ -37,19 +37,17 @@ export class MeetingController {
             return res.status(401).json(respUser.body)
         }
 
-        const resp = await user.getMeetings();
-        const userMeetings = resp.body;
+        const resp = await user.getMeeting(meetingId);
+        const userMeeting = resp.body.meeting;
 
         if(process.env.DEBUG == "true"){
             console.log(resp.body)
         }
 
-        const meeting = userMeetings.find(meeting => meeting._id == meetingId);
-
-        if(!meeting){
+        if(!userMeeting){
             return res.status(404).json({message : "meeting not found"})
         }
-        res.status(200).json({meeting});
+        res.status(200).json({meeting: userMeeting});
     }
     
     static async delete(req: any, res: Response) {

@@ -63,10 +63,16 @@ export class MethodUserService extends mongoose.Model<User> {
         return res.status(200).json(pipelineResult);
     }
 
-    getMeeting(meetingID) {
-        const meeting = new MeetingModel.findById(meetingID);
+    async getMeeting(meetingID) {
+        const meeting = await MeetingModel.aggregate([
+            { $addFields: { "_id": meetingID as ObjectId } }
+        ]);
 
-        return res.status(200).json(meeting);
+        if (!meeting) {
+            return res.status(404).json({ message: "Meeting not found" });
+        }
+
+        return res.status(200).json({ meeting: meeting[0]});
     }
 
     /*async addUserToMeeting (user: Member, meetingID: Schema.Types.ObjectId, res: Response) {

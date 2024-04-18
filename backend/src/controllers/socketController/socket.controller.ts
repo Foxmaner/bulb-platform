@@ -28,10 +28,10 @@ export class SocketController {
     static async create_section(socket : Socket, data){
 
         const respMeeting = await MeetingModel.get(data.meetingID);
-        
         const meeting = respMeeting.body;
-        const section = meeting.addSection();
-        console.log(meeting);
+
+        const section = await meeting.addSection();
+        
         socket.broadcast.to(data.meetingID).emit('section_created', {data:"section created"});
     }
 

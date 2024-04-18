@@ -79,7 +79,7 @@ export class MethodMeetingService extends mongoose.Model<Meeting> {
      * Section
     */
     async addSection () {
-        const newSection: Section = {
+        const newSection = {
             title: "Untitled Section",
             contains: [],
             sectionHistory: []
