@@ -1,4 +1,15 @@
-
+/**
+ * ParagraphForm Component
+ * 
+ * This component renders a form for adding/editing a paragraph within a section.
+ * It allows users to input paragraph text and optionally a title for the paragraph.
+ * 
+ * Props:
+ * - data: Paragraph - The data for the paragraph including title, text, and _id.
+ * 
+ * Usage:
+ * <ParagraphForm data={paragraphData} />
+ */
 'use client';
 import { Button, ButtonGroup, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Textarea } from "@nextui-org/react";
 import Image from "next/image";

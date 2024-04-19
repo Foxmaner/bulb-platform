@@ -1,3 +1,20 @@
+/**
+ * MeetingProvider Component
+ * 
+ * This component provides a context for managing the meeting data throughout the application.
+ * It wraps the entire application with the MeetingContext, allowing components to access and update the meeting data.
+ * 
+ * Props:
+ * - children: ReactNode - The child components wrapped by the MeetingProvider.
+ * 
+ * Usage:
+ * <MeetingProvider>
+ *   <App />
+ * </MeetingProvider>
+ * 
+ * Note: This component should be placed at the top level of the component tree to provide access to the meeting context across the entire application.
+ */
+
 'use client';
 
 import { Section, Paragraph, Meeting } from "index";
@@ -12,6 +29,7 @@ type MeetingContextType = {
 
 const defaultMeeting: Meeting = {		
     _id: '',
+	title:"",
     sections: []
 }
 

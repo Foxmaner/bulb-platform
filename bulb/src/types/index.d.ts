@@ -5,6 +5,7 @@ declare module "index" {
 
     type Meeting = {
         _id: string,
+        title: string,
         sections: Section[]
     }
 

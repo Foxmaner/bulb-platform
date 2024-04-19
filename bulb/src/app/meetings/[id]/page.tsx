@@ -1,6 +1,18 @@
+/**
+ * MeetingPage Component
+ * 
+ * This component represents the meeting page UI where users can view and edit meeting content.
+ * It displays the meeting title, date, catalog, and sections with options to add new sections.
+ * 
+ * Usage:
+ * <MeetingPage />
+ * 
+ * Note: This component assumes the usage of Next.js and includes components from the NextUI library.
+ */
+
 "use client";
 
-import { Button, ScrollShadow, ButtonGroup } from "@nextui-org/react";
+import { Button, ScrollShadow, ButtonGroup, Tooltip, Input } from "@nextui-org/react";
 import { FormEvent, useState } from "react";
 import Link from "next/link";
 import AddSection from "../../components/defaultAddsection";
@@ -10,6 +22,7 @@ import SectionForm from "app/components/sectionForm"
 import { Section, Paragraph } from "index";
 
 import { useMeetingContext } from "../../context/meetingProvider";
+
 
 
 export default function MeetingPage() {
@@ -41,21 +54,29 @@ export default function MeetingPage() {
                         </Link>
 
                     </div>
-                    {/*Försöker fixa med katalogen här men har inte lyckats*/}
+                    {/*Katalogen*/}
                     <div className="bg-secondaryGrey h-1 w-full"></div>
                     <div className="flex flex-col justify-center py-2">
-                        <p className="text-xl">Catalog</p>
+                        <p className="text-center text-xl">Catalog</p>
                         <ul className="flex flex-col py-2">
                             {
                                 meeting.sections.map((section: Section, index: number) => (
-                                    <div className="flex flex-col">
-                                        <Button variant="ghost" className="w-36" key={index}>
-                                            {section.title}
-                                        </Button>
-                                        {section.paragraphs?.map((paragraph: Paragraph, paragraphIndex: number) =>
-                                            <Button variant="ghost" className="w-36" key={paragraphIndex}>
-                                                {paragraph.title}
+                                    <div className="flex items-center flex-col">
+                                        <Tooltip content={section.title} isDisabled={!section.title}>
+                                            <Button variant="ghost" className="w-36" key={index}>
+                                                <p className="truncate">
+                                                    {section.title}
+                                                </p>
                                             </Button>
+                                        </Tooltip>
+                                        {section.paragraphs?.map((paragraph: Paragraph, paragraphIndex: number) =>
+                                            <Tooltip content={paragraph.title} isDisabled={!paragraph.title}>
+                                                <Button variant="ghost" className="w-28" key={paragraphIndex}>
+                                                    <p className="truncate">
+                                                        {paragraph.title}
+                                                    </p>
+                                                </Button>
+                                            </Tooltip>
                                         )}
                                     </div>
                                 ))}
@@ -67,7 +88,7 @@ export default function MeetingPage() {
 
                 <div className="flex flex-col text-primaryText gap-5 w-11/12 py-5">
                     <div className="flex flex-col gap-2 ">
-                        <p className="text-black text-5xl font-bold">Untitled meeting</p>
+                        <Input variant="underlined" size="lg" disableAnimation={true} radius="lg" type={meeting.title} placeholder="Tomt möte" isRequired={true}></Input>
                         <p className="text-primaryText text-sm">2024 - 01 - 01</p>
                         <div className="flex flex-row bg-secondaryGrey h-1 w-11/12"></div>
                     </div>

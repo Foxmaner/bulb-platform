@@ -1,4 +1,15 @@
-
+/**
+ * SectionForm Component
+ * 
+ * This component is responsible for rendering a form for a section of a meeting.
+ * It allows users to add, edit, and delete paragraphs within the section.
+ * 
+ * Props:
+ * - data: Section - The data for the section containing title, _id, and paragraphs.
+ * 
+ * Usage:
+ * <SectionForm data={sectionData} />
+ */
 'use client';
 import {
     Button, ButtonGroup, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Textarea, Modal,
@@ -131,7 +142,7 @@ export default function SectionForm({ data }: SectionFormProps) {
                 radius="none"
                 labelPlacement="outside"
                 placeholder="Titel"
-                className="flex w-11/12 grow-0 overflow-hidden"
+                className="flex w-11/12 truncate"
                 value={title}
                 onValueChange={addSectionTitle}
                 minRows={1}

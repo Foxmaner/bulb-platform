@@ -1,3 +1,19 @@
+/**
+ * AddSection Component
+ * 
+ * This component represents a button to add a new section to the meeting.
+ * It toggles a menu to add a new section when clicked.
+ * 
+ * Props:
+ * - addSection: Function - Function to add a new section to the meeting.
+ * 
+ * Usage:
+ * <AddSection addSection={handleAddSection} />
+ * 
+ * Note: This component assumes the usage of React and includes components like InputField and paragraphForm.
+ */
+
+
 import { useEffect, useState, useRef } from "react";
 
 import InputField from "./inputField";
