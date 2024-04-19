@@ -9,6 +9,13 @@ import { Response as res } from "../utils.service";
 
 export class MethodMeetingService extends mongoose.Model<Meeting> {
 
+    async changeAccessLevel (userID: ObjectId, accessLevel: string) {
+        await this.updateOne({ 
+            $set: { "members.$[element].role": accessLevel } }, 
+            { arrayFilters: [ { "element.userID": userID } ] 
+        });
+    }
+
     isMember (userID: ObjectId) {
         if (!this.members.includes(userID)) {
             return res.status(403).json({ message: "User is not a member of this meeting" });
@@ -79,7 +86,10 @@ export class MethodMeetingService extends mongoose.Model<Meeting> {
      * Section
     */
     async addSection () {
+        const _id = Math.max(this.mainDocumentSections.sections.map((section: any) => section._id)) + 1;
+
         const newSection = {
+            _id: _id,
             title: "Untitled Section",
             contains: [],
             sectionHistory: []
@@ -132,22 +142,30 @@ export class MethodMeetingService extends mongoose.Model<Meeting> {
         return res.status(200).json({ message: "History added" });
     }
 
-    addParagaraph (sectionID: number) {
+    async addParagaraph (sectionID: number) {
+        const section = this.sections.find((section) => section._id == sectionID)
+        const _id = Math.max(section.paragraphs.map((section: any) => section._id)) + 1;
+
         const newParagraph = {
-            id: this.sections[sectionID].contains.length,
+            _id,
             text: "",
             paragraphHistory: [],
             comments: []
         }
 
-        this.sections[sectionID].contains.push(newParagraph);
+        await this.updateOne({ 
+            $match: { "sections._id": sectionID },
+            $push: { "sections.$.paragraphs": newParagraph } 
+        });
 
         return res.status(200).json(newParagraph);
     }
 
-    removeParagraph (sectionID: number, paragraphID: number) {
-        const newParagraphs = this.sections[sectionID].contains.filter((paragraph: any) => paragraph.id !== paragraphID);
-        this.sections[sectionID].contains = newParagraphs;
+    async removeParagraph (sectionID: number, paragraphID: number) {
+        await this.updateOne({ 
+            $match: { "sections._id": sectionID },
+            $pull: { "sections.$.paragraphs._id": paragraphID } 
+        });
 
         return res.status(200).json({ message: "Paragraph removed" });
     }

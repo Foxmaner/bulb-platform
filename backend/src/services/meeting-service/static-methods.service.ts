@@ -30,6 +30,22 @@ export class StaticMeetingService {
         return res.status(200).json(meetings);
     }
 
+    static async getPublishedMeetings() {
+        try {
+            const meetings = await MeetingModel.aggregate([
+                {
+                    $addFields: {
+                        "published": true 
+                    }
+                }
+            ]);
+
+            return res.status(201).json({ meetings });
+        } catch (error: any) {
+            return res.status(500).json({ error: error.message });
+        }
+    }
+
     static async get(id: string) {
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ message: "Invalid ObjectID." });

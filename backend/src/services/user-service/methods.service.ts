@@ -10,6 +10,62 @@ import { Response as res } from "../utils.service";
 
 export class MethodUserService extends mongoose.Model<User> {
 
+    async getSharedMeeting({ filter = {} }: { filter: { companyIDs?: ObjectId[], userIDs?: ObjectId[] } }) {
+
+
+    }
+
+    async getPubslishedMeetings() {
+        const meetings = await MeetingModel.aggregate([
+            {
+                $addFields: {
+                    "published": true
+                }
+            }
+        ]);
+
+        return res.status(200).json({ meetings });
+    }
+
+    async publishMeeting(meetingID: ObjectId) {
+        await MeetingModel.findByIdAndUpdate(meetingID, { published: true });
+
+        return res.status(200).json({ message: "Meeting published" });
+    }
+
+    async changeNameOfMeeting (meetingID: ObjectId, newName: string) {
+        const meeting = await MeetingModel.findById(meetingID);
+
+        if (!meeting) {
+            return res.status(404).json({ message: "Meeting not found" });
+        }
+
+        meeting.members.forEach((member: any) => {
+            if (member.role == "owner" && member.userID != this._id) {
+                return res.status(403).json({ message: "User is not the owner of this meeting" });
+            }
+        })
+
+        meeting.updateOne({ name: newName })
+
+        return res.status(200).json({ meeting: "Meeting Name Successfully Changed!" });
+    }
+
+    async addWordCloudWord (meetingID: ObjectId, word: string, weight: number) {
+        const meeting = await MeetingModel.updateOne([
+            { 
+                $match: { "_id": meetingID as ObjectId },
+                $set: { "wordCloud": { word, weight } }
+            }
+        ]);
+
+        if (!meeting) {
+            return res.status(404).json({ message: "Meeting not found" });
+        }
+
+        return res.status(200).json({ message: "Word added to word cloud" });
+    }
+
     async addMeeting (meetingID: ObjectId) {
         await this.updateOne({ $push: { accessibleMeetings: meetingID } });
 
@@ -57,8 +113,19 @@ export class MethodUserService extends mongoose.Model<User> {
     }
 
     async getMeetings () {
+
+
         const pipelineResult = await MeetingModel.aggregate([
-            { $addFields: { "members.userID": this._id } }
+            { 
+                $addFields: {
+                    "members.role": { 
+                        $cond: { 
+                            if: { $eq: ["$members.userID", this._id] }, 
+                            then: "owner"
+                        } 
+                    }
+                }
+            }
         ]);
         return res.status(200).json(pipelineResult);
     }
