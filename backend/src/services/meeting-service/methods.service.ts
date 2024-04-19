@@ -86,23 +86,23 @@ export class MethodMeetingService extends mongoose.Model<Meeting> {
      * Section
     */
     async addSection () {
-        const _id = Math.max(this.mainDocumentSections.sections.map((section: any) => section._id)) + 1;
+        const _id = Math.max(this.mainDocumentSections.map((section: any) => section._id)) + 1;
 
-        const newSection = {
-            _id: _id,
-            title: "Untitled Section",
-            contains: [],
-            sectionHistory: []
+        const section = {
+            _id,
+            title: "Untitled Section"
         }
 
-        await this.updateOne({ $push: { mainDocumentSections: newSection } });
+        await this.updateOne({ $push: { mainDocumentSections: section } });
 
-        return res.status(200).json(newSection);
+        return res.status(200).json(section);
     }
 
     async removeSection (sectionID: number) {
         await this.updateOne(
-            { $pull: { mainDocumentSections: { _id: sectionID } } }
+            { 
+                $pull: { mainDocumentSections: { _id: sectionID } } 
+            }
         );
 
         return res.status(200).json({ message: "Section removed" });
@@ -135,7 +135,7 @@ export class MethodMeetingService extends mongoose.Model<Meeting> {
 
     async pushParagraphHistory(history, sectionID, paragraphID) {
         this.updateOne({
-            $match: { "sections_id": sectionID, "sections.contains._id": paragraphID },
+            $match: { "mainDocumentSections._id": sectionID, "mainDocumentSections.contains._id": paragraphID },
             $push: { paragraphHistory: history } 
         });
 
@@ -143,8 +143,12 @@ export class MethodMeetingService extends mongoose.Model<Meeting> {
     }
 
     async addParagaraph (sectionID: number) {
-        const section = this.sections.find((section) => section._id == sectionID)
-        const _id = Math.max(section.paragraphs.map((section: any) => section._id)) + 1;
+        const section = this.mainDocumentSections.find((section) => section._id == sectionID)
+
+        if (!section) {
+            return res.status(404).json({ message: "Section not found" });
+        }
+        const _id = Math.max(section.contains.map((section: any) => section._id)) + 1;
 
         const newParagraph = {
             _id,
@@ -153,11 +157,9 @@ export class MethodMeetingService extends mongoose.Model<Meeting> {
             comments: []
         }
 
-        await this.updateOne({ 
-            $match: { "sections._id": sectionID },
-            $push: { "sections.$.paragraphs": newParagraph } 
-        });
-
+        section.contains.push(newParagraph)
+        await this.save();
+    
         return res.status(200).json(newParagraph);
     }
 

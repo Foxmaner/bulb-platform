@@ -95,18 +95,18 @@ export class MethodUserService extends mongoose.Model<User> {
     async createMeeting(props: { name: string }) {
         try {
 
-            const Meeting = new MeetingModel({
+            const meeting = new MeetingModel({
                 name: props.name,
                 date: new Date(),
                 members: [
                     { userID: this._id, role: "owner" }
                 ]
             });
-            await Meeting.save();
+            await meeting.save();
             
-            await this.addMeeting(Meeting._id);
+            await this.addMeeting(meeting._id);
 
-            return res.status(201).json(Meeting);
+            return res.status(201).json(meeting);
         } catch (error: any) {
             return res.status(500).json({ error: error.message });
         }
