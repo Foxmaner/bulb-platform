@@ -41,7 +41,7 @@ export default function Menu() {
             <Link href={"/meetings"} className={`hover:text-primary ${pathname.includes("")}`}>
               Mina
             </Link>
-            <Link href={"/meetings/shared"} className={`hover:text-primary ${pathname.includes("/shared")}`}>
+            <Link href={"/meetings"} className={`hover:text-primary ${pathname.includes("/shared")}`}>
               Delade
             </Link>
             <Link href={"/meetings"} className={`hover:text-primary mb-2 ${pathname.includes("/published") ? "text-primary" : ""}`}>

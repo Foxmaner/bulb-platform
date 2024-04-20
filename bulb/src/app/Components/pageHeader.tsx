@@ -18,12 +18,12 @@ export default function PageHeader({ userName }: { userName: string }) {
   const pathName = usePathname().slice(1);
   const router = useRouter();
   return (
-    <div className="bg-primaryGrey w-full flex-col justify-between">
-      <div className="bg-white w-full">
-        <h2 className="text-black">Good afternoon, {userName}</h2>
+    <div className="bg-primaryGrey w-full flex-coljustify-between">
+      <div className="bg-white w-full px-2 py-1">
+        <h2 className="text-black">Good afternoon, {userName}!</h2>
       </div>
 
-      <div className="flex justify-between border-2 border-primaryBorder w-full items-center overflow-hidden">
+      <div className="flex justify-between border-1 border-primaryBorder border-edge w-full items-center overflow-hidden">
         <div className="flex items-start">
           <h1 className="text-black font-bold text-7xl mx-5">
             {capitalizeFirstLetter(pathName)}

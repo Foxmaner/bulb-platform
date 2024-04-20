@@ -31,7 +31,8 @@ export default function Sidebar() {
   }
 
   return (
-    <div className="bg-primaryGrey divide-y divide-gray-400 h-screen flex flex-col flex-shrink-0">
+    <div className="bg-primaryGrey h-screen flex flex-col">
+      {/* Logo */}
       <div className="p-5">
         <Link href="/">
           <h1 className="text-primary font-bold text-3xl">
@@ -40,42 +41,56 @@ export default function Sidebar() {
         </Link>
         <div className="bg-primary h-1 w-5/6 content-center"></div>
       </div>
-      <div className="p-5">
+
+      {/* Border */}
+      <div className="border-edge border-y-1 w-5/6 self-center" />
+
+      {/* Meny */}
+      <div className="px-5 pt-3 pb-5">
         <h2 className="text-gray-800 font-bold mb-1">Meny</h2>
         <ul>
           <Menu />
         </ul>
       </div>
 
-      <div className="flex flex-col-reverse flex-grow overflow-hidden">
-        <Image src={sidebarImg} alt="Sidebar Image" width={178} />
+      {/* Image */}
+      <div className="flex flex-col-reverse flex-grow overflow-hidden relative">
+        <Image
+          src={sidebarImg}
+          alt="Sidebar Image"
+          className="absolute w-full"
+        />
       </div>
 
       {/* Actionbar */}
-      <div>
-        <button className="text-gray-500 items-center flex w-full mx-1">
+      <div className="py-1">
+        <button className="text-gray-500 items-center flex w-full mx-2">
           {" "}
           <BsFillInfoCircleFill color="grey" /> Info
         </button>
         {
-          <Switch defaultSelected>
-            <p className="text-gray-500"> Darkmode</p>
+          <Switch defaultSelected size="sm" className="ml-2">
+            <p className="text-gray-500 text-sm">Darkmode</p>
           </Switch>
         }
       </div>
 
-      <div className="flex">
+      {/* Border */}
+      <div className="border-edge border-y-1 w-5/6 self-center" />
+
+      <div className="flex p-1">
         <Image
           src="/logo-1.png"
           alt="East Sweden MedTech"
           width={80}
           height={80}
+          className="p-1 w-1/3 rounded-2xl overflow-hidden"
         />
         <div className="width-full flex-col content-center items-center">
-          <p className="text-gray-500">
+          <p className="text-gray-500 text-sm">
             East Sweden <br></br> MedTech
           </p>
-          <p className="text-gray-500">© 2024</p>
+          <p className="text-gray-500 text-sm">© 2024</p>
         </div>
       </div>
     </div>
