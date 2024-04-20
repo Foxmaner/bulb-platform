@@ -6,6 +6,10 @@ import mongoose, { ObjectId } from 'mongoose';
 import { Response as res } from '../utils.service';
 
 
+/**
+ * StaticMeetingService class
+ * This class contains all the static methods that can be used by the MeetingService class
+ */
 export class StaticMeetingService {
 
     static async delete(id: ObjectId) {

@@ -7,6 +7,10 @@ import { Meeting, Section } from "index";
 import { Response as res } from "../utils.service";
 
 
+/**
+ * MethodMeetingService class
+ * This class contains all the methods that can be used by the MeetingService class
+ */
 export class MethodMeetingService extends mongoose.Model<Meeting> {
 
     async changeAccessLevel (userID: ObjectId, accessLevel: string) {

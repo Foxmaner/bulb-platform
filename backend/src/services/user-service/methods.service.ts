@@ -8,6 +8,10 @@ import { MeetingModel } from "../../models";
 import { Response as res } from "../utils.service";
 
 
+/**
+ * MethodUserService class
+ * This class contains all the methods that can be used by the UserService class
+ */
 export class MethodUserService extends mongoose.Model<User> {
 
     async getSharedMeeting({ filter = {} }: { filter: { companyIDs?: ObjectId[], userIDs?: ObjectId[] } }) {
@@ -118,12 +122,8 @@ export class MethodUserService extends mongoose.Model<User> {
         const pipelineResult = await MeetingModel.aggregate([
             { 
                 $addFields: {
-                    "members.role": { 
-                        $cond: { 
-                            if: { $eq: ["$members.userID", this._id] }, 
-                            then: "owner"
-                        } 
-                    }
+                    "members.role": "owner",
+                    "members.userID": this._id
                 }
             }
         ]);

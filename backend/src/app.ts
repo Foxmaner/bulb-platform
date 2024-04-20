@@ -1,13 +1,16 @@
-import express, { Express } from "express";
+/*
+*  App.ts is the main entry point for the backend server. 
+*  It sets up the express server, the socket.io server, and the routes for the server. 
+*/
+
+import express from "express";
 import { Server } from "socket.io";
 import { connectionHandler } from "./server";
 import { createServer } from "http";
 
 
 import cors from "cors";
-import session from "express-session";
 import cookieParser from "cookie-parser";
-import MongoStore from "connect-mongo";
 import passport from "passport";
 
 import { setupPassport } from "./config/passport-setup";
@@ -28,6 +31,8 @@ import {
 import dotenv from "dotenv";
 
 import { connectDatabase } from "./config/test-connection";
+import { connectDatabase as testConnectDatabase } from "./config/test-connection";
+
 import { 
     verifySession, 
     verifySocket, 
@@ -40,19 +45,27 @@ import {
 
 dotenv.config();
 
-const run = () => {
-    //connectDatabase();
+const run = async () => {
+    let db;
+    if (process.env.DB === "TEST") {
+        console.log("Running in test mode");
+        db = await testConnectDatabase();
+    }
+    else {
+        db = await connectDatabase();
+    }
 
     const app = express();
     const httpServer = createServer(app);
     const io = new Server(httpServer, {});
+    
     app.use(cors(corsConfig));
-
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
     
     app.use(sessionMiddleware);
 
+    // Passport setup, for authentication
     setupPassport(app);
 
     app.use(cookieParser());
@@ -61,18 +74,21 @@ const run = () => {
     app.use(passport.session());
 
     app.use("/auth", authRoutes);
+    
+    if (process.env.AUTH !== "FALSE") {
+        // Middleware that verifies the token to go to the next routes
+        app.use(verifySession);
 
-    app.use(verifySession);
+        app.use(function (req: any, res: any, next) {
+            res.locals.currentUser = req.user;
+            res.locals.session = req.session;
 
-    app.use(function (req: any, res: any, next) {
-        res.locals.currentUser = req.user;
-        res.locals.session = req.session;
+            next();
+        });
 
-        next();
-    });
-
-    // Middleware that verifies the token
-    app.post("/verify", updateSessionPath);
+        // Middleware that verifies the token when routing
+        app.post("/verify", updateSessionPath);
+    }
 
     app.use("/example", exampleRoutes);
     app.use("/history", historyRoutes);
@@ -91,7 +107,7 @@ const run = () => {
         httpServer.close();
     };
 
-    return { httpServer, closeServer, io };
+    return { httpServer, closeServer, io, connectDB: db };
 };
 
 export { run };

@@ -7,6 +7,10 @@ import { User } from "index";
 import { Response as res } from '../utils.service';
 
 
+/**
+ * StaticUserService class
+ * This class contains all the static methods that can be used by the UserService class
+ */
 export class StaticUserService {
 
     static async findOrCreate(props: User) {

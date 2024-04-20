@@ -19,6 +19,9 @@ interface TestFnProps {
     originalMethod: Function;
 }
 
+/**
+ * Decorator for test functions
+ */
 class TestDecorators {
     static test(
         testName: string,
@@ -35,6 +38,11 @@ class TestDecorators {
         };
     }
 
+    /**
+     * 
+     *  Describe routes for testing routes
+     *  It sets up for testing routes
+     */
     static describeRoutes<T>(description: string) {
         return (constructor: new () => T) => {
             describe(description, () => {
@@ -45,17 +53,21 @@ class TestDecorators {
                 let io: any;
 
                 beforeAll(async () => {
-                    
-                    connection = await connectDatabase();
-
                     const port = process.env.PORT || 3000;
 
-                    const { httpServer: localHttpServer, closeServer: localCloseServer, io: localIo } = run();  // Correct destructuring with variable declaration
+                    const { 
+                        httpServer: localHttpServer, 
+                        closeServer: localCloseServer, 
+                        io: localIo,
+                        connectDB
+                    } = await run();  // Correct destructuring with variable declaration
+
+                    connection = connectDB;
                     httpServer = localHttpServer;
                     closeServer = localCloseServer;
                     io = localIo;
                     
-                    httpServer.listen(process.env.PORT, () => {});
+                    httpServer.listen(port, () => {});
                     req = agent(httpServer);
                     
                 });
@@ -86,6 +98,11 @@ class TestDecorators {
         };
     }
 
+    /**
+     * 
+     *  Describe socket for testing socket
+     *  It sets up for testing socket
+     */
     static describeSocket<T>(description: string) {
         return (constructor: new () => T) => {
             describe(description, () => {
@@ -108,18 +125,22 @@ class TestDecorators {
                 }
 
                 beforeAll(async () => {
-                    connection = await connectDatabase();
-
                     const port = process.env.PORT || 3001;
 
-                    const { httpServer: localHttpServer, closeServer: localCloseServer, io: localIo } = run();  // Correct destructuring with variable declaration
+                    const { 
+                        httpServer: localHttpServer, 
+                        closeServer: localCloseServer, 
+                        io: localIo,
+                        connectDB
+                    } = await run();  // Correct destructuring with variable declaration
+
+                    connection = connectDB;
                     httpServer = localHttpServer;
                     closeServer = localCloseServer;
                     io = localIo;
 
                     httpServer.listen(port, () => {});
                     req = agent(httpServer);
-
                 });
 
                 afterAll(async () => {
@@ -154,7 +175,11 @@ class TestDecorators {
         };
     }
 
-
+    /**
+     * 
+     *  Describe models for testing models
+     *  It sets up for testing models
+     */
     static describeModels<T>(description: string) {
         return (constructor: new () => T) => {
             describe(description, () => {

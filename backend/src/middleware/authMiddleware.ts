@@ -6,10 +6,10 @@ import dotenv from "dotenv";
 dotenv.config()
 
 const sessionMiddleware = session({
-    secret: ["secret123"],
+    secret: [process.env.SESSION_SECRET as string],
     cookie: {
-        secure: process.env.NODE_ENV === "production" ? "true" : "auto",
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        secure: process.env.NODE_ENV === "PROD" ? "true" : "auto",
+        sameSite: process.env.NODE_ENV === "PROD" ? "none" : "lax",
         _expires: 1000 * 60 * 60,
     },
     resave: false,
