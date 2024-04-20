@@ -50,6 +50,7 @@ export default function Sidebar() {
         <h2 className="text-gray-800 font-bold mb-1">Meny</h2>
         <ul>
           <Menu />
+          
         </ul>
       </div>
 
@@ -58,7 +59,7 @@ export default function Sidebar() {
         <Image
           src={sidebarImg}
           alt="Sidebar Image"
-          className="absolute w-full"
+          className="absolute w-3/5"
         />
       </div>
 

@@ -9,6 +9,7 @@ import {
 } from "@nextui-org/react";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
+import TemplatePopup from "./templatePopup";
 
 function capitalizeFirstLetter(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -35,12 +36,13 @@ export default function PageHeader({ userName }: { userName: string }) {
       </div>
 
       <div className="flex gap-1 bg-white w-full">
-        <Button
+        <TemplatePopup />
+        {/*<Button
           onClick={() => router.push("/meetings/create")}
           className="bg-white border-2 border-edge text-primaryText w-5 h-7 m-2"
         >
           Skapa
-        </Button>
+  </Button>*/}
         <Button className="bg-white border-2 border-edge text-primaryText w-5 h-7 m-2">
           Företag
         </Button>
