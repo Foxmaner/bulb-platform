@@ -26,7 +26,7 @@ function generateStickerNotes(sampleData: any) {
     for (let i = 0; i < sampleData.length; i++) {
         stickerNotes.push(
             <Draggable defaultPosition={sampleData[i].position}>
-                <div className="bg-yellow-200 p-4 aspect-square shadow-xl cursor-grab active:cursor-grabbing">
+                <div className="bg-yellow-200 p-4 aspect-square shadow-xl cursor-grab active:cursor-grabbing w-fit max-w-40 text-balance">
                     <p className="text-yellow-800">{sampleData[i].content}</p>
                 </div>
             </Draggable>
