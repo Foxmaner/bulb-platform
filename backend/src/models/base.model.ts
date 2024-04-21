@@ -9,6 +9,12 @@ interface BaseModelProps<U, S> {
     staticMethods: U;
 }
 
+/**
+ * 
+ * Base Model class
+ * 
+ * This class is used to create a base model that can be extended by other models
+ */
 class BaseModel<T, U extends Function, S extends Function> {
     protected _schema: Schema;
     protected _model: Model<T & Document>;

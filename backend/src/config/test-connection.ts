@@ -7,6 +7,13 @@ import * as dotenv from "dotenv";
 
 dotenv.config();
 
+
+/**
+ * 
+ * Connect to the in-memory database.
+ * 
+ * It spins up a new in-memory database server.
+ */
 const connectDatabase = async () => {
 	const mongoServer = await MongoMemoryServer.create();
 

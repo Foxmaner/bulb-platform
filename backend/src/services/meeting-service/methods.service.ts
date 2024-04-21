@@ -7,7 +7,18 @@ import { Meeting, Section } from "index";
 import { Response as res } from "../utils.service";
 
 
+/**
+ * MethodMeetingService class
+ * This class contains all the methods that can be used by the MeetingService class
+ */
 export class MethodMeetingService extends mongoose.Model<Meeting> {
+
+    async changeAccessLevel (userID: ObjectId, accessLevel: string) {
+        await this.updateOne({ 
+            $set: { "members.$[element].role": accessLevel } }, 
+            { arrayFilters: [ { "element.userID": userID } ] 
+        });
+    }
 
     isMember (userID: ObjectId) {
         if (!this.members.includes(userID)) {
@@ -79,21 +90,23 @@ export class MethodMeetingService extends mongoose.Model<Meeting> {
      * Section
     */
     async addSection () {
-        const newSection = {
-            //_id: this.mainDocumentSections.length.toString(),
-            title: "Untitled Section",
-            contains: [],
-            sectionHistory: []
+        const _id = Math.max(this.mainDocumentSections.map((section: any) => section._id)) + 1;
+
+        const section = {
+            _id,
+            title: "Untitled Section"
         }
 
-        await this.updateOne({ $push: { mainDocumentSections: newSection } });
+        await this.updateOne({ $push: { mainDocumentSections: section } });
 
-        return res.status(200).json(newSection);
+        return res.status(200).json(section);
     }
 
     async removeSection (sectionID: number) {
         await this.updateOne(
-            { $pull: { mainDocumentSections: { _id: sectionID } } }
+            { 
+                $pull: { mainDocumentSections: { _id: sectionID } } 
+            }
         );
 
         return res.status(200).json({ message: "Section removed" });
@@ -126,36 +139,39 @@ export class MethodMeetingService extends mongoose.Model<Meeting> {
 
     async pushParagraphHistory(history, sectionID, paragraphID) {
         this.updateOne({
-            $match: { "sections_id": sectionID, "sections.contains._id": paragraphID },
+            $match: { "mainDocumentSections._id": sectionID, "mainDocumentSections.contains._id": paragraphID },
             $push: { paragraphHistory: history } 
         });
 
         return res.status(200).json({ message: "History added" });
     }
 
-    async addParagraph(sectionID) {
-        const newParagraph = {
-            id: 0,
-            text: "", 
-            paragraphHistory: [], 
-            comments: [] 
-        };
-    
-        console.log(this.mainDocumentSections);
-    
-        await this.updateOne(
-            { "mainDocumentSections._id": sectionID }, 
-            { $push : { "mainDocumentSections.$.section.sectionHistory": newParagraph } }
-        );
-    
-        console.log(this.mainDocumentSections);
-        return res.status(200).json({newParagraph})
-    }
-    
+    async addParagaraph (sectionID: number) {
+        const section = this.mainDocumentSections.find((section) => section._id == sectionID)
 
-    removeParagraph (sectionID: number, paragraphID: number) {
-        const newParagraphs = this.sections[sectionID].contains.filter((paragraph: any) => paragraph.id !== paragraphID);
-        this.sections[sectionID].contains = newParagraphs;
+        if (!section) {
+            return res.status(404).json({ message: "Section not found" });
+        }
+        const _id = Math.max(section.contains.map((section: any) => section._id)) + 1;
+
+        const newParagraph = {
+            _id,
+            text: "",
+            paragraphHistory: [],
+            comments: []
+        }
+
+        section.contains.push(newParagraph)
+        await this.save();
+    
+        return res.status(200).json(newParagraph);
+    }
+
+    async removeParagraph (sectionID: number, paragraphID: number) {
+        await this.updateOne({ 
+            $match: { "sections._id": sectionID },
+            $pull: { "sections.$.paragraphs._id": paragraphID } 
+        });
 
         return res.status(200).json({ message: "Paragraph removed" });
     }

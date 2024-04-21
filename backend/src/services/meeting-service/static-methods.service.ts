@@ -6,6 +6,10 @@ import mongoose, { ObjectId } from 'mongoose';
 import { Response as res } from '../utils.service';
 
 
+/**
+ * StaticMeetingService class
+ * This class contains all the static methods that can be used by the MeetingService class
+ */
 export class StaticMeetingService {
 
     static async delete(id: ObjectId) {
@@ -28,6 +32,22 @@ export class StaticMeetingService {
     static async list() {
         const meetings = await MeetingModel.find({});
         return res.status(200).json(meetings);
+    }
+
+    static async getPublishedMeetings() {
+        try {
+            const meetings = await MeetingModel.aggregate([
+                {
+                    $addFields: {
+                        "published": true 
+                    }
+                }
+            ]);
+
+            return res.status(201).json({ meetings });
+        } catch (error: any) {
+            return res.status(500).json({ error: error.message });
+        }
     }
 
     static async get(id: string) {

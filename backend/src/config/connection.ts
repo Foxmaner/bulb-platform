@@ -6,7 +6,7 @@ import * as dotenv from "dotenv";
 
 export async function connectDatabase() {
     try {
-        if (process.env.NODE_ENV === "test") {
+        if (process.env.NODE_ENV === "TEST") {
             return;
         }
 

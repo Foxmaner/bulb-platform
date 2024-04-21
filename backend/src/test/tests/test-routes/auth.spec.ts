@@ -17,11 +17,13 @@ class ExempelTest {
             name: 'testMeeting',
         })
 
-        expect(resp.status).toBe(200);
+        expect(resp.status).toBe(201);
         
-        const respMeeting = await req.get("/meeting") 
+        const respMeeting = await req.get("/meeting/") 
+
+        console.log(respMeeting.body)
 
         expect(respMeeting.status).toBe(200);
-        expect(respMeeting.body.length).toBe(1);
+        expect(respMeeting.body.meetings.length).toBe(1);
     }
 }

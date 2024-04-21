@@ -1,7 +1,5 @@
 import { Schema } from "mongoose";
 
-import { MemberAccessLevel, UserAccessLevel } from "accessLevels" 
-
 
 export default class Utils {
     static integerValidator (v: number) {
@@ -9,24 +7,39 @@ export default class Utils {
     }
 
     static sectionSchema () {
-        return {
-            section: {
-                _id: Schema.Types.ObjectId,
-                title: String,
-                contains: {},
-                sectionHistory: [this.sectionHistorySchema()]
-            }
-        }
+        return new Schema({
+            _id: Number,
+            title: String,
+            contains: { type: [this.paragraphSchema()], default: [] },
+            sectionHistory: { type: [this.sectionHistorySchema()], default: [] }
+        })
+    }
+
+    static paragraphSchema () {
+        return new Schema({
+            _id: Number,
+            text: String,
+            paragraphHistory: [],
+            comments: []
+        })
+    }
+
+    static questionSchema () {
+        return new Schema({
+            id: Number,
+            responses: [],
+            questionText: this.paragraphSchema(),
+            summaryText: this.paragraphSchema(),
+            questionHistory: []
+        })
     }
 
     static sectionHistorySchema() {
-        return {
-            sectionHistory: {
-                userID: Schema.Types.ObjectId,
-                date: Date,
-                contentIndex: Number,
-                added: Boolean
-            }
-        }
+        return new Schema({
+            userID: Schema.Types.ObjectId,
+            date: Date,
+            change: String,
+            added: Boolean
+        })
     }
 }

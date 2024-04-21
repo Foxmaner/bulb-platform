@@ -1,4 +1,7 @@
 
+/**
+ * Response class to make easier communication between services and controllers
+ */
 class Response {
     static status(code: number) {
         const response = {

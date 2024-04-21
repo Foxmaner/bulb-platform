@@ -180,4 +180,50 @@ class MeetingTests {
 		const user1 = await MeetingTests.createUser("User 1");
 		
 	}
+
+	/**
+	 * Get add section to meeting
+	 */
+	@TestDecorators.test("Add and remove section to meeting")
+	async addSectionToMeeting() {
+		const user1 = await MeetingTests.createUser("User 1");
+		const resp = await user1.createMeeting({ name: "Meeting 1"});
+		
+		const meeting = resp.body
+
+		const addSectionResp = await meeting.addSection()
+	
+		const meetingWithSection = await MeetingModel.findOne({ name: "Meeting 1" });
+
+		expect(meetingWithSection.mainDocumentSections.length).toBe(1);
+
+		await meetingWithSection.removeSection(meetingWithSection.mainDocumentSections[0]._id);
+
+		const meetingWithoutSection = await MeetingModel.findOne({ name: "Meeting 1" });
+
+		expect(meetingWithoutSection.mainDocumentSections.length).toBe(0);
+	}
+
+		/**
+	 * Get add section to meeting
+	 */
+	@TestDecorators.test("Add and remove paragraph to meeting")
+	async addParagraphToSection() {
+		const user1 = await MeetingTests.createUser("User 1");
+		const resp = await user1.createMeeting({ name: "Meeting 1"});
+		
+		const meeting = resp.body
+
+		const addSectionResp = await meeting.addSection()
+	
+		const meetingWithSection = await MeetingModel.findOne({ name: "Meeting 1" });
+
+		expect(meetingWithSection.mainDocumentSections.length).toBe(1);
+
+		await meetingWithSection.addParagaraph(meetingWithSection.mainDocumentSections[0]._id);
+
+		const meetingWithParagraph = await MeetingModel.findOne({ name: "Meeting 1" });
+
+		expect(meetingWithParagraph.mainDocumentSections[0].contains.length).toBe(1);
+	}
 }

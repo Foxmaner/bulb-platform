@@ -11,7 +11,7 @@ import { MemberAccessLevel } from "accessLevels";
 
 class MeetingModel extends BaseModel<Meeting, typeof StaticMeetingService, typeof MethodMeetingService> {
     constructor() {  
-        const companySchema = {
+        const meetingSchema = {
             name: {
                 type: String,
                 validate: {
@@ -34,7 +34,7 @@ class MeetingModel extends BaseModel<Meeting, typeof StaticMeetingService, typeo
         
         super({
             name: 'Meeting',
-            schema: companySchema,
+            schema: meetingSchema,
             staticMethods: StaticMeetingService,
             methods: MethodMeetingService
         });
