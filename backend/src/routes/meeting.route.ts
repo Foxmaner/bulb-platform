@@ -20,7 +20,8 @@ routes.put('/rename/:id', MeetingController.renameMeeting);
 routes.post('/publish/:id', MeetingController.publish);
 
 routes.get('/:id', MeetingController.id);
-routes.post('/acesslevel/:id', MeetingController.changeAcessLevel);
+
+routes.put('/accesslevel/:id', MeetingController.changeAccessLevel);
 
 routes.post('/publish/:id', MeetingController.publish);
 

@@ -228,6 +228,31 @@ class MeetingRouteTests {
         expect(res.statusCode).toBe(200);
         expect(res.body.meetings.length).toBe(1);
     }
+    @TestDecorators.test("Change accesslevel")
+    async changeaccessevel(req: any) {   
+        let res: any;
+        await req.post("/login").send({
+          password: "testPassword",
+          name: "testUser",
+        });
+ 
+        res = await req.post("/meeting/create").send({
+          name: "Meeting 1",
+        });
+        const id = res.body.meeting_id;
+
+        res = await req.get(`/meeting/${id}`)
+        expect(res.body.meeting.members[0].role).toBe("owner")
+
+        res = await req.put(`/meeting/accesslevel/${id}`).send({
+            accessLevel : "viewer"
+        })
+        expect(res.statusCode).toBe(200)
+
+        //change isnt implemented yet it seems
+        res = await req.get(`/meeting/${id}`)
+        expect(res.body.meeting.members[0].role).toBe("viewer")
+    }
 }
 
 

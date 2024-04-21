@@ -189,36 +189,24 @@ export class MeetingController {
         res.status(200).json({ meetings: resp.body });
     }
 
-    static async changeAcessLevel(req: any, res: Response){
+    static async changeAccessLevel(req: any, res: Response){
         const userID = req.session.passport.user
         const respUser = await UserModel.get(userID);
         const user = respUser.body.user;
         const meetingId = req.params.id
+        const accesLevel = req.body.accesLevel
 
         if(respUser.statusCode != 200){
             return res.status(401).json(respUser.body)
         }
-        
-        const respMeetings = await user.getMeetings();
-        const userMeetings = respMeetings.body;
 
-        if(process.env.DEBUG == "true"){
-            console.log(respMeetings.body)
-        }
-
-        const meeting = userMeetings.find(meeting => meeting._id == meetingId);
-        
-        const resp = await meeting.changeAcessLevel(meetingId, req.body)
-
-        if(process.env.DEBUG == "true"){
-            console.log(resp.body)
-        }
+        const resp = await user.changeAccessLevel(meetingId, accesLevel)
 
         if(resp.statusCode != 200){
             return res.status(resp.statusCode).json(resp.body)
         }
         
-        res.status(200).json({message : "meeting posted"});
+        res.status(200).json({message : "access level changed"});
     }
 
     static async advancedLoad(req: any, rep: Response){
