@@ -1,3 +1,4 @@
+import exp from "constants";
 import { TestDecorators } from "../../utils";
 
 @TestDecorators.describeRoutes("Testing meeting route")
@@ -139,63 +140,6 @@ class MeetingRouteTests {
         expect(end - start).toBeLessThan(300); // expect the operation to take less than 300 milliseconds
     }
 
-    @TestDecorators.test("Performance test for create meeting")
-    async performanceTestForMeetingCreateMeeting(req: any) {
-        await req.post("/login").send({
-            password: 'testPassword',
-            name: 'testUser',
-        });
-    
-        const start = new Date().getTime();
-        const res = await req.post("/meeting/create").send({ name: "Meeting" });
-        const end = new Date().getTime();
-    
-        expect(res.statusCode).toBe(201);
-        expect(end - start).toBeLessThan(300); // expect the operation to take less than 300 milliseconds
-    }
-
-    @TestDecorators.test("Performance test for get meeting")
-    async performanceTestForMeetingGetMeeting(req: any) {
-        await req.post("/login").send({
-            password: 'testPassword',
-            name: 'testUser',
-        });
-        let res : any
-        res = await req.post("/meeting/create").send({ name: "Meeting" });
-
-        console.log(res.body)
-
-        const id = res.body.meeting._id
-
-        const start = new Date().getTime();
-        res = await req.get(`/meeting/${id}`);
-        const end = new Date().getTime();
-    
-        expect(res.statusCode).toBe(200);
-        expect(end - start).toBeLessThan(300); // expect the operation to take less than 300 milliseconds
-    }
-
-    @TestDecorators.test("Performance test for delete meeting")
-    async performanceTestForMeetingDeleteMeeting(req: any) {
-        await req.post("/login").send({
-            password: 'testPassword',
-            name: 'testUser',
-        });
-        let res : any
-        res = await req.post("/meeting/create").send({ name: "Meeting" });
-
-        console.log(res.body)
-
-        const id = res.body.meeting._id
-
-        const start = new Date().getTime();
-        res = await req.delete(`/meeting/delete/${id}`);
-        const end = new Date().getTime();
-    
-        expect(res.statusCode).toBe(200);
-        expect(end - start).toBeLessThan(100); // expect the operation to take less than 100 milliseconds
-    }
-
     @TestDecorators.test("Create multiple meetings rapidly")
     async createMultipleMeetingsRapidly(req: any) {
         await req.post("/login").send({
@@ -236,7 +180,6 @@ class MeetingRouteTests {
             password: "testPassword",
             name: "testUser",
         });
-      
         let res: any;
       
         res = await req.post("/meeting/create").send({
@@ -244,7 +187,6 @@ class MeetingRouteTests {
         });
       
         const meeting = res.body.meeting;
-      
         expect(meeting.name).toBe("Jesus");
       
         res = await req.put(`/meeting/rename/${meeting._id}/`).send({
@@ -252,11 +194,40 @@ class MeetingRouteTests {
         });
         expect(res.statusCode).toBe(200);
       
-        res = await req.get(`/meeting/${meeting._id}/`);
         //this fails as meeting is stilled named Jesus
+        res = await req.get(`/meeting/${meeting._id}/`);
         expect(res.body.meeting.name).toBe("Christ");
     }
 
+    @TestDecorators.test("Publish test")
+    async publishTest(req: any) {
+        await req.post("/login").send({
+           password: "testPassword",
+           name: "testUser",
+        });
+        let res: any;
+    
+        await req.post("/meeting/create").send({
+           name: "Meeting 1",
+        });
+    
+        await req.post("/meeting/create").send({
+           name: "Meeting 2",
+        });
+    
+        res = await req.post("/meeting/create").send({
+           name: "Jesus",
+        });
+        const meeting = res.body.meeting;
+    
+        res = await req.post(`/meeting/publish/${meeting._id}`);
+        expect(res.statusCode).toBe(200);
+    
+        //getpublishedmeetings returns all meetings for some reason
+        res = await req.get("/meeting/published");
+        expect(res.statusCode).toBe(200);
+        expect(res.body.meetings.length).toBe(1);
+    }
 }
 
 

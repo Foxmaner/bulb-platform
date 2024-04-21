@@ -19,7 +19,7 @@ export class MethodUserService extends mongoose.Model<User> {
 
     }
 
-    async getPubslishedMeetings() {
+    async getPublishedMeetings() {
         const meetings = await MeetingModel.aggregate([
             {
                 $addFields: {
@@ -28,7 +28,7 @@ export class MethodUserService extends mongoose.Model<User> {
             }
         ]);
 
-        return res.status(200).json({ meetings });
+        return res.status(200).json(meetings);
     }
 
     async publishMeeting(meetingID: ObjectId) {

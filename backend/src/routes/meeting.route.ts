@@ -3,26 +3,25 @@ import { MeetingController } from '../controllers';
 
 const routes: Router = Router();
 
-routes.get('/', MeetingController.load)
+routes.get('/', MeetingController.load);
 
-routes.get('/:id', MeetingController.id)
+routes.post('/create', MeetingController.create);
 
-routes.delete('/delete/:id', MeetingController.delete)
-
-routes.post('/create', MeetingController.create)
-
-//new name shoud be in body
-routes.put('/rename/:id', MeetingController.renameMeeting)
-
-routes.post('/acesslevel/:id', MeetingController.changeAcessLevel)
+routes.get('/published', MeetingController.loadPublished);
 
 //loadAdvanced has filter, sort, and type in body
-routes.post('/advanced', MeetingController.advancedLoad)
+routes.post('/advanced', MeetingController.advancedLoad);
 
+//be important to init :id routes after other
+routes.delete('/delete/:id', MeetingController.delete);
 
+routes.put('/rename/:id', MeetingController.renameMeeting);
 
+routes.post('/publish/:id', MeetingController.publish);
 
+routes.get('/:id', MeetingController.id);
+routes.post('/acesslevel/:id', MeetingController.changeAcessLevel);
 
-routes.post('/publish/:id', MeetingController.publish)
+routes.post('/publish/:id', MeetingController.publish);
 
-export { routes as meetingRoutes }
+export { routes as meetingRoutes };

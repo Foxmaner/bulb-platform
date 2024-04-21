@@ -5,7 +5,6 @@ import { MeetingModel, UserModel } from '../../models';
 export class MeetingController {
 
     static async load(req: any, res: Response) {
-
         const userID = req.session.passport.user
         const respUser = await UserModel.get(userID);
         const user = respUser.body.user;
@@ -146,34 +145,48 @@ export class MeetingController {
     static async publish(req: any, res: Response){
         const userID = req.session.passport.user
         const respUser = await UserModel.get(userID);
-        const user = respUser.body;
+        const user = respUser.body.user;
         const meetingId = req.params.id
 
         if(respUser.statusCode != 200){
             return res.status(401).json( respUser.body)
         }        
 
-        const resp = await user.getMeetings();
-        const userMeetings = resp.body;
-
-        const meeting = userMeetings.find(meeting => meeting._id == meetingId);
-
-        if(!meeting){
-            return res.status(404).json({message : "meeting not found"})
-        }
-
-        //function doesn't exist yet
-        const respPublish = await meeting.publish()
+        const resp = await user.publishMeeting(meetingId)
 
         if(process.env.DEBUG == "true"){
-            console.log(respPublish.body)
+            console.log(resp.body)
         }
 
         if(resp.statusCode != 200){
-            return res.status(respPublish.statusCode).json(respPublish.body)
+            return res.status(resp.statusCode).json(resp.body)
         }
         
-        res.status(200).json({message : "meeting posted"});
+        res.status(200).json({message : "meeting published"});
+    }
+
+
+    static async loadPublished(req: any, res: Response) {
+        const userID = req.session.passport.user;
+        const respUser = await UserModel.get(userID);
+        const user = respUser.body.user;
+    
+        if (respUser.statusCode != 200) {
+           return res.status(401).json(respUser.body);
+        }
+    
+        //getpublishedmeetings return all meetings it seems
+        const resp = await user.getPublishedMeetings();
+    
+        if (process.env.DEBUG == "true") {
+           console.log(resp.body);
+        }
+    
+        if (resp.statusCode != 200) {
+           return res.status(resp.statusCode).json(resp.body);
+        }
+    
+        res.status(200).json({ meetings: resp.body });
     }
 
     static async changeAcessLevel(req: any, res: Response){
