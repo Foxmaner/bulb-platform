@@ -100,10 +100,6 @@ class TestDecorators {
 
                     const socket = ioc(`http://localhost:${port}`);
 
-                    socket.on("connect", () => {
-                        console.log("Connected");
-                    });
-
                     return socket;
                 }
 

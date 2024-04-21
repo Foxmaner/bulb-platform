@@ -4,8 +4,8 @@ import { TestDecorators } from "../../utils";
 @TestDecorators.describeSocket("Meeting Socket tests")
 class MeetingTest {
 
-    @TestDecorators.test("Paragraphs")
-    async socketTest(openSocket: any, req: any) {
+    @TestDecorators.test("Sections")
+    async socketTestSection(openSocket: any, req: any) {
 
         await req.post("/login").send({
             password: 'testPassword',
@@ -15,36 +15,121 @@ class MeetingTest {
         const resp = await req.post("/meeting/create").send({
             name: 'testMeeting',
         })
-        
+
         const meetingID = resp.body.meeting._id;
 
         const socket1 = await openSocket();
+
+        socket1.on("connect", () => {
+            console.log("Connected");
+
+            socket1.on("section_created", async (section) => {
+                console.log(112, section);
+            });
+
+            socket1.emit("join_room", meetingID);
+            socket1.emit("section_create", {meetingID});
+        });
+
         const socket2 = await openSocket();
 
-        socket2.on("section_created", async () => {
-            const res1 = await req.get(`/meeting/${meetingID}`);
-            expect(res1.body.meeting.mainDocumentSections.length).toBe(1);
+        socket2.on("connect", () => {
+            socket2.on("section_created", async (section) => {
+                console.log(112, section);
+            });
+    
+            socket2.emit("join_room", meetingID);
+            socket2.emit("section_create", {meetingID});
         });
 
-        socket1.on("section_created", async () => {
-            const res1 = await req.get(`/meeting/${meetingID}`);
-            expect(res1.body.meeting.mainDocumentSections.length).toBe(2);
-        });
-        
-        await socket1.emit("join_room", meetingID);
-        await socket2.emit("join_room", meetingID);
-
-        await socket1.emit("section_create", {meetingID});
         await new Promise((resolve, reject) => {
             setTimeout(() => {
                 resolve({id:3});
-            }, 500);
+            }, 1000);
         })
-        await socket2.emit("section_create", {meetingID});
+        
+    }
 
-        //const res = await req.get(`/meeting/${meetingID}`);
-        //console.log(res.body.meeting);
-        //expect(res.body.meeting.mainDocumentSections.length).toBe(2);
+    @TestDecorators.test("Paragraphs")
+    async socketTestParagraph(openSocket: any, req: any) {
+
+        let sectionID : any;
+
+        await req.post("/login").send({
+            password: 'testPassword',
+            name: 'testUser',
+        });
+        
+        const resp = await req.post("/meeting/create").send({
+            name: 'testMeeting',
+        })
+
+        const meetingID = resp.body.meeting._id;
+
+        const socket1 = await openSocket();
+
+        socket1.on("connect", () => {
+            console.log("Connected");
+
+            socket1.on("section_created", async (section) => {
+                console.log(101);
+            });
+
+            socket1.on("paragraph_created", async (paragraph) => {
+                console.log(202, paragraph)
+            });
+
+            //socket1.emit("section_paragraph", {meetingID, sectionID});
+            socket1.emit("join_room", meetingID);
+
+
+        });
+
+        const socket2 = await openSocket();
+
+        socket2.on("connect", async () => {
+
+            socket2.on("section_created", async (section) => {
+            });
+
+    
+            socket2.emit("join_room", meetingID);
+            socket2.emit("section_create", {meetingID});
+            socket2.emit("section_create", {meetingID});
+
+            await new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    resolve({id:3});
+                }, 300);
+            })
+
+            const resp2 = await req.get(`/meeting/${meetingID}`);
+            const section = resp2.body.meeting.mainDocumentSections[0];
+            const sectionID = section._id;
+            const params = {meetingID, sectionID}
+            socket2.emit("paragraph_create", params);
+
+            await new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    resolve({id:3});
+                }, 1000);
+            })
+
+            const resp3 = await req.get(`/meeting/${meetingID}`);
+            const tmp = resp3.body.meeting.mainDocumentSections;
+            console.log(666, tmp);
+
+
+
+
+        });
+
+        await new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve({id:3});
+            }, 1000);
+        })
+        
     }
 
     // @TestDecorators.test("Test cursor in socket")

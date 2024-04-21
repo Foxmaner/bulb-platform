@@ -4,8 +4,9 @@ declare module "socket" {
     }
     
     interface IParagraph {
-        meetingId: string,
-        sectionId: string,
+        meetingID: string,
+        sectionID: string,
+        paragraphID: string,
     }
     
     interface IParagraphEdit {

@@ -80,6 +80,7 @@ export class MethodMeetingService extends mongoose.Model<Meeting> {
     */
     async addSection () {
         const newSection = {
+            //_id: this.mainDocumentSections.length.toString(),
             title: "Untitled Section",
             contains: [],
             sectionHistory: []
@@ -132,18 +133,25 @@ export class MethodMeetingService extends mongoose.Model<Meeting> {
         return res.status(200).json({ message: "History added" });
     }
 
-    addParagaraph (sectionID: number) {
+    async addParagraph(sectionID) {
         const newParagraph = {
-            id: this.sections[sectionID].contains.length,
-            text: "",
-            paragraphHistory: [],
-            comments: []
-        }
-
-        this.sections[sectionID].contains.push(newParagraph);
-
-        return res.status(200).json(newParagraph);
+            id: 0,
+            text: "", 
+            paragraphHistory: [], 
+            comments: [] 
+        };
+    
+        console.log(this.mainDocumentSections);
+    
+        await this.updateOne(
+            { "mainDocumentSections._id": sectionID }, 
+            { $push : { "mainDocumentSections.$.section.sectionHistory": newParagraph } }
+        );
+    
+        console.log(this.mainDocumentSections);
+        return res.status(200).json({newParagraph})
     }
+    
 
     removeParagraph (sectionID: number, paragraphID: number) {
         const newParagraphs = this.sections[sectionID].contains.filter((paragraph: any) => paragraph.id !== paragraphID);
