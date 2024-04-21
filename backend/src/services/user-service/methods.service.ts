@@ -131,6 +131,10 @@ export class MethodUserService extends mongoose.Model<User> {
     }
 
     async getMeeting(meetingID) {
+        if (!mongoose.Types.ObjectId.isValid(meetingID)) {
+            return res.status(400).json({ message: "Invalid ObjectID." });
+        }
+
         const meeting = await MeetingModel.aggregate([
             { $addFields: { "_id": meetingID as ObjectId } }
         ]);

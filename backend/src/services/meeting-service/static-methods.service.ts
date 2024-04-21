@@ -60,7 +60,7 @@ export class StaticMeetingService {
             return res.status(404).json({ error: 'Meeting not found' });
         }
 
-        return res.status(200).json(meeting);
+        return res.status(200).json({meeting});
     }
 }
 

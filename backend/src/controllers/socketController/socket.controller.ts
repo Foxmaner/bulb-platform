@@ -16,7 +16,7 @@ export class SocketController {
 
     static async create_section(socket : Socket, data){
         const respMeeting = await MeetingModel.get(data.meetingID);
-        const meeting = respMeeting.body;
+        const meeting = respMeeting.body.meeting;
         const res = await meeting.addSection();
         const section = res.body;
         socket.broadcast.to(data.meetingID).emit('section_created', section);
@@ -24,14 +24,14 @@ export class SocketController {
 
     static async delete_section(socket, data){
         const res = await MeetingModel.get(data.meetingID);
-        const meeting = res.body;
+        const meeting = res.body.meeting;
         const resp = await meeting.removeSection(data.sectionID);
         socket.broadcast.to(data.meetingID).emit('section_deleted', { resp });
     }
 
     static async create_paragraph(socket, data){
         const respMeeting = await MeetingModel.get(data.meetingID);
-        const meeting = respMeeting.body;     
+        const meeting = respMeeting.body.meeting;     
         const res = await meeting.addParagaraph(data.sectionID);
         const paragraph = res.body;
         socket.broadcast.to(data.meetingID).emit('paragraph_created', paragraph);
@@ -39,7 +39,7 @@ export class SocketController {
 
     static async delete_paragraph(socket, data: IParagraph){
         const respMeeting = await MeetingModel.get(data.meetingID);
-        const meeting = respMeeting.body;
+        const meeting = respMeeting.body.meeting;
         const resp = await meeting.removeParagraph(data.sectionID, data.paragraphID);
         socket.broadcast.to(data.meetingID).emit('paragraph_deleted', { resp });
     }
@@ -47,7 +47,7 @@ export class SocketController {
     static async edit_paragraph(socket, data: IParagraphEdit) {
         
         const respMeeting = await MeetingModel.get(data.meetingID);
-        const meeting = respMeeting.body;
+        const meeting = respMeeting.body.meeting;
         const paragraph = await meeting.getParagraph(data.sectionID, data.parahraphID)
         
         const [newText, _] = dmp.patch_apply(data.patches, paragraph.text);
