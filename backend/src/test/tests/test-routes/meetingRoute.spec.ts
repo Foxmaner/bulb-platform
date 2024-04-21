@@ -230,6 +230,33 @@ class MeetingRouteTests {
         expect(res.body.meetings.length).toBe(30);
     }
 
+    @TestDecorators.test("Rename meeting")
+    async renameMeeting(req: any) {
+        await req.post("/login").send({
+            password: "testPassword",
+            name: "testUser",
+        });
+      
+        let res: any;
+      
+        res = await req.post("/meeting/create").send({
+            name: "Jesus",
+        });
+      
+        const meeting = res.body.meeting;
+      
+        expect(meeting.name).toBe("Jesus");
+      
+        res = await req.put(`/meeting/rename/${meeting._id}/`).send({
+            name: "Christ",
+        });
+        expect(res.statusCode).toBe(200);
+      
+        res = await req.get(`/meeting/${meeting._id}/`);
+        //this fails as meeting is stilled named Jesus
+        expect(res.body.meeting.name).toBe("Christ");
+    }
+
 }
 
 

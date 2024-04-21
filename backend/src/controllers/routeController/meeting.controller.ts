@@ -126,31 +126,17 @@ export class MeetingController {
         const userID = req.session.passport.user;
         const respUser = await UserModel.get(userID);
         const user = respUser.body.user;
-        const meetingId = req.params.id
-        const newName = req.params.name
+        const meetingId = req.params.id;
+        const newName = req.body.name;
 
         if(respUser.statusCode != 200){
             return res.status(401).json(respUser.body)
         }
 
-        const respMeetings = await user.getMeetings();
-        const userMeetings = respMeetings.body;
-
-        if(process.env.DEBUG == "true"){
-            console.log(respMeetings.body)
-        }
-
-        const meeting = userMeetings.find(meeting => meeting._id == meetingId);
-
-        if(!meeting){
-            return res.status(404).json({message : "meeting not found"})
-        }
-
-        //function deosnt exist
-        const resp = await user.renameMeeting(req.body)
+        const resp = await user.changeNameOfMeeting(meetingId, newName);
 
         if(resp.statusCode != 200){
-            return res.status(401).json(respUser.body)
+            return res.status(resp.statusCode).json(respUser.body);
         }
 
         res.status(200).json({message : "meeting renamed " + newName});
