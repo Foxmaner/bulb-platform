@@ -1,5 +1,5 @@
 import { TestDecorators } from "../../utils";
-
+import { IParagraphEdit } from "socket";
 
 @TestDecorators.describeSocket("Meeting Socket tests")
 class MeetingTest {
@@ -24,7 +24,6 @@ class MeetingTest {
             console.log("Connected");
 
             socket1.on("section_created", async (section) => {
-                console.log(112, section);
             });
 
             socket1.emit("join_room", meetingID);
@@ -35,7 +34,6 @@ class MeetingTest {
 
         socket2.on("connect", () => {
             socket2.on("section_created", async (section) => {
-                console.log(112, section);
             });
     
             socket2.emit("join_room", meetingID);
@@ -52,8 +50,6 @@ class MeetingTest {
 
     @TestDecorators.test("Paragraphs")
     async socketTestParagraph(openSocket: any, req: any) {
-
-        let sectionID : any;
 
         await req.post("/login").send({
             password: 'testPassword',
@@ -72,11 +68,9 @@ class MeetingTest {
             console.log("Connected");
 
             socket1.on("section_created", async (section) => {
-                console.log(101);
             });
 
             socket1.on("paragraph_created", async (paragraph) => {
-                console.log(202, paragraph)
             });
 
             //socket1.emit("section_paragraph", {meetingID, sectionID});
@@ -88,14 +82,12 @@ class MeetingTest {
         const socket2 = await openSocket();
 
         socket2.on("connect", async () => {
-
-            socket2.on("section_created", async (section) => {
-            });
-
     
             socket2.emit("join_room", meetingID);
             socket2.emit("section_create", {meetingID});
             socket2.emit("section_create", {meetingID});
+            socket2.emit("section_create", {meetingID});
+
 
             await new Promise((resolve, reject) => {
                 setTimeout(() => {
@@ -106,8 +98,9 @@ class MeetingTest {
             const resp2 = await req.get(`/meeting/${meetingID}`);
             const section = resp2.body.meeting.mainDocumentSections[0];
             const sectionID = section._id;
-            const params = {meetingID, sectionID}
-            socket2.emit("paragraph_create", params);
+            const paramsCreate = {meetingID, sectionID}
+            socket2.emit("paragraph_create", paramsCreate);
+
 
             await new Promise((resolve, reject) => {
                 setTimeout(() => {
@@ -117,10 +110,17 @@ class MeetingTest {
 
             const resp3 = await req.get(`/meeting/${meetingID}`);
             const tmp = resp3.body.meeting.mainDocumentSections;
-            console.log(666, tmp);
-
-
-
+            console.log(tmp)
+            const parahraphID = tmp[0].contains[0]._id;
+            const patches = [{
+                diffs: [ [ 1, 'Hello World!' ] ],
+                start1: 0,
+                start2: 0,
+                length1: 0,
+                length2: 12
+            }]
+            const paramEdit : IParagraphEdit = {meetingID, sectionID, parahraphID, patches}
+            socket2.emit("paragraph_edit", paramEdit);
 
         });
 

@@ -124,8 +124,7 @@ export class MethodMeetingService extends mongoose.Model<Meeting> {
         if (!paragraph) {
             return res.status(404).json({ message: "No meeting" })
         }
-
-        return res.status(200)
+        return res.status(200).json(paragraph)
     }
 
     async editPargraphText(text, sectionID, paragraphID) {

@@ -10,10 +10,10 @@ declare module "socket" {
     }
     
     interface IParagraphEdit {
-        meetingId: string,
-        sectionId: string,
-        parahraphId: string,
-        patches: string,
+        meetingID: string,
+        sectionID: string,
+        parahraphID: string,
+        patches: any,
     }
 
     interface ICursor{
