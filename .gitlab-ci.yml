@@ -33,8 +33,6 @@ unit-test:
   coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
 
 
-
-
 # For recording and parallelization to work you must set your CYPRESS_RECORD_KEY
 # in GitLab repo → Settings → CI/CD → Variables
 variables:
@@ -75,5 +73,4 @@ test:
     # https://docs.cypress.io/guides/guides/parallelization
     - npm run 
     - npm run e2e:headless
-  dependecies:
-    - start_database
+
