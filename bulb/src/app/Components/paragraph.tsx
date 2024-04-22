@@ -78,7 +78,7 @@ export default function ParagraphForm({ data }: IParagraphFormProps) {
                     minRows={5}
                 />
             </div>
-            { }
+            
 
         </div>
     )

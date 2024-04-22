@@ -15,6 +15,7 @@ function capitalizeFirstLetter(string: string) {
 }
 
 export default function PageHeader({ userName }: { userName: string }) {
+  //We use slice to get rid of the "/" in the beginning of pathname
   const pathName = usePathname().slice(1)
   const router = useRouter();
   return (

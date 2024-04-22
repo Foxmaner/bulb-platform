@@ -1,6 +1,11 @@
 import { useState } from "react";
 
-export default function InputField({inputType} : {inputType:string}){
+
+interface IinputFieldProps{
+    data: string
+}
+
+export default function InputField({data} : IinputFieldProps){
     const [textFields, setTextFields] = useState<string[]>([]);
 
     const addInput = () => {
@@ -14,7 +19,7 @@ export default function InputField({inputType} : {inputType:string}){
                     <input className="border-1 border-black gap-1"/>
                 </div>
             ))}
-            <button className="border-2 border-primaryGrey"onClick={addInput}>{inputType}</button>
+            <button className="border-2 border-primaryGrey"onClick={addInput}>{data}</button>
         </div>
     )
 }
