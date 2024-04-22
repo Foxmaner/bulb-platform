@@ -21,7 +21,9 @@
     "dev:backend": "cd ../backend && npm start",
     "start:dev": "concurrently \"npm run dev:frontend\" \"wait-on http://localhost:3000 && npm run dev:backend\"",
     "start:backend": "cd ../backend && npm start",
-    "test:e2e": "npm run start:dev && cypress run --headless"
+    "test:e2e": "npm run start:dev && cypress run --headless",
+    "start-server": "npm run dev:backend",
+    "test:backend": "start-server-and-test start-server http://localhost:YOUR_PORT e2e:headless"
 },
   "dependencies": {
     "@nextui-org/react": "^2.3.1",

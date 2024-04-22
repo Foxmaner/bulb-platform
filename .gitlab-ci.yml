@@ -1,22 +1,47 @@
 stages:
-
-  - build
+  - lint
+  - unit-test
   - test
 
-start_database:
- # Uses official Cypress docker image for dependencies
-  # https://docs.cypress.io/guides/continuous-integration/introduction#Official-Cypress-Docker-Images
-  stage: build
+
+lint:
+  image: node:latest
+  stage: lint
+  before_script:
+    - cd bulb
+    - |
+      npm install eslint \
+      eslint-config-airbnb \
+      eslint-config-prettier \
+      eslint-plugin-flowtype \
+      eslint-plugin-import \
+      eslint-plugin-jsx-a11y \
+      eslint-plugin-prettier \
+      eslint-plugin-react
   script:
-    - cd backend
+    - node_modules/eslint/bin/eslint.js .
+
+unit-test:
+  image: node:latest
+  stage: unit-test
+  before_script:
+    - cd bulb
     - npm install
-    #- npm ci --cache .npm --prefer-offline
-    # Starts web server for E2E tests - replace with your own server invocation
-    # https://docs.cypress.io/guides/continuous-integration/introduction#Boot-your-server
-    # Runs tests in parallel and records to Cypress Cloud
-    # https://docs.cypress.io/guides/cloud/projects#Set-up-a-project-to-record
-    # https://docs.cypress.io/guides/guides/parallelization
-    - npm start dev
+  script:
+    - npm run test:ci
+  coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
+
+
+
+
+# For recording and parallelization to work you must set your CYPRESS_RECORD_KEY
+# in GitLab repo → Settings → CI/CD → Variables
+variables:
+  CYPRESS_RECORD_KEY: $CYPRESS_RECORD_KEY
+  npm_config_cache: '$CI_PROJECT_DIR/bulb/.npm'
+  CYPRESS_CACHE_FOLDER: '$CI_PROJECT_DIR/bulb/cache/Cypress'
+# Caches dependencies using npm lock file as key
+# https://docs.cypress.io/guides/continuous-integration/introduction#Caching
 
 test:
   # Uses official Cypress docker image for dependencies
@@ -32,6 +57,8 @@ test:
     # Runs tests in parallel and records to Cypress Cloud
     # https://docs.cypress.io/guides/cloud/projects#Set-up-a-project-to-record
     # https://docs.cypress.io/guides/guides/parallelization
-    - npm run e2e:headless
-  dependencies:
-    - start_database
+    - npm run test:backend
+    
+    
+  only:
+    - testFix
