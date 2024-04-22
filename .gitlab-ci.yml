@@ -73,4 +73,5 @@ test:
     # https://docs.cypress.io/guides/guides/parallelization
     - npm run 
     - npm run e2e:headless
-
+  dependencies:
+    - start_database
