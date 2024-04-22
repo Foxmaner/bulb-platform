@@ -6,11 +6,9 @@ dotenv.config();
 
 export async function connectDatabase() {
     try {
-        /*
-        if (process.env.NODE_ENV === "test") {
+        if (process.env.NODE_ENV === "testing") {
             return;
         }
-        */
 
         if (!process.env.DB_URI) {
             throw new Error("DB_URI is not defined");
