@@ -8,7 +8,7 @@ start_database:
   # https://docs.cypress.io/guides/continuous-integration/introduction#Official-Cypress-Docker-Images
   stage: build
   script:
-    - cd bulb
+    - cd backend
     - npm install
     #- npm ci --cache .npm --prefer-offline
     # Starts web server for E2E tests - replace with your own server invocation
@@ -16,7 +16,7 @@ start_database:
     # Runs tests in parallel and records to Cypress Cloud
     # https://docs.cypress.io/guides/cloud/projects#Set-up-a-project-to-record
     # https://docs.cypress.io/guides/guides/parallelization
-    - npm run dev:backend
+    - npm start dev
 
 test:
   # Uses official Cypress docker image for dependencies
