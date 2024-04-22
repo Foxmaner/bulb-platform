@@ -1,4 +1,30 @@
 /// <reference types = "cypress" />
+describe('Home Page', () => {
+  beforeEach(() => {
+    cy.visit('http://localhost:3000/')
+  })
+  it('createExample', () => {
+    cy.request({
+      method: 'POST',
+      url: 'http://localhost:3001/login',
+      body: {
+        "password": 'testPassword',
+        "name": 'testUser',
+      },
+    }).then((response) => {
+      expect(response.status).to.eq(200);
+      
+      // Add more assertions as needed
+    });
+  });
+})
+
+
+
+
+
+/*
+
 
 describe('signIn', () => {
   it('createExample', () => {
@@ -6,8 +32,8 @@ describe('signIn', () => {
       method: 'POST',
       url: '/login',
       body: {
-        password: 'testPassword',
-        name: 'testUser',
+        "password": 'testPassword',
+        "name": 'testUser',
       },
     }).then((response) => {
       expect(response.status).to.eq(200);
@@ -15,23 +41,6 @@ describe('signIn', () => {
     });
   });
 });
-
-/*
-
-
-describe('Home Page', () => {
-  beforeEach(() => {
-    cy.request
-  })
-  it('should display the login page', () => {
-    cy.screenshot('my-screenshot'); // Take a screenshot
-
-    cy.get('button').contains('Login with Google')
-    cy.screenshot('my-screenshot2'); // Take a screenshot
-
-  })
-})
-
 
 
 

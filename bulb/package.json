@@ -11,16 +11,18 @@
     "test:watch": "jest --watch",
     "test:ci": "npm run test --ci",
     "cypress:open": "cypress open",
-    "backend": "cd ../backend && NODE_ENV=test npm start",
     "e2e": "start-server-and-test dev http://localhost:3000 \"cypress open --e2e --record --key 1b55db46-7328-4c3c-9d5f-39021cb38c0e\"",
     "ci:cy-run": "start-server-and-test ci:start-server http://localhost:3000 cy:run",
-    "test:headless": "start-server-and-test backend http://localhost:3001 e2e:headless",
     "e2e:headless": "start-server-and-test dev http://localhost:3000 \"cypress run --e2e --record --key 1b55db46-7328-4c3c-9d5f-39021cb38c0e\"",
     "e2e:local": "start-server-and-test dev http://localhost:3000 \"cypress run --e2e",
-    "posttest:headless": "node -e \"process.on('SIGINT', () => process.exit()); setTimeout(() => process.kill(process.pid, 'SIGINT'), 3001);\"",
     "component": "cypress open --component",
-    "component:headless": "cypress run --component"
-  },
+    "component:headless": "cypress run --component",
+    "dev:frontend": "next dev",
+    "dev:backend": "cd ../backend && npm start",
+    "start:dev": "concurrently \"npm run dev:frontend\" \"wait-on http://localhost:3000 && npm run dev:backend\"",
+    "start:backend": "cd ../backend && npm start",
+    "test:e2e": "npm run start:dev && cypress run --headless"
+},
   "dependencies": {
     "@nextui-org/react": "^2.3.1",
     "cookie": "^0.6.0",
