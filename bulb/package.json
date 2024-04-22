@@ -19,6 +19,9 @@
   },
   "dependencies": {
     "@nextui-org/react": "^2.2.10",
+    "@tiptap/pm": "^2.3.0",
+    "@tiptap/react": "^2.3.0",
+    "@tiptap/starter-kit": "^2.3.0",
     "cookie": "^0.6.0",
     "d3-scale": "^4.0.2",
     "d3-scale-chromatic": "^3.1.0",

@@ -6,8 +6,11 @@ declare module "index" {
     type Meeting = {
         _id: string,
         title: string,
-        sections: Section[]
+        sections: Section[],
+        
     }
+
+    type Toolbar = {}
 
     type Section = {
         _id: string,

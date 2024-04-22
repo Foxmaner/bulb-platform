@@ -22,7 +22,8 @@ import SectionForm from "app/components/sectionForm"
 import { Section, Paragraph } from "index";
 
 import { useMeetingContext } from "../../context/meetingProvider";
-
+import Tiptap from "app/components/tiptap";
+import { Toolbar } from "app/components/toolbar";
 
 
 export default function MeetingPage() {
@@ -63,7 +64,7 @@ export default function MeetingPage() {
                                 meeting.sections.map((section: Section, index: number) => (
                                     <div className="flex items-center flex-col">
                                         <Tooltip content={section.title} isDisabled={!section.title}>
-                                            <Button variant="ghost" className="w-36" key={index}>
+                                            <Button variant="light" className="w-36 underline" key={index}>
                                                 <p className="truncate">
                                                     {section.title}
                                                 </p>
@@ -71,7 +72,7 @@ export default function MeetingPage() {
                                         </Tooltip>
                                         {section.paragraphs?.map((paragraph: Paragraph, paragraphIndex: number) =>
                                             <Tooltip content={paragraph.title} isDisabled={!paragraph.title}>
-                                                <Button variant="ghost" className="w-28" key={paragraphIndex}>
+                                                <Button variant="light" className="w-28 underline" key={paragraphIndex}>
                                                     <p className="truncate">
                                                         {paragraph.title}
                                                     </p>
@@ -93,15 +94,12 @@ export default function MeetingPage() {
                         <div className="flex flex-row bg-secondaryGrey h-1 w-11/12"></div>
                     </div>
                     <div className="flex flex-row gap-2">
-
+                        
                         <Button variant="solid" className="bg-primaryGrey border-2 border-edge" onClick={addSection}>Nytt avsnitt</Button>
-                        <Button className="bg-white border-2 border-edge w-4 h-6 m-2">File</Button>
-                        <Button className="bg-white border-2 border-edge w-4 h-6 m-2">Edit</Button>
-                        <Button className="bg-white border-2 border-edge w-4 h-6 m-2">Insert</Button>
-                        <Button className="bg-white border-2 border-edge w-4 h-6 m-2">Format</Button>
-                        <Button className="bg-white border-2 border-edge w-4 h-6 m-2">Help</Button>
+                        
 
                     </div>
+                    
                     <ScrollShadow hideScrollBar size={20}>
                         <div className="w-full h-screen">
                             {

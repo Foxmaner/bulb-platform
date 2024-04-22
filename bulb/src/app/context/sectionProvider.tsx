@@ -3,7 +3,7 @@
 import { Section, Paragraph } from "index"; 
 
 import React, { createContext, useState, useContext, ReactNode } from 'react';
-
+import { Meeting } from "index";
 
 type MeetingContextType = {
 	meeting: Meeting;
@@ -12,7 +12,7 @@ type MeetingContextType = {
 
 const DefaultData: Section[] = []
 
-const MeetingContext = createContext<MeetingContextType>({
+const SectionContext = createContext<MeetingContextType>({
 	meeting: DefaultData,
 	setMeeting: (): any => {}
 });
@@ -25,7 +25,7 @@ export const SectionProvider: React.FC<MeetingProviderProps> = ({ children }) =>
   const [meeting, setMeeting] = useState<Meeting>(DefaultData);
 
   const value = {
-    meeting
+    meeting,
     setMeeting
   };
 

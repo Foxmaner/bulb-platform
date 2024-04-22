@@ -17,6 +17,7 @@
 
 'use client';
 
+import { Toolbar } from "app/components/toolbar";
 import { Section, Paragraph, Meeting } from "index";
 
 import React, { createContext, useState, useContext, ReactNode } from 'react';
@@ -30,7 +31,8 @@ type MeetingContextType = {
 const defaultMeeting: Meeting = {		
     _id: '',
 	title:"",
-    sections: []
+    sections: [],
+	
 }
 
 const MeetingContext = createContext<MeetingContextType>({

@@ -17,6 +17,8 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useMeetingContext } from "app/context/meetingProvider";
 import { Paragraph } from "index";
+import Tiptap from "./tiptap";
+import { Editor } from "@tiptap/react";
 
 interface IParagraphFormProps {
     data: Paragraph
@@ -25,7 +27,7 @@ interface IParagraphFormProps {
 export default function ParagraphForm({ data }: IParagraphFormProps) {
     const [title, setTitle] = useState<string>(data.title || "")
     const { meeting, setMeeting } = useMeetingContext();
-    const [titleValue, setTitleValue] = useState("");
+    const [text, setTextValue] = useState<string>(data.text || "");
 
     const addParagraphTitle = (title: string) => {
         setTitle(title);
@@ -51,10 +53,40 @@ export default function ParagraphForm({ data }: IParagraphFormProps) {
         })
     }
 
+
+    
+    const addParagraphText = (text: string) => {
+        setTextValue(title);
+
+        setMeeting({
+            ...meeting,
+            sections: meeting.sections.map(section => {
+
+                section.paragraphs?.map(paragraph => {
+                    if (paragraph._id === data._id) {
+                        
+                        
+                        paragraph.text = text
+                        return {
+                            ...section,
+                            paragraphs: [(section.paragraphs || []), paragraph]
+                        }
+                    }
+                })
+
+                return section;
+            })
+        })
+    }
+
+
     return (
+        
         <div className="flex flex-col gap-2">
+           
             {
                 data.useTitle && (
+                    
                     <Textarea
                         variant="bordered"
                         radius="none"
