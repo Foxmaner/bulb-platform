@@ -1,5 +1,5 @@
 import PageHeader from "../components/pageHeader";
-import MeetingsView from "app/components/meetingList";
+import MeetingsView from "components/table/TableView";
 
 export default function meetingPage() {
   return (

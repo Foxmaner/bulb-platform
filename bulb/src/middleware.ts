@@ -26,6 +26,7 @@ const protectedRoutes = [
 ];
 
 export async function middleware(req: NextRequest) {
+    return NextResponse.next();
     const cookieHeader = req.headers.get("cookie") || '';
     const cookies = parse(cookieHeader);
     const connectSid = cookies['connect.sid'];
@@ -68,3 +69,9 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
 }
 
+
+export const config = {
+    matcher: [
+      '/((?!api|_next/static|_next/image|favicon.ico).*)'
+    ]
+}
