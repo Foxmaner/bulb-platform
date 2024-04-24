@@ -9,16 +9,11 @@ interface IeditorProps{
 }
 
 export function Toolbar({editor}: IeditorProps){
+    
     if(!editor){
         return null
     }
-
-
     return(
         <div></div>
     )
-
-
-
-
 }
