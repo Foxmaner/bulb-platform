@@ -1,13 +1,20 @@
 /// <reference types = "cypress" />
-
 describe('Home Page', () => {
   beforeEach(() => {
     cy.visit('http://localhost:3000/')
   })
-  it('should display the home page', () => {
-    cy.contains('Welcome to Bulb platform!')
+  it('should display the login page', () => {
+    cy.screenshot('my-screenshot'); // Take a screenshot
+
+    cy.get('button').contains('Login with Google')
+    cy.screenshot('my-screenshot2'); // Take a screenshot
+
   })
 })
+
+/** 
+
+
 
 describe('The Home Page', () => {
   it('successfully loads', () => {
@@ -43,4 +50,6 @@ describe('The Home Page', () => {
     // includes '/commands/actions'
     cy.url().should('include', '/')
   })
+  
 })
+*/
