@@ -264,15 +264,7 @@ TableViewProps<T>) {
 				</div>
 			</div>
 		);
-	}, [
-		filterValue,
-		externalFilters,
-		visibleColumns,
-		onSearchChange,
-		onRowsPerPageChange,
-		data.length,
-		hasSearchFilter,
-	]);
+	}, [filterValue, onSearchChange, externalFilters, visibleColumns, columns, data.length, onRowsPerPageChange, onClear]);
 
 	const bottomContent = useMemo(() => {
 		return (
@@ -301,7 +293,7 @@ TableViewProps<T>) {
 				</div>
 			</div>
 		);
-	}, [selectedKeys, items.length, page, pages, hasSearchFilter]);
+	}, [selectedKeys, filteredItems.length, page, pages, onPreviousPage, onNextPage]);
 
 	const classNames = useMemo(
 		() => ({

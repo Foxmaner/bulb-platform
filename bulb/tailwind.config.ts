@@ -20,8 +20,7 @@ const config: Config = {
         'easyGrey':'#EEE',
         'edge': "#D9D9D9", //Bordercolor
         'titleText':'#333333',
-        'primaryText': "#888888",
-        
+        'primaryText': "#888888"
       },
 
       backgroundImage: {
