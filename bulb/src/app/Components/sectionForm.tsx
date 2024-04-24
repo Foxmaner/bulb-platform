@@ -1,3 +1,4 @@
+
 /**
  * SectionForm Component
  * 
@@ -142,7 +143,7 @@ export default function SectionForm({ data }: SectionFormProps) {
                 radius="none"
                 labelPlacement="outside"
                 placeholder="Titel"
-                className="flex w-11/12 truncate"
+                className="flex w-11/12"
                 value={title}
                 onValueChange={addSectionTitle}
                 minRows={1}
