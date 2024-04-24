@@ -26,8 +26,6 @@ const protectedRoutes = [
 ];
 
 export async function middleware(req: NextRequest) {
-    return NextResponse.next();
-
     const cookieHeader = req.headers.get("cookie") || '';
     const cookies = parse(cookieHeader);
     const connectSid = cookies['connect.sid'];
@@ -67,5 +65,6 @@ export async function middleware(req: NextRequest) {
         }
     }
 
+    return NextResponse.next();
 }
 
