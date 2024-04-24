@@ -62,7 +62,7 @@ export default function MeetingPage() {
                         <ul className="flex flex-col py-2">
                             {
                                 meeting.sections.map((section: Section, index: number) => (
-                                    <div className="flex items-center flex-col">
+                                    <div className="flex items-center flex-col" key={index}>
                                         <Tooltip content={section.title} isDisabled={!section.title}>
                                             <Button variant="light" className="w-36 underline" key={index}>
                                                 <p className="truncate">
@@ -71,7 +71,7 @@ export default function MeetingPage() {
                                             </Button>
                                         </Tooltip>
                                         {section.paragraphs?.map((paragraph: Paragraph, paragraphIndex: number) =>
-                                            <Tooltip content={paragraph.title} isDisabled={!paragraph.title}>
+                                            <Tooltip content={paragraph.title} isDisabled={!paragraph.title} key={paragraphIndex}>
                                                 <Button variant="light" className="w-28 underline" key={paragraphIndex}>
                                                     <p className="truncate">
                                                         {paragraph.title}
