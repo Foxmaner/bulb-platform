@@ -29,5 +29,7 @@ You may write an environment file (.env, in this directory) to specify the follo
 DB_URI=[mongodb+srv://<username>:<password>@cluster0.3q5ijpk.mongodb.net/] where <username> is your username and <password> is your password for MongoDB.
 NODE_ENV=[(development)/testing/production], designates the environment being run. 
 VERIFICATION=[(true)/false], sets if login/verification is required. Some functionality may not work with this disabled.
+PORT=[(3001)/1-65535], specifies the port the backend is hosted on.
+FILE_SIZE=[(10485760)], the maximum allowed file size upload, in bytes. Default is 10 MiB.
 
 Default values are given in parenthesis, if appliccable.

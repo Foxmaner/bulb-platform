@@ -46,3 +46,6 @@ next-env.d.ts
 #Cypress
 screenshots
 .gitignore
+
+#Image upload
+backend/public/uploaded_images/
