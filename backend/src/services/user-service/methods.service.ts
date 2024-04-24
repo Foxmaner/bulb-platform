@@ -19,17 +19,17 @@ export class MethodUserService extends mongoose.Model<User> {
 
     }
 
-    async getPublishedMeetings() {
+    /* async getPublishedMeetings() {
         const meetings = await MeetingModel.aggregate([
             {
-                $addFields: {
+                $match: {
                     "published": true
                 }
             }
         ]);
 
         return res.status(200).json(meetings);
-    }
+    } */
 
     async publishMeeting(meetingID: ObjectId) {
         await MeetingModel.findByIdAndUpdate(meetingID, { published: true });
@@ -50,7 +50,7 @@ export class MethodUserService extends mongoose.Model<User> {
             }
         })
 
-        meeting.updateOne({ name: newName })
+        meeting.updateOne({ name: newName });
 
         return res.status(200).json({ meeting: "Meeting Name Successfully Changed!" });
     }
@@ -98,7 +98,6 @@ export class MethodUserService extends mongoose.Model<User> {
 
     async createMeeting(props: { name: string }) {
         try {
-
             const meeting = new MeetingModel({
                 name: props.name,
                 date: new Date(),
@@ -117,8 +116,6 @@ export class MethodUserService extends mongoose.Model<User> {
     }
 
     async getMeetings () {
-
-
         const pipelineResult = await MeetingModel.aggregate([
             { 
                 $addFields: {

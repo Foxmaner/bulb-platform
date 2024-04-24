@@ -22,10 +22,9 @@ export class StaticMeetingService {
                 { accessibleMeetings: { id } },
                 { $unset: { "accessibleMeetings$[element]": "" } }
             )
-            // TODO CONRAD!!!!
             return res.status(200).json({ message: "Object removed." });
         } catch (err) {
-            return res.status(500).json({ message: "An error occurred." });
+            return res.status(500).json({ message: "An error occurred: " + err });
         }
     }
 
@@ -38,7 +37,7 @@ export class StaticMeetingService {
         try {
             const meetings = await MeetingModel.aggregate([
                 {
-                    $addFields: {
+                    $match: {
                         "published": true 
                     }
                 }

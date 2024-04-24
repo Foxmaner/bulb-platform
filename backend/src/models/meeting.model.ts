@@ -21,7 +21,7 @@ class MeetingModel extends BaseModel<Meeting, typeof StaticMeetingService, typeo
                 required: [true, "The meeting name is required."]
             },
             progress: { type: Number, default: 0 },
-            completed: { type: Boolean, default: true },
+            completed: { type: Boolean, default: false },
             date: {
                 type: Date,
                 required: [true, "The creation date is required."]
@@ -29,7 +29,8 @@ class MeetingModel extends BaseModel<Meeting, typeof StaticMeetingService, typeo
             mainDocumentSections: { type: [Utils.sectionSchema()], default: [] },
             summaryDocumentSections: { type: {}, default: [] },
             meetingHistory: { type: [Utils.sectionSchema()], default: [] },
-            members: { type: [MeetingModel.memberSchema()], default: [] }
+            members: { type: [MeetingModel.memberSchema()], default: [] },
+            published: { type: Boolean, default: false }
         };
         
         super({
