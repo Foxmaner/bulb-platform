@@ -1,6 +1,5 @@
 import PageHeader from "../components/pageHeader";
 import MeetingsView from "app/components/meetingList";
-import TemplatePopup from "app/Components/templatePopup";
 import homepageimage from "../../../public/homepage2.svg";
 import Image from "next/image";
 

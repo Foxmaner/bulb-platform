@@ -19,7 +19,7 @@ export default function PageHeader({ userName }: { userName: string }) {
   const pathName = usePathname().slice(1);
   const router = useRouter();
   return (
-    <div className="bg-primaryGrey w-full flex-coljustify-between">
+    <div className="bg-primaryGrey w-full flex-col justify-between">
       <div className="bg-white w-full px-2 py-1">
         <h2 className="text-black">Good afternoon, {userName}!</h2>
       </div>
