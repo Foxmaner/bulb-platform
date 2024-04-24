@@ -12,23 +12,24 @@
  */
 'use client';
 import { Button, ButtonGroup, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Textarea } from "@nextui-org/react";
-import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+
+import { useState, useRef } from "react";
 import { useMeetingContext } from "app/context/meetingProvider";
+import { useEditorContext } from "app/context/editorProvider";
+
 import { Paragraph } from "index";
 import Tiptap from "./tiptap";
-import { Editor } from "@tiptap/react";
+
 
 interface IParagraphFormProps {
     data: Paragraph
 }
 
 export default function ParagraphForm({ data }: IParagraphFormProps) {
-    const [title, setTitle] = useState<string>(data.title || "")
+    const [ title, setTitle ] = useState<string>(data.title || "")
     const { meeting, setMeeting } = useMeetingContext();
-    const [text, setTextValue] = useState<string>(data.text || "");
-
+    const [ text, setTextValue ] = useState<string>(data.text || "");
+    
     const addParagraphTitle = (title: string) => {
         setTitle(title);
 
@@ -38,8 +39,8 @@ export default function ParagraphForm({ data }: IParagraphFormProps) {
 
                 section.paragraphs?.map(paragraph => {
                     if (paragraph._id === data._id) {
-                        
-                        
+
+
                         paragraph.title = title
                         return {
                             ...section,
@@ -54,9 +55,9 @@ export default function ParagraphForm({ data }: IParagraphFormProps) {
     }
 
 
-    
+
     const addParagraphText = (text: string) => {
-        setTextValue(title);
+        setTextValue(text);
 
         setMeeting({
             ...meeting,
@@ -64,8 +65,8 @@ export default function ParagraphForm({ data }: IParagraphFormProps) {
 
                 section.paragraphs?.map(paragraph => {
                     if (paragraph._id === data._id) {
-                        
-                        
+
+
                         paragraph.text = text
                         return {
                             ...section,
@@ -83,34 +84,22 @@ export default function ParagraphForm({ data }: IParagraphFormProps) {
     return (
         
         <div className="flex flex-col gap-2">
-           
+
             {
                 data.useTitle && (
-                    
-                    <Textarea
-                        variant="bordered"
-                        radius="none"
-                        labelPlacement="outside"
-                        placeholder="Underrubrik"
-                        className="flex"
-                        value={title}
-                        onValueChange={addParagraphTitle}
-                        minRows={1}
+                    <Tiptap
+                        text={title}
+                        onChange={addParagraphTitle}
+                        
                     />
                 )
             }
 
-            <div className="flex flex-col gap-1">
-                <Textarea
-                    variant="bordered"
-                    radius="none"
-                    labelPlacement="outside"
-                    placeholder="Skriv text här"
-                    className="flex"
-                    minRows={5}
-                />
-            </div>
             
+            <div className="flex flex-col gap-1">
+                <Tiptap text={text} onChange={addParagraphText} />
+            </div>
+
 
         </div>
     )

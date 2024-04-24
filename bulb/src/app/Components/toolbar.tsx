@@ -1,21 +1,28 @@
 "use client"
 
-import { type Editor } from "@tiptap/react"
-import { toggle } from "@nextui-org/react"
+import { Editor } from "@tiptap/react";
+import { useEditorContext } from "app/context/editorProvider";
 
 
-interface IeditorProps{
-    editor: Editor | null
-}
 
-export function Toolbar({editor}: IeditorProps){
-    if(!editor){
-        return null
+export function Toolbar() {
+    const { currentEditor, setCurrentEditor } = useEditorContext();
+    
+    const handleBold = () => {
+        if (!currentEditor) return;
+
+        currentEditor.chain().focus().toggleBold().run()
     }
 
-
-    return(
-        <div></div>
+    return (
+        <div className="">
+            <button 
+                onClick={handleBold}
+                disabled={currentEditor === null}
+                className={currentEditor?.isActive('bold') ? 'is-active' : ''}>
+                bold
+            </button>
+        </div>
     )
 
 

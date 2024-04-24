@@ -24,13 +24,17 @@ import { Section, Paragraph } from "index";
 import { useMeetingContext } from "../../context/meetingProvider";
 import Tiptap from "app/components/tiptap";
 import { Toolbar } from "app/components/toolbar";
+import { useEditor } from "@tiptap/react";
+
+import { useCurrentEditor } from "app/context/editorProvider";
 
 
 export default function MeetingPage() {
+    const { currentEditor, setCurrentEditor } = useCurrentEditor();
     const { meeting, setMeeting } = useMeetingContext();
-
+    
+    
     const addSection = () => {
-        //testa det här sen
         const id = meeting.sections.length
         const newSection = {
             _id: "",
@@ -41,10 +45,9 @@ export default function MeetingPage() {
         setMeeting({ ...meeting, sections: [...meeting.sections, newSection] })
     }
 
-
-
+   
     return (
-
+       
         <div className="flex w-screen h-screen content-center justify-center items-center">
             <div className="flex flex-row gap-10 bg-white w-[calc(95%)] h-[calc(95%)] ">
                 {/*Vänstra div den med loggan*/}
@@ -96,8 +99,10 @@ export default function MeetingPage() {
                     <div className="flex flex-row gap-2">
                         
                         <Button variant="solid" className="bg-primaryGrey border-2 border-edge" onClick={addSection}>Nytt avsnitt</Button>
+                      
+                        <Toolbar />
+                      
                         
-
                     </div>
                     
                     <ScrollShadow hideScrollBar size={20}>
@@ -121,7 +126,7 @@ export default function MeetingPage() {
             </div>
 
         </div>
-
+       
     );
 
 }

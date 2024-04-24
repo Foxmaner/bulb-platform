@@ -1,8 +1,8 @@
+
+
 declare module "index" {
-    //Här skrivs olika typer
-
-    interface Example { }
-
+    
+    import { useEditor } from "@tiptap/react"
     type Meeting = {
         _id: string,
         title: string,
@@ -10,7 +10,7 @@ declare module "index" {
         
     }
 
-    type Toolbar = {}
+    
 
     type Section = {
         _id: string,
