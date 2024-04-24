@@ -1,32 +1,100 @@
-
+/**
+ * ParagraphForm Component
+ * 
+ * This component renders a form for adding/editing a paragraph within a section.
+ * It allows users to input paragraph text and optionally a title for the paragraph.
+ * 
+ * Props:
+ * - data: Paragraph - The data for the paragraph including title, text, and _id.
+ * 
+ * Usage:
+ * <ParagraphForm data={paragraphData} />
+ */
 'use client';
 import { Button, ButtonGroup, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Textarea } from "@nextui-org/react";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
-
+import { useMeetingContext } from "app/context/meetingProvider";
+import { Paragraph } from "index";
+import Tiptap from "./tiptap";
+import { Editor } from "@tiptap/react";
 
 interface IParagraphFormProps {
-    title?: string
+    data: Paragraph
 }
 
-export default function ParagraphForm({ title: defautlTitle }: IParagraphFormProps) {
-    const [ title, setTitle  ] = useState<string>(defautlTitle || "");
+export default function ParagraphForm({ data }: IParagraphFormProps) {
+    const [title, setTitle] = useState<string>(data.title || "")
+    const { meeting, setMeeting } = useMeetingContext();
+    const [text, setTextValue] = useState<string>(data.text || "");
 
-    const addTitle = () => {
-        
+    const addParagraphTitle = (title: string) => {
+        setTitle(title);
+
+        setMeeting({
+            ...meeting,
+            sections: meeting.sections.map(section => {
+
+                section.paragraphs?.map(paragraph => {
+                    if (paragraph._id === data._id) {
+                        
+                        
+                        paragraph.title = title
+                        return {
+                            ...section,
+                            paragraphs: [(section.paragraphs || []), paragraph]
+                        }
+                    }
+                })
+
+                return section;
+            })
+        })
     }
 
+
+    
+    const addParagraphText = (text: string) => {
+        setTextValue(title);
+
+        setMeeting({
+            ...meeting,
+            sections: meeting.sections.map(section => {
+
+                section.paragraphs?.map(paragraph => {
+                    if (paragraph._id === data._id) {
+                        
+                        
+                        paragraph.text = text
+                        return {
+                            ...section,
+                            paragraphs: [(section.paragraphs || []), paragraph]
+                        }
+                    }
+                })
+
+                return section;
+            })
+        })
+    }
+
+
     return (
+        
         <div className="flex flex-col gap-2">
+           
             {
-                title && (
-                    <Textarea 
+                data.useTitle && (
+                    
+                    <Textarea
                         variant="bordered"
                         radius="none"
                         labelPlacement="outside"
                         placeholder="Underrubrik"
                         className="flex"
+                        value={title}
+                        onValueChange={addParagraphTitle}
                         minRows={1}
                     />
                 )
@@ -42,8 +110,8 @@ export default function ParagraphForm({ title: defautlTitle }: IParagraphFormPro
                     minRows={5}
                 />
             </div>
-            {}
             
+
         </div>
     )
 

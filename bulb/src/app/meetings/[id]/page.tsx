@@ -1,29 +1,47 @@
+/**
+ * MeetingPage Component
+ * 
+ * This component represents the meeting page UI where users can view and edit meeting content.
+ * It displays the meeting title, date, catalog, and sections with options to add new sections.
+ * 
+ * Usage:
+ * <MeetingPage />
+ * 
+ * Note: This component assumes the usage of Next.js and includes components from the NextUI library.
+ */
+
 "use client";
 
-import { Button, ScrollShadow, ButtonGroup } from "@nextui-org/react";
+import { Button, ScrollShadow, ButtonGroup, Tooltip, Input } from "@nextui-org/react";
 import { FormEvent, useState } from "react";
 import Link from "next/link";
 import AddSection from "../../components/defaultAddsection";
 
 import SectionForm from "app/components/sectionForm"
 
-import { Section } from "index"; 
+import { Section, Paragraph } from "index";
 
 import { useMeetingContext } from "../../context/meetingProvider";
+import Tiptap from "app/components/tiptap";
+import { Toolbar } from "app/components/toolbar";
 
 
 export default function MeetingPage() {
     const { meeting, setMeeting } = useMeetingContext();
 
     const addSection = () => {
+        //testa det här sen
+        const id = meeting.sections.length
         const newSection = {
-            _id: '',
+            _id: "",
             title: '',
             paragraphs: []
         }
 
-        setMeeting({...meeting, sections: [...meeting.sections, newSection]})
+        setMeeting({ ...meeting, sections: [...meeting.sections, newSection] })
     }
+
+
 
     return (
 
@@ -37,9 +55,33 @@ export default function MeetingPage() {
                         </Link>
 
                     </div>
+                    {/*Katalogen*/}
                     <div className="bg-secondaryGrey h-1 w-full"></div>
-                    <div className="flex justify-center py-2">
-                        <p className="">Catalog</p>
+                    <div className="flex flex-col justify-center py-2">
+                        <p className="text-center text-xl">Catalog</p>
+                        <ul className="flex flex-col py-2">
+                            {
+                                meeting.sections.map((section: Section, index: number) => (
+                                    <div className="flex items-center flex-col" key={index}>
+                                        <Tooltip content={section.title} isDisabled={!section.title}>
+                                            <Button variant="light" className="w-36 underline" key={index}>
+                                                <p className="truncate">
+                                                    {section.title}
+                                                </p>
+                                            </Button>
+                                        </Tooltip>
+                                        {section.paragraphs?.map((paragraph: Paragraph, paragraphIndex: number) =>
+                                            <Tooltip content={paragraph.title} isDisabled={!paragraph.title} key={paragraphIndex}>
+                                                <Button variant="light" className="w-28 underline" key={paragraphIndex}>
+                                                    <p className="truncate">
+                                                        {paragraph.title}
+                                                    </p>
+                                                </Button>
+                                            </Tooltip>
+                                        )}
+                                    </div>
+                                ))}
+                        </ul>
                     </div>
                 </div>
 
@@ -47,20 +89,17 @@ export default function MeetingPage() {
 
                 <div className="flex flex-col text-primaryText gap-5 w-11/12 py-5">
                     <div className="flex flex-col gap-2 ">
-                        <p className="text-black text-5xl font-bold">Untitled meeting</p>
+                        <Input variant="underlined" size="lg" disableAnimation={true} radius="lg" type={meeting.title} placeholder="Tomt möte" isRequired={true}></Input>
                         <p className="text-primaryText text-sm">2024 - 01 - 01</p>
                         <div className="flex flex-row bg-secondaryGrey h-1 w-11/12"></div>
                     </div>
                     <div className="flex flex-row gap-2">
-                   
-                        <Button variant="solid" className="bg-primaryGrey border-2 border-edge"onClick={addSection}>Nytt avsnitt</Button>
-                        <Button className="bg-white border-2 border-edge w-4 h-6 m-2">File</Button>
-                        <Button className="bg-white border-2 border-edge w-4 h-6 m-2">Edit</Button>
-                        <Button className="bg-white border-2 border-edge w-4 h-6 m-2">Insert</Button>
-                        <Button className="bg-white border-2 border-edge w-4 h-6 m-2">Format</Button>
-                        <Button className="bg-white border-2 border-edge w-4 h-6 m-2">Help</Button>
                         
+                        <Button variant="solid" className="bg-primaryGrey border-2 border-edge" onClick={addSection}>Nytt avsnitt</Button>
+                        
+
                     </div>
+                    
                     <ScrollShadow hideScrollBar size={20}>
                         <div className="w-full h-screen">
                             {
@@ -78,7 +117,7 @@ export default function MeetingPage() {
                     </ScrollShadow>
 
                 </div>
-                
+
             </div>
 
         </div>
