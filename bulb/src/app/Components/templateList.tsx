@@ -23,7 +23,7 @@ let sampleData = {
   ],
 };
 
-export default function templatesView() {
+export default function TemplatesView() {
   const [page, setPage] = useState(1);
   const rowsPerPage = 8;
 

@@ -87,7 +87,7 @@ let sampleData = {
   ],
 };
 
-export default function meetingsView() {
+export default function MeetingsView() {
   const [page, setPage] = useState(1);
   const rowsPerPage = 8;
 
