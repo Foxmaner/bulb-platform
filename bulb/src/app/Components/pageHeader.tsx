@@ -10,6 +10,7 @@ import {
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import TemplatePopup from "./templatePopup";
+import HeaderImg from "./../../../public/header.svg";
 
 function capitalizeFirstLetter(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -30,19 +31,15 @@ export default function PageHeader({ userName }: { userName: string }) {
             {capitalizeFirstLetter(pathName)}
           </h1>
         </div>
-        <div className="flex-shrink-0">
-          <Image src="/placeholder.jpg" alt="" height={122} width={400}></Image>
+        <div className="flex-shrink-0 bg-white">
+          <Image src={HeaderImg} alt="" height={122} width={400}></Image>
         </div>
       </div>
 
       <div className="flex gap-1 bg-white w-full">
+        {/* Skapa-knapp */}
         <TemplatePopup />
-        {/*<Button
-          onClick={() => router.push("/meetings/create")}
-          className="bg-white border-2 border-edge text-primaryText w-5 h-7 m-2"
-        >
-          Skapa
-  </Button>*/}
+
         <Button className="bg-white border-2 border-edge text-primaryText w-5 h-7 m-2">
           Företag
         </Button>
