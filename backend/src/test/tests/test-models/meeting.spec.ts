@@ -3,8 +3,7 @@ import { MeetingModel, CompanyModel, UserModel } from "../../../models";
 import mongoose, { ObjectId } from 'mongoose';
 
 import { TestDecorators } from "../../utils";
-import { Meeting, Member } from 'index';
-import Utils from '../../../models/utils';
+
 
 
 @TestDecorators.describeModels("Meeting tests")
@@ -250,12 +249,12 @@ class MeetingTests {
 		// Setup
 		const user1 = await MeetingTests.createUser("User 1");
 		const resp = await user1.createMeeting({ name: "Meeting 1"});
+
 		const meeting = resp.body;
 		await meeting.addSection();
+
 		const meetingWithSection = await MeetingModel.findOne({ name: "Meeting 1" });
 		expect(meetingWithSection.mainDocumentSections.length).toBe(1);
-
-		console.log("Before paragraph add: " + meetingWithSection);
 
 		// Add the paragraph
 		await meetingWithSection.addParagraph(meetingWithSection.mainDocumentSections[0]._id);
@@ -263,10 +262,15 @@ class MeetingTests {
 		console.log(meetingWithParagraph);
 		expect(meetingWithParagraph.mainDocumentSections[0].contains.length).toBe(1);
 
-		// Remove the paragraph
+		console.log(meetingWithParagraph.mainDocumentSections[0].contains)
+
+		//Remove the paragraph
 		//console.log("Deleting paragraph " + meetingWithParagraph.mainDocumentSections[0].contains[0]._id + " of section " + meetingWithParagraph.mainDocumentSections[0]._id);
 		await meetingWithParagraph.removeParagraph(meetingWithParagraph.mainDocumentSections[0]._id, meetingWithParagraph.mainDocumentSections[0].contains[0]._id);
 		const meetingWithoutParagraph = await MeetingModel.findOne({ name: "Meeting 1" });
+		
+		console.log("sectionhistory", meetingWithoutParagraph.mainDocumentSections[0].sectionHistory)
+		
 		//console.log(meetingWithoutParagraph);
 		expect(meetingWithoutParagraph.mainDocumentSections[0].contains.length).toBe(0);
 		expect(meetingWithoutParagraph.mainDocumentSections[0].sectionHistory.length).toBe(1);

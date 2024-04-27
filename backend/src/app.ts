@@ -30,14 +30,14 @@ import {
 
 import dotenv from "dotenv";
 
-import { connectDatabase } from "./config/test-connection";
+import { connectDatabase } from "./config/connection";
 import { connectDatabase as testConnectDatabase } from "./config/test-connection";
 
 import { 
     verifySession, 
     verifySocket, 
     wrap, 
-    sessionMiddleware,
+    runSessionMiddleware,
     corsConfig,
     updateSessionPath
 } from "./middleware/authMiddleware";
@@ -63,7 +63,7 @@ const run = async () => {
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
     
-    app.use(sessionMiddleware);
+    app.use(runSessionMiddleware());
 
     // Passport setup, for authentication
     setupPassport(app);
@@ -99,7 +99,7 @@ const run = async () => {
     app.use("/template", templateRoutes);
     app.use("/wordcloud", wordcloudRoutes); 
 
-    io.use(wrap(sessionMiddleware))
+    io.use(wrap(runSessionMiddleware()))
     //io.use(verifySocket);
     io.on('connection', connectionHandler);
 

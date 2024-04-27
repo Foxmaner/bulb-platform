@@ -5,7 +5,7 @@ interface BaseModelProps<U, S> {
     name: string;
     schema: any;
 
-    methods: S;
+    methods: S[] | S;
     staticMethods: U;
 }
 
@@ -14,7 +14,7 @@ interface BaseModelProps<U, S> {
  * Base Model class
  * 
  * This class is used to create a base model that can be extended by other models
- */
+*/
 class BaseModel<T, U extends Function, S extends Function> {
     protected _schema: Schema;
     protected _model: Model<T & Document>;
@@ -23,7 +23,11 @@ class BaseModel<T, U extends Function, S extends Function> {
         
         this._schema = new Schema<T>(schema)
 
-        this._schema.loadClass(methods);
+        if (methods instanceof Array) {
+            methods.map((method) => this._schema.loadClass(method));
+        } else {
+            this._schema.loadClass(methods)
+        }
         this._schema.loadClass(staticMethods);
 
         this._model = model<T & Document>(name, this._schema);

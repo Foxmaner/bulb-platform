@@ -5,20 +5,24 @@ import dotenv from "dotenv";
 
 dotenv.config()
 
-const sessionMiddleware = session({
-    secret: [process.env.SESSION_SECRET as string],
-    cookie: {
-        secure: process.env.NODE_ENV === "PROD" ? "true" : "auto",
-        sameSite: process.env.NODE_ENV === "PROD" ? "none" : "lax",
-        _expires: 1000 * 60 * 60,
-    },
-    resave: false,
-    saveUninitialized: false,
-    store: MongoStore.create({
-        mongoUrl: process.env.DB_URI,
-        collectionName: "sessions",
-    }),
-});
+const runSessionMiddleware = () => {
+    const sessionMiddleware = session({
+        secret: [process.env.SESSION_SECRET as string],
+        cookie: {
+            secure: process.env.NODE_ENV === "PROD" ? "true" : "auto",
+            sameSite: process.env.NODE_ENV === "PROD" ? "none" : "lax",
+            _expires: 1000 * 60 * 60,
+        },
+        resave: false,
+        saveUninitialized: false,
+        store: MongoStore.create({
+            mongoUrl: process.env.DB_URI,
+            collectionName: "sessions",
+        }),
+    });
+
+    return sessionMiddleware;
+}
 
 const verifySession = (req: any, res: any, next: any) => {
     if (req.isAuthenticated()) {
@@ -62,4 +66,4 @@ const corsConfig = {
     allowedHeaders: 'Content-Type,Authorization'
 }
 
-export { verifySession, verifySocket, wrap, sessionMiddleware, corsConfig, updateSessionPath }
+export { verifySession, verifySocket, wrap, runSessionMiddleware, corsConfig, updateSessionPath }

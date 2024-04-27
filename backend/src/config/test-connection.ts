@@ -15,6 +15,7 @@ dotenv.config();
  * It spins up a new in-memory database server.
  */
 const connectDatabase = async () => {
+
 	const mongoServer = await MongoMemoryServer.create();
 
 	const uri = mongoServer.getUri();
@@ -26,6 +27,8 @@ const connectDatabase = async () => {
 	const client = await mongoose.connect(uri);
 
 	process.env.DB_URI = uri;
+
+	console.log(uri)
 
 	client.connection.on("close", () => {
 		mongoServer.stop();

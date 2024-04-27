@@ -1,8 +1,8 @@
 import mongoose, { ObjectId } from "mongoose";
 
 
-import { MeetingModel, UserModel } from "../../models";
-import { Meeting, Section } from "index";
+import { UserModel } from "../../models";
+import { Meeting } from "index";
 
 import { Response as res } from "../utils.service";
 
@@ -86,6 +86,7 @@ export class MethodMeetingService extends mongoose.Model<Meeting> {
         return res.status(200).json({ message: "User added" });
     }
 
+<<<<<<< Updated upstream
     /**
      * Section
     */
@@ -200,6 +201,8 @@ export class MethodMeetingService extends mongoose.Model<Meeting> {
     /**
      * Paragraph
     */
+=======
+>>>>>>> Stashed changes
     addQuestion (sectionID: number) {
         const newQuestion = {
             id: this.sections[sectionID].contains.length,
@@ -219,37 +222,4 @@ export class MethodMeetingService extends mongoose.Model<Meeting> {
         return res.status(200).json({ message: "Question removed" });
     }
 
-    addAnswer (sectionID: number, questionID: number, answer: any) {
-        this.sections[sectionID].contains[questionID].responses.push(answer);
-
-        return res.status(200).json({ message: "Answer added" });
-    }
-
-    removeAnswer (sectionID: number, questionID: number, answerID: number) {
-        const newAnswers = this.sections[sectionID].contains[questionID].responses.filter((answer: any) => answer.id !== answerID);
-        this.sections[sectionID].contains[questionID].responses = newAnswers;
-
-        return res.status(200).json({ message: "Answer removed" });
-    }
-
-    async addComment (sectionID: number, paragraphID: number, comment: any) {
-        this.sections[sectionID].contains[paragraphID].comments.push(comment);
-
-        return res.status(200).json({ message: "Comment added" });
-    }
-
-    async removeComment (sectionID: number, paragraphID: number, commentID: number) {
-        const newComments = this.sections[sectionID].contains[paragraphID].comments.filter((comment: any) => comment.id !== commentID);
-        this.sections[sectionID].contains[paragraphID].comments = newComments;
-
-        return res.status(200).json({ message: "Comment removed" });
-    }
-
-    async addImage (sectionID: number) {
-        // Add image
-    }
-
-    async removeImage (sectionID: number, imageID: number) {
-        // Remove image
-    }
 }

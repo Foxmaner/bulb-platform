@@ -1,5 +1,11 @@
 import { Schema } from "mongoose";
-import { MethodMeetingService, StaticMeetingService } from "../services"
+import { 
+    MethodMeetingService, 
+    StaticMeetingService,
+    MethodImageService,
+    MethodParagraphService,
+    MethodSectionService,
+} from "../services"
 
 import BaseModel from "./base.model";
 
@@ -8,8 +14,13 @@ import { Meeting } from "index";
 import Utils from "./utils";
 import { MemberAccessLevel } from "accessLevels";
 
+type Methods = (
+    MethodMeetingService | 
+    MethodImageService | 
+    MethodParagraphService | 
+    MethodSectionService) & Function;
 
-class MeetingModel extends BaseModel<Meeting, typeof StaticMeetingService, typeof MethodMeetingService> {
+class MeetingModel extends BaseModel<Meeting, typeof StaticMeetingService, Methods> {
     constructor() {  
         const meetingSchema = {
             name: {
@@ -37,7 +48,12 @@ class MeetingModel extends BaseModel<Meeting, typeof StaticMeetingService, typeo
             name: 'Meeting',
             schema: meetingSchema,
             staticMethods: StaticMeetingService,
-            methods: MethodMeetingService
+            methods: [
+                MethodMeetingService,
+                MethodImageService,
+                MethodParagraphService,
+                MethodSectionService
+            ] as any[]
         });
     }
     
