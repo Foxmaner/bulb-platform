@@ -99,26 +99,36 @@ export class MeetingController {
     }
 
     static async create(req: any, res: Response) {
+        console.log(">>> Create function start");
+
         const userID = req.session.passport.user
         const respUser = await UserModel.get(userID);
         const user = respUser.body.user;
 
+        console.log(">>> Create meeting called!!!")
+
         if(respUser.statusCode != 200){
+            console.log(">>> Gonna return 401 :(");
             return res.status(401).json( respUser.body)
         }
 
         const resp = await user.createMeeting(req.body);        
         
+        console.log(">>> Meeting created");
 
         if(process.env.DEBUG == "true"){
             console.log(resp.body)
         }
 
         if(resp.statusCode != 201){
-            return res.status(400).json(resp.body)
-        }
+            console.log(">>> Gonna return 400 :(");
 
-        res.status(201).json({ message: "meeting created", meeting: resp.body });
+            return res.status(400).json(resp.body)
+        }       
+        
+        console.log(">>> Gonna return 201 :)");
+
+        return res.status(201).json({ message: "meeting created", meeting: resp.body });
     }
 
     static async renameMeeting(req: any, res: Response){

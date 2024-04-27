@@ -10,36 +10,33 @@ export default class Utils {
         return new Schema({
             _id: Number,
             title: String,
-            contains: { type: [this.paragraphSchema()], default: [] },
-            sectionHistory: { type: [this.sectionHistorySchema()], default: [] }
+            contains: { type: [this.questionSchema()], default: [] },
+            sectionHistory: { type: [this.questionSchema()], default: [] },
+            dateCreated: Date,
+            dateDeleted: { type: Date, default: null }
         })
     }
 
     static paragraphSchema () {
         return new Schema({
-            _id: Number,
+            id: Number,
             text: String,
             paragraphHistory: [],
-            comments: []
+            comments: [],
+            dateCreated: Date,
+            dateDeleted: { type: Date, default: null }
         })
     }
 
     static questionSchema () {
         return new Schema({
             id: Number,
-            responses: [],
+            responses: { type: [], default: null },
             questionText: this.paragraphSchema(),
-            summaryText: this.paragraphSchema(),
-            questionHistory: []
-        })
-    }
-
-    static sectionHistorySchema() {
-        return new Schema({
-            userID: Schema.Types.ObjectId,
-            date: Date,
-            change: String,
-            added: Boolean
+            summaryText: {type: this.paragraphSchema(), default: null},
+            questionHistory: [],
+            dateCreated: Date,
+            dateDeleted: { type: Date, default: null }
         })
     }
 }

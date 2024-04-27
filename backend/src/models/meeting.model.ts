@@ -21,15 +21,16 @@ class MeetingModel extends BaseModel<Meeting, typeof StaticMeetingService, typeo
                 required: [true, "The meeting name is required."]
             },
             progress: { type: Number, default: 0 },
-            completed: { type: Boolean, default: true },
+            completed: { type: Boolean, default: false },
             date: {
                 type: Date,
                 required: [true, "The creation date is required."]
             },
             mainDocumentSections: { type: [Utils.sectionSchema()], default: [] },
             summaryDocumentSections: { type: {}, default: [] },
-            meetingHistory: { type: [MeetingModel.meetingHistorySchema()], default: [] },
-            members: { type: [MeetingModel.memberSchema()], default: [] }
+            meetingHistory: { type: [Utils.sectionSchema()], default: [] },
+            members: { type: [MeetingModel.memberSchema()], default: [] },
+            published: { type: Boolean, default: false }
         };
         
         super({
@@ -60,17 +61,6 @@ class MeetingModel extends BaseModel<Meeting, typeof StaticMeetingService, typeo
                 }
             }
         } 
-    }
-
-    static meetingHistorySchema() {
-        return {
-            meetingHistory: {
-                userID: Schema.Types.ObjectId,
-                date: Date,
-                sectionID: Schema.Types.ObjectId,
-                added: Boolean
-            }
-        }
     }
 
 }
