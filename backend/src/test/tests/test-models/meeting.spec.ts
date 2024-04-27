@@ -82,8 +82,6 @@ class MeetingTests {
 
 		const resp = await user.createMeeting({name: "Meeting 1"});
 
-		console.log(resp);
-
 		// Check if the company was created
 		const meetings = await MeetingModel.find();
 
@@ -160,8 +158,6 @@ class MeetingTests {
 
 		// Check no meeting was created
 		const meetings = await MeetingModel.find({});
-
-		console.log(resp.body);
 
 		expect(resp.statusCode).toBe(404);
 		expect(meetings.length).toBe(1);

@@ -8,8 +8,8 @@ function connectionHandler(socket: any): void {
         console.log(`User with ID : ${socket.id} disconnected`);
     });
 
-    socket.on('join_room', (data) => {
-        SocketController.join_room(socket, data);
+    socket.on('join_room', (roomID) => {
+        SocketController.join_room(socket, roomID);
     });
 
     socket.on('cursor_movement', (data) =>{

@@ -19,7 +19,7 @@ export class SocketController {
         const meeting = respMeeting.body.meeting;
         const res = await meeting.addSection();
         const section = res.body;
-        socket.broadcast.to(data.meetingID).emit('section_created', section);
+        socket.broadcast.to(data.meetingID).emit('section_created', {section});
     }
 
     static async delete_section(socket, data){
@@ -34,7 +34,7 @@ export class SocketController {
         const meeting = respMeeting.body.meeting;     
         const res = await meeting.addParagaraph(data.sectionID);
         const paragraph = res.body;
-        socket.broadcast.to(data.meetingID).emit('paragraph_created', paragraph);
+        socket.broadcast.to(data.meetingID).emit('paragraph_created', {paragraph});
     }
 
     static async delete_paragraph(socket, data: IParagraph){
@@ -48,17 +48,19 @@ export class SocketController {
         
         const respMeeting = await MeetingModel.get(data.meetingID);
         const meeting = respMeeting.body.meeting;
-        const paragraph = await meeting.getParagraph(data.sectionID, data.parahraphID)
-        
-        const [newText, _] = dmp.patch_apply(data.patches, paragraph.text);
+        const paragraph = await meeting.getParagraph(data.sectionID, data.paragraphID)
+        const [newText, success] = dmp.patch_apply(data.patches, paragraph.text);
 
+        if(!success){
+            return
+        }
 
-        paragraph.pushParagraphHistory({
+        await paragraph.editPargraphText(newText, data.sectionID, data.paragraphID);
+
+        await paragraph.pushParagraphHistory({
             user: socket.id,
             patch: data.patches
         });
-
-        paragraph.text = newText;
 
         socket.to(socket.id).emit("document_content", data);
     };
