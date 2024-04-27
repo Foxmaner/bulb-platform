@@ -5,17 +5,17 @@ declare module "index" {
         progress?: number,
         completed?: boolean,
         date: Date,
-        mainDocumentSections?: [Section],
-        summaryDocumentSections?: [Section, Integer],
-        meetingHistory?: [MeetingHistory],
+        sections?: [Section],
+        summerySections?: [Section, Integer],
+        history?: [MeetingHistory],
         members?: [Member]
     }
 
     type Template = {
         name: string,
         date: Date,
-        mainDocumentSections?: [Section],
-        summaryDocumentSections?: [Section, Integer]
+        sections?: [Section],
+        summerySections?: [Section, Integer]
     }
 
     type User = {
@@ -39,7 +39,7 @@ declare module "index" {
     type Section = {
         title: string,
         contains: (Paragraph | Question | Image)[],
-        sectionHistory: []
+        history: []
     }
     
     type SectionHistory = {
@@ -49,11 +49,16 @@ declare module "index" {
         added: boolean
     }
     
+    type Text = {
+        text: string,
+        textHistory?: [ParagraphHistory],
+        comments?: [Comment]
+    }
+
     type Paragraph = {
-        id: Integer,
-        text: String,
-        paragraphHistory: [ParagraphHistory],
-        comments: [Comment]
+        _id?: Integer,
+        title: Text,
+        body: Text
     }
     
     type ParagraphHistory = {
@@ -89,9 +94,12 @@ declare module "index" {
     type Answer = {
         xCoord: number,
         yCoord: number,
-        size: number,
-        text: Paragraph,
-        image: Image
+        size?: number,
+        content: Paragraph,
+        _id?: number,
+        dateCreated?: Date,
+        createdBy: String,
+        image?: Image
     }
     
     type Image = {

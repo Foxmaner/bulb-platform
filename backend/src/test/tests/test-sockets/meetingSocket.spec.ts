@@ -98,7 +98,7 @@ class MeetingTest {
             })
 
             const resp2 = await req.get(`/meeting/${meetingID}`);
-            const section = resp2.body.meeting.mainDocumentSections[0];
+            const section = resp2.body.meeting.sections[0];
             const sectionID = section._id;
             const paramsCreate = {meetingID, sectionID}
             socket2.emit("paragraph_create", paramsCreate);
@@ -111,7 +111,7 @@ class MeetingTest {
             })
 
             const resp3 = await req.get(`/meeting/${meetingID}`);
-            const tmp = resp3.body.meeting.mainDocumentSections;
+            const tmp = resp3.body.meeting.sections;
             const paragraphID = tmp[0].contains[0]._id;
             const patches = [{
                 diffs: [ [ 1, 'Hello World!' ] ],

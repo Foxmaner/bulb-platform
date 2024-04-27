@@ -15,7 +15,9 @@ import { Response as res } from "../../utils.service";
 export class MethodSectionService extends mongoose.Model<Meeting> {
 
     async addSection (name: string = "Untitled Section") {
-        var _id = Math.max(...this.mainDocumentSections.map((section: any) => section._id)) + 1;
+        var _id = Math.max(...this.sections.map((section: any) => section._id),
+            ...this.history.map((p: any) => p._id)
+        ) + 1;
         if (_id < 0) {
             _id = 1;
         }
@@ -26,7 +28,7 @@ export class MethodSectionService extends mongoose.Model<Meeting> {
             "dateCreated": Date()
         }
 
-        await this.updateOne({ $push: { mainDocumentSections: section } });
+        await this.updateOne({ $push: { sections: section } });
 
         return res.status(200).json(section);
     }
@@ -34,8 +36,8 @@ export class MethodSectionService extends mongoose.Model<Meeting> {
     async removeSection (sectionID: number) {
         await this.updateOne(
             { 
-                $push: { meetingHistory: { mainDocumentSections: { _id: sectionID } } },
-                $pull: { mainDocumentSections: { _id: sectionID } } 
+                $push: { history: { sections: { _id: sectionID } } },
+                $pull: { sections: { _id: sectionID } } 
             }
         );
 

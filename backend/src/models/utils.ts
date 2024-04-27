@@ -11,7 +11,7 @@ export default class Utils {
             _id: Number,
             title: String,
             contains: { type: [this.paragraphSchema()], default: [] },
-            sectionHistory: { type: [this.paragraphSchema()], default: [] },
+            history: { type: [this.paragraphSchema()], default: [] },
             dateCreated: Date,
             dateDeleted: { type: Date, default: null }
         })
@@ -20,7 +20,7 @@ export default class Utils {
     static textSchema () {
         return {
             text: { type: String, default: "" },
-            textHistory: { type: [], default: [] },
+            history: { type: [], default: [] },
             comments: { type: [], default: [] }
         }
     }
@@ -31,7 +31,7 @@ export default class Utils {
             responses: { type: [], default: null },
             title: this.textSchema(),
             body: this.textSchema(),
-            paragraphHistory: { type: [], default: [] },
+            history: { type: [], default: [] },
             dateCreated: Date,
             dateDeleted: { type: Date, default: null }
         })

@@ -3,6 +3,7 @@ import { MeetingModel, CompanyModel, UserModel } from "../../../models";
 import mongoose, { ObjectId } from 'mongoose';
 
 import { TestDecorators } from "../../utils";
+import { Answer } from "index";
 
 
 
@@ -50,9 +51,9 @@ class MeetingTests {
 			progress: 0,
 			completed: false,
 			date,
-			mainDocumentSections: [],
-			summaryDocumentSections: [],
-			meetingHistory: [],
+			sections: [],
+			summerySections: [],
+			history: [],
 			members: []
 		}
 
@@ -185,14 +186,14 @@ class MeetingTests {
 	
 		const meetingWithSection = await MeetingModel.findOne({ name: "Meeting 1" });
 
-		expect(meetingWithSection.mainDocumentSections.length).toBe(1);
+		expect(meetingWithSection.sections.length).toBe(1);
 
-		await meetingWithSection.removeSection(meetingWithSection.mainDocumentSections[0]._id);
+		await meetingWithSection.removeSection(meetingWithSection.sections[0]._id);
 
 		const meetingWithoutSection = await MeetingModel.findOne({ name: "Meeting 1" });
 
-		expect(meetingWithoutSection.mainDocumentSections.length).toBe(0);
-		expect(meetingWithoutSection.meetingHistory.length).toBe(1);
+		expect(meetingWithoutSection.sections.length).toBe(0);
+		expect(meetingWithoutSection.history.length).toBe(1);
 	}
 
 	/**
@@ -214,11 +215,11 @@ class MeetingTests {
 	
 		const meetingWithSections = await MeetingModel.findOne({ name: "Meeting 1" });
 
-		expect(meetingWithSections.mainDocumentSections.length).toBe(3);
+		expect(meetingWithSections.sections.length).toBe(3);
 
-		expect (meetingWithSections.mainDocumentSections[0]._id).not.toBe(meetingWithSections.mainDocumentSections[1]._id);
-		expect (meetingWithSections.mainDocumentSections[1]._id).not.toBe(meetingWithSections.mainDocumentSections[2]._id);
-		expect (meetingWithSections.mainDocumentSections[2]._id).not.toBe(meetingWithSections.mainDocumentSections[0]._id);
+		expect (meetingWithSections.sections[0]._id).not.toBe(meetingWithSections.sections[1]._id);
+		expect (meetingWithSections.sections[1]._id).not.toBe(meetingWithSections.sections[2]._id);
+		expect (meetingWithSections.sections[2]._id).not.toBe(meetingWithSections.sections[0]._id);
 	}
 
 	/*
@@ -237,12 +238,12 @@ class MeetingTests {
 		const addSection2Resp = await meeting2.addSection("Section in 2")
 		var meeting2 = await MeetingModel.findOne({ name: "Meeting 2" });
 
-		expect(meeting1.mainDocumentSections.length).toBe(1);
-		expect(meeting2.mainDocumentSections.length).toBe(1);
+		expect(meeting1.sections.length).toBe(1);
+		expect(meeting2.sections.length).toBe(1);
 	}
 
 	/**
-	 * Get add section to meeting
+	 * Get add paragraph to section
 	 */
 	@TestDecorators.test("Add and remove paragraph to meeting")
 	async addParagraphToSection() {
@@ -254,25 +255,78 @@ class MeetingTests {
 		await meeting.addSection();
 
 		const meetingWithSection = await MeetingModel.findOne({ name: "Meeting 1" });
-		expect(meetingWithSection.mainDocumentSections.length).toBe(1);
+		expect(meetingWithSection.sections.length).toBe(1);
 
 		// Add the paragraph
-		await meetingWithSection.addParagraph(meetingWithSection.mainDocumentSections[0]._id);
+		await meetingWithSection.addParagraph(meetingWithSection.sections[0]._id);
 		const meetingWithParagraph = await MeetingModel.findOne({ name: "Meeting 1" });
-		console.log(meetingWithParagraph);
-		expect(meetingWithParagraph.mainDocumentSections[0].contains.length).toBe(1);
-
-		console.log(meetingWithParagraph.mainDocumentSections[0].contains)
+		expect(meetingWithParagraph.sections[0].contains.length).toBe(1);
 
 		//Remove the paragraph
-		//console.log("Deleting paragraph " + meetingWithParagraph.mainDocumentSections[0].contains[0]._id + " of section " + meetingWithParagraph.mainDocumentSections[0]._id);
-		await meetingWithParagraph.removeParagraph(meetingWithParagraph.mainDocumentSections[0]._id, meetingWithParagraph.mainDocumentSections[0].contains[0]._id);
+		//console.log("Deleting paragraph " + meetingWithParagraph.sections[0].contains[0]._id + " of section " + meetingWithParagraph.sections[0]._id);
+		await meetingWithParagraph.removeParagraph(meetingWithParagraph.sections[0]._id, meetingWithParagraph.sections[0].contains[0]._id);
 		const meetingWithoutParagraph = await MeetingModel.findOne({ name: "Meeting 1" });
 		
-		console.log("sectionhistory", meetingWithoutParagraph.mainDocumentSections[0].sectionHistory)
+		console.log("sectionhistory", meetingWithoutParagraph.sections[0].history)
 		
 		//console.log(meetingWithoutParagraph);
-		expect(meetingWithoutParagraph.mainDocumentSections[0].contains.length).toBe(0);
-		expect(meetingWithoutParagraph.mainDocumentSections[0].sectionHistory.length).toBe(1);
+		expect(meetingWithoutParagraph.sections[0].contains.length).toBe(0);
+		expect(meetingWithoutParagraph.sections[0].history.length).toBe(1);
+	}
+
+	/**
+	 * Get add answer to section
+	 */
+	@TestDecorators.test("Add and remove answer to paragraph") 
+	async addAnwserToParagraph() {
+		const user1 = await MeetingTests.createUser("User 1");
+		const resp = await user1.createMeeting({ name: "Meeting 1"});
+
+		const meeting = resp.body;
+		await meeting.addSection();
+
+		const meetingWithSection = await MeetingModel.findOne({ name: "Meeting 1" });
+		expect(meetingWithSection.sections.length).toBe(1);
+
+		// Add the paragraph
+		await meetingWithSection.addParagraph(meetingWithSection.sections[0]._id);
+		const meetingWithParagraph = await MeetingModel.findOne({ name: "Meeting 1" });
+		expect(meetingWithParagraph.sections[0].contains.length).toBe(1);
+
+		const answer: Answer = {
+			xCoord: 0,
+			yCoord: 0,
+			content: {
+				title: {
+					text: "test title"
+				},
+				body: {
+					text: "test body"
+				},
+			},
+			createdBy: "User 1"
+		}
+
+		await meetingWithParagraph.addAnswer(
+			meetingWithSection.sections[0]._id,
+			meetingWithParagraph.sections[0].contains[0.]._id,
+			answer
+		);
+
+		const meetingWithAnswer = await MeetingModel.findOne({ name: "Meeting 1" });
+		expect(meetingWithAnswer.sections[0].contains[0].responses.length).toBe(1);
+	
+		console.log(meetingWithAnswer.sections[0].contains[0])
+
+		await meetingWithAnswer.removeAnswer(
+			meetingWithParagraph.sections[0]._id, 
+			meetingWithParagraph.sections[0].contains[0]._id,
+			meetingWithAnswer.sections[0].contains[0].responses[0]._id
+		);
+		
+		const meetingWithoutAnswer = await MeetingModel.findOne({ name: "Meeting 1" });
+
+		expect(meetingWithoutAnswer.sections[0].contains[0].responses.length).toBe(0);
+	
 	}
 }
