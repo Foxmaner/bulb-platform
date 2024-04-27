@@ -1,5 +1,5 @@
 import { Socket } from 'socket.io';
-import { SocketController,  } from '../controllers';
+import { SocketController, BrainstormController  } from '../controllers';
 
 function connectionHandler(socket: any): void {
     console.log(`User connected with ID: ${socket.id}`);
@@ -12,12 +12,20 @@ function connectionHandler(socket: any): void {
         SocketController.join_room(socket, data);
     });
 
-    socket.on('cursor_movement', (data, meetingID) =>{
-        SocketController.cursor_move(socket, data, meetingID);
+    socket.on('cursor_movement', (data) =>{
+        BrainstormController.cursor_move(socket, data);
     });
 
     socket.on('notes_movement', (data) =>{
-        SocketController.notes_move(socket,data);
+        BrainstormController.notes_move(socket,data);
+    });
+
+    socket.on('create_note', (data) =>{
+        BrainstormController.create_note(socket, data);
+    });
+
+    socket.on('delete_note', (data) =>{
+        BrainstormController.delete_note(socket,data);
     });
 
     socket.on("section_create", (data) => {

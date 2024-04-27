@@ -1,7 +1,7 @@
 import { Paragraph } from "index";
 import { MeetingModel } from "../../models";
 import diff_match_patch from 'diff-match-patch';
-import { IParagraph, ISection, IParagraphEdit, ICursor } from "socket";
+import { IParagraph, ISection, IParagraphEdit, ICursor, INote } from "socket";
 import { Socket } from "socket.io";
 
 const dmp = new diff_match_patch();
@@ -62,16 +62,4 @@ export class SocketController {
 
         socket.to(socket.id).emit("document_content", data);
     };
-
-    static async cursor_move(socket: Socket, data: ICursor, meetingID){
-        const user = socket.id;
-        const out = { user: user, cursorPosition: data };
-        socket.broadcast.to(meetingID).emit('cursor_moved',  out);
-    } 
-
-    static async notes_move(socket: Socket, data: ICursor){
-        const out = {notesPosition: data};
-        socket.broadcast.emit('notes_moved', out);
-    }
-
 }
