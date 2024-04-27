@@ -10,8 +10,8 @@ export default class Utils {
         return new Schema({
             _id: Number,
             title: String,
-            contains: { type: [this.paragraphSchema()], default: [] },
-            sectionHistory: { type: [this.paragraphSchema()], default: [] },
+            contains: { type: [this.questionSchema()], default: [] },
+            sectionHistory: { type: [this.questionSchema()], default: [] },
             dateCreated: Date,
             dateDeleted: { type: Date, default: null }
         })
@@ -19,7 +19,7 @@ export default class Utils {
 
     static paragraphSchema () {
         return new Schema({
-            _id: Number,
+            id: Number,
             text: String,
             paragraphHistory: [],
             comments: [],
@@ -31,9 +31,9 @@ export default class Utils {
     static questionSchema () {
         return new Schema({
             id: Number,
-            responses: [],
+            responses: { type: [], default: null },
             questionText: this.paragraphSchema(),
-            summaryText: this.paragraphSchema(),
+            summaryText: {type: this.paragraphSchema(), default: null},
             questionHistory: [],
             dateCreated: Date,
             dateDeleted: { type: Date, default: null }

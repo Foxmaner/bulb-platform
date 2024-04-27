@@ -163,20 +163,27 @@ export class MethodMeetingService extends mongoose.Model<Meeting> {
         }
 
         const newParagraph = {
-            _id,
-            text: "",
-            paragraphHistory: [],
-            comments: []
+            "id": _id as Number,
+            "text": "",
+            "paragraphHistory": [],
+            "comments": [],
+            "dateCreated": Date()
         };
 
-        const sectionIndex = this.mainDocumentSections.findIndex((section) => section._id == sectionID);
-
+        /* console.log(newParagraph);
         await this.updateOne(
             { $push: { "mainDocumentSections.$[element].contains": newParagraph } },
-            { arrayFilters: [ { element: sectionIndex } ] }
-        );
+            { arrayFilters: [ { "element._id": section._id } ] }
+        );*/
+
+        section.contains.push(newParagraph);
+        await this.save();
+
+        console.log(this.mainDocumentSections[0].contains[0]);
+
+        console.log("Paragraph added");
     
-        return res.status(200).json(newParagraph._id);
+        return res.status(200).json(newParagraph.id);
     }
 
     async removeParagraph (sectionID: number, paragraphID: number) {
