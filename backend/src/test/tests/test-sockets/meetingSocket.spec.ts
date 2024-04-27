@@ -60,6 +60,8 @@ class MeetingTest {
             name: 'testMeeting',
         })
 
+        console.log(resp.body)
+
         const meetingID = resp.body.meeting._id;
 
         const socket1 = await openSocket();
@@ -110,8 +112,7 @@ class MeetingTest {
 
             const resp3 = await req.get(`/meeting/${meetingID}`);
             const tmp = resp3.body.meeting.mainDocumentSections;
-            console.log(tmp)
-            const parahraphID = tmp[0].contains[0]._id;
+            const paragraphID = tmp[0].contains[0]._id;
             const patches = [{
                 diffs: [ [ 1, 'Hello World!' ] ],
                 start1: 0,
@@ -119,7 +120,7 @@ class MeetingTest {
                 length1: 0,
                 length2: 12
             }]
-            const paramEdit : IParagraphEdit = {meetingID, sectionID, parahraphID, patches}
+            const paramEdit : IParagraphEdit = {meetingID, sectionID, paragraphID, patches}
             socket2.emit("paragraph_edit", paramEdit);
 
         });

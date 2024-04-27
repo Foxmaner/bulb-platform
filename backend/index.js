@@ -15,4 +15,5 @@ process.env.NODE_ENV = 'DEV';
 
 const { httpServer } = app.run();
 
+console.log(httpServer)
 httpServer.listen(port, () => console.log(`server listening on port : ${port}`));

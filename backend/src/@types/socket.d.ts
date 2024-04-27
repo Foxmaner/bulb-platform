@@ -12,7 +12,7 @@ declare module "socket" {
     interface IParagraphEdit {
         meetingID: string,
         sectionID: string,
-        parahraphID: string,
+        paragraphID: string,
         patches: any,
     }
 

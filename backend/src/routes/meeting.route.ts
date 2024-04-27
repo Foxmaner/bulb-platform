@@ -17,7 +17,7 @@ routes.delete('/delete/:id', MeetingController.delete);
 
 routes.put('/rename/:id', MeetingController.renameMeeting);
 
-routes.post('/publish/:id', MeetingController.publish);
+routes.put('/publish/:id', MeetingController.publish);
 
 routes.get('/:id', MeetingController.id);
 
