@@ -50,13 +50,13 @@ const statusOptions = [
 
 
 
-export default function meetingPage() {
+export default function MeetingPage() {
 	const [statusFilter, setStatusFilter] = useState<Selection>("all");
 
 	return (
 		<div className="flex-col h-[calc(100vh-2rem)] w-full bg-white border m-4 rounded-lg">
 			<PageHeader contentTitle="Users" buttenMenu={false} />
-			<div className="h-[80%]">
+			<div className="h-[70%]">
 				<TableView<User>
 					name="Users"
 					defaultVisibleColumns={["name", "role", "status", "actions"]}

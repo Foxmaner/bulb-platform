@@ -1,16 +1,22 @@
 "use client";
+
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { useRef, useState } from "react";
 
+import './calender.css';
 
 import {
+    Button,
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
     Selection,
     useDisclosure
 } from "@nextui-org/react";
-import { parseDate } from "@internationalized/date";
+
 
 import {
     EventSourceInput,
@@ -24,14 +30,14 @@ const INITIAL_EVENTS = [
     {
         id: 123,
         title: "All-day event",
-        start: "2024-04-21T00:00:00",
-        allDay: false,
+        start: "2024-04-21T11:00:00",
+        end: "2024-04-21T12:00:00"
     },
     {
         id: 456,
         title: "Timed event",
-        start: "2024-04-22T00:00:00",
-        allDay: false,
+        start: "2024-04-22T10:00:00",
+        end: "2024-04-22T12:00:00"
     },
 ];
 
@@ -46,7 +52,24 @@ export default function Calender() {
     const ref = useRef<FullCalendar>(null);
     const [event, setEvent] = useState<Event>();
     const [allEvents, setAllEvents] = useState<Event[]>(INITIAL_EVENTS);
-    const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+
+    const createEvent = (event: Event) => {
+        setAllEvents([...allEvents, event]);
+    }
+
+    const handleEventClick = (arg: any) => {
+
+        setEvent({
+            title: arg.event.title,
+            start: new Date(arg.event.start),
+            end: new Date(arg.event.end),
+            id: arg.event.id,   
+        });
+
+        onOpen();
+
+    };
 
     const handleDateClick = (arg: any) => {
         const newId = id + 1;
@@ -54,10 +77,9 @@ export default function Calender() {
         setId(newId);
 
         setEvent({
-            title: "Untitled",
+            title: "",
             start: new Date(arg.start),
             end: new Date(arg.end),
-            allDay: false,
             id: newId,   
         });
 
@@ -68,17 +90,67 @@ export default function Calender() {
         const calApi = ref.current?.getApi();
 
         if (calApi) {
+            const [day, month] = text.slice(3).split("/");
+            const year = calApi.getDate().getFullYear()
+
             setSelectedViews(new Set(["timeGridDay"]));
             calApi.changeView("timeGridDay");
-            calApi.gotoDate(new Date(text));
+            calApi.gotoDate(new Date(`${year}/${day}/${month}`));
         }
     };
 
+    const handleCloseCreateEvent = () => {
+        const calApi = ref.current?.getApi();
+
+        if (calApi) {
+            calApi.unselect();
+        }
+    }
+
+    const handleQtip = (eventInfo: any) => {
+        let open;
+
+        console.log("TITLE", eventInfo.event.title)
+
+        if (event?.title === eventInfo.event.title || !eventInfo.event.title) {
+            open = isOpen
+        } else {
+            open = false;
+        }
+
+        return (
+            <Popover isOpen={open} onOpenChange={() => {
+                if (open) {
+                    onClose();
+                    handleCloseCreateEvent();
+                }
+            }} placement="right" showArrow={true} radius="sm" shadow="lg">
+                <PopoverTrigger>
+                    <Button className="flex flex-col h-full w-full bg-transparent z-50 rounded-none items-start justify-start p-1">
+                        <h1 className="text-white">
+                            {eventInfo.event.title === "" ? "(Ingen titel)" : eventInfo.event.title}
+                        </h1>
+                        <p className="text-white -mt-2 font-thin text-xs">
+                            {eventInfo.timeText}
+                        </p>
+                    </Button>
+                </PopoverTrigger>
+                <PopoverContent className="p-0">
+                    <CalenderEvent 
+                        unselect={handleCloseCreateEvent}
+                        isOpen={isOpen} 
+                        onOpenChange={onOpenChange}
+                        event={event} 
+                        createEvent={createEvent}
+                    />
+                </PopoverContent>
+            </Popover>
+        )
+    }
 
     return (
         <>
             <main className="flex flex-col border-1 border-edge items-center w-full bg-white m-4 p-4 rounded-lg">
-                <CalenderEvent isOpen={isOpen} onOpenChange={onOpenChange} event={event} />
                 <CalendarHeader
                     setSelectedViews={setSelectedViews}
                     selectedViews={selectedViews}
@@ -86,6 +158,7 @@ export default function Calender() {
                 />
                 <div className=" text-primary h-[55vh] w-[82vw]">
                     <FullCalendar
+                        eventContent={handleQtip}
                         ref={ref}
                         plugins={[
                             dayGridPlugin,
@@ -124,35 +197,39 @@ export default function Calender() {
                                     >
                                         {text.slice(0, 3)}
                                     </p>
-                                    <h1
-                                        onClick={() => handleSelectDay(text)}
-                                        className={`font-bold py-1.5 px-2 m-0 ${
-                                            isToday
-                                                ? "text-white bg-secondary hover:bg-opacity-90"
-                                                : "hover:bg-easyGrey"
-                                        } cursor-pointer rounded-full`}
-                                    >
-                                        {isToday
-                                            ? text.slice(6, 8)
-                                            : text.split("/")[1]}
-                                    </h1>
+                                    {
+                                        ref.current?.getApi()?.view.type === "timeGridWeek" && (<h1
+                                            onClick={() => handleSelectDay(text)}
+                                            className={`font-bold py-1.5 px-2 m-0 ${
+                                                isToday
+                                                    ? "text-white bg-secondary hover:bg-opacity-90"
+                                                    : "hover:bg-easyGrey"
+                                            } cursor-pointer rounded-full`}
+                                        >
+                                            {isToday
+                                                ? text.slice(6, 8)
+                                                : text.split("/")[1]}
+                                        </h1>)
+                                    }
+                                    
                                 </div>
                             );
                         }}
-                        nowIndicatorClassNames={"text-primary"}
-                        viewClassNames={"bg-white"}
-                        dayCellClassNames={"bg-white"}
+   
                         initialView="timeGridWeek"
                         eventBackgroundColor="#8B4270"
                         events={allEvents as EventSourceInput}
-                        editable={true}
-                        droppable={true}
+                        editable={false}
                         nowIndicator={true}
                         selectable={true}
                         selectMirror={true}
 
+                        unselectAuto={false}
                         select={handleDateClick}
-                        eventClick={handleDateClick}
+                        unselect={() => {
+                            return false;
+                        }}
+                        eventClick={handleEventClick}
                     />
                 </div>
             </main>

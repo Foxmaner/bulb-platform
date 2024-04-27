@@ -69,10 +69,8 @@ TableViewProps<T>) {
 	const headerColumns = useMemo(() => {
 		if (visibleColumns === "all") return columns;
 
-		console.log(visibleColumns);
-
 		return columns.filter((column) => Array.from(visibleColumns).includes(column.uid));
-	}, [visibleColumns]);
+	}, [columns, visibleColumns]);
 
 	const filteredItems = useMemo(() => {
 		let filteredData = [...data];
@@ -104,7 +102,7 @@ TableViewProps<T>) {
 		}
 
 		return filteredData;
-	}, [data, filterValue, externalFilters]);
+	}, [data, hasSearchFilter, searchFilter, filterValue, externalFilters]);
 
 	const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -154,7 +152,7 @@ TableViewProps<T>) {
 		}
 
 		return (<p>{cellValue}</p>);
-	}, []);
+	}, [specificComponents]);
 
 	const onNextPage = useCallback(() => {
 		if (page < pages) {
@@ -297,7 +295,7 @@ TableViewProps<T>) {
 
 	const classNames = useMemo(
 		() => ({
-			wrapper: "h-[60vh] overflow-y-scroll border-none shadow-none bg-none m-0 p-0 rounded-none",
+			wrapper: "h-[48vh] overflow-y-scroll border-none shadow-none bg-none m-0 p-0 rounded-none",
 			th: ["bg-primaryGrey", "rounded-none", "text-textTitle", "-mt-0", "mb-4", "border-y", "border-edge"],
 			td: [
 				"border-t cursor-pointer",
