@@ -2,21 +2,16 @@ import {
     Button,
     DatePicker,
     Input,
-    Modal,
-    ModalBody,
-    ModalContent,
-    ModalHeader,
     Autocomplete,
     AutocompleteItem,
     Selection,
     ListboxItem,
     User as UserComponent,
     Listbox,
-    Textarea,
-    ModalFooter,
+    Textarea
 } from "@nextui-org/react";
 import { parseDate } from "@internationalized/date";
-import { FormEvent, useMemo, useRef, useState } from "react";
+import { FormEvent, useCallback, useMemo, useRef, useState } from "react";
 import { User } from "index";
 
 import Image from "next/image";
@@ -246,22 +241,20 @@ interface TimeScedule {
 
 interface CalenderEventProps {
     unselect: () => void;
-    isOpen: boolean;
-    onOpenChange: (isOpen: boolean) => void;
+    onOpenChange: (open: number) => void;
     event: Event | undefined;
     createEvent: (event: Event) => void;
 }
 
 export default function CalenderEvent({
     unselect,
-    isOpen,
     onOpenChange,
     event,
     createEvent,
 }: CalenderEventProps) {
     const titleRef = useRef<HTMLInputElement>(null);
-    const [value, setValue] = useState<string>("");
-    const [guests, setGuests] = useState<User[]>([]);
+    const [ value, setValue ] = useState<string>("");
+    const [ guests, setGuests ] = useState<User[]>([]);
 
     const [filteredGuests, setFilteredGuests] = useState(
         users.map((guest) => ({
@@ -291,13 +284,13 @@ export default function CalenderEvent({
         return values;
     }, []);
 
-    const getDefaultDate = (date: Date | string | undefined) => {
+    const getDefaultDate = useCallback((date: Date | string | undefined) => {
         if (!date || typeof date === "string") date = new Date();
 
         return date.toISOString().split("T")[0];
-    };
+    }, []);
 
-    const getDefaultTime = (date: Date | string | undefined) => {
+    const getDefaultTime = useCallback((date: Date | string | undefined) => {
         if (!date) return "";
 
         const time = new Date(date).toLocaleString("en", {
@@ -313,13 +306,14 @@ export default function CalenderEvent({
         if (key) return key.value;
 
         return "1";
-    };
+    }, []);
 
     const handleGuests = (keys: Selection): any => {
         console.log(keys);
     };
 
-    const submitEvent = (e: FormEvent<HTMLFormElement>) => {
+    const submitEvent = useCallback((e: FormEvent<HTMLFormElement>) => {
+        console.log(event);
         if (!event) return;
 
         e.preventDefault();
@@ -332,16 +326,14 @@ export default function CalenderEvent({
         };
 
         createEvent(newEvent);
-        unselect();
-        onOpenChange(false);
+        handleClose();
 
-        return false;
-    };
+    }, [createEvent, event]);
 
-    const handleClose = () => {
+    const handleClose = useCallback(() => {
         unselect();
-        onOpenChange(false);
-    };
+        onOpenChange(0);
+    }, [unselect, onOpenChange]);
 
     return (
         <div className="w-full">
@@ -557,15 +549,16 @@ export default function CalenderEvent({
                         }}
                     />
                 </div>
+
+                <div className="flex flex-row justify-end w-full p-4">
+                    <Button className="mx-2" color="default">
+                        Fler Alternativ
+                    </Button>
+                    <Button color="secondary" type="submit">
+                        Spara
+                    </Button>
+                </div>
             </form>
-            <div className="flex flex-row justify-end w-full p-4">
-                <Button className="mx-2" color="default">
-                    Fler Alternativ
-                </Button>
-                <Button color="secondary" type="submit">
-                    Spara
-                </Button>
-            </div>
         </div>
     );
 }
