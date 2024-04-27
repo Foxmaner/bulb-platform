@@ -30,23 +30,21 @@ export default function CalenderPopover({
         } else {
             setOpen(event.id);
         }
-    }, [ setOpen, open ]);
+    }, [open, event?.id, setOpen]);
 
     return (
-        <Popover aria-label='event' isOpen={open === event.id} onOpenChange={() => {
-            if (open !== event.id) {
-                setOpen(0);
-                handleCloseCreateEvent();
-            }
+        <Popover aria-label='event' isOpen={open === event?.id} onOpenChange={() => {
+            setOpen(0);
+            handleCloseCreateEvent();
         }} placement="right" showArrow={true} radius="sm" shadow="lg">
             <PopoverTrigger>
                 <Button aria-label='event' onClick={() => { console.log(event.id); handleToggleEvent() }} className="flex flex-col h-full w-full bg-transparent z-50 rounded-none items-start justify-start p-1">
                     <h1 className="text-white">
-                        {event.title === "" ? "(Ingen titel)" : event.title}
+                        {event?.title === "" ? "(Ingen titel)" : event?.title}
                     </h1>
-                    <p className="text-white -mt-2 font-thin text-xs">
-                        {new Date(event.start).toLocaleTimeString()} - 
-                        {new Date(event.end).toLocaleTimeString()}
+                    <p className="text-white -mt-2 font-light text-xs">
+                        {new Date(event?.start).toLocaleTimeString('en-US', { hour: '2-digit', hour12: true })} - 
+                        {new Date(event?.end).toLocaleTimeString('en-US', { hour: '2-digit', hour12: true })} 
                     </p>
                 </Button>
             </PopoverTrigger>

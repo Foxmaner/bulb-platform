@@ -306,11 +306,16 @@ export default function CalenderEvent({
         if (key) return key.value;
 
         return "1";
-    }, []);
+    }, [getInitialValues]);
 
     const handleGuests = (keys: Selection): any => {
         console.log(keys);
     };
+
+    const handleClose = useCallback(() => {
+        unselect();
+        onOpenChange(0);
+    }, [unselect, onOpenChange]);
 
     const submitEvent = useCallback((e: FormEvent<HTMLFormElement>) => {
         console.log(event);
@@ -328,12 +333,7 @@ export default function CalenderEvent({
         createEvent(newEvent);
         handleClose();
 
-    }, [createEvent, event]);
-
-    const handleClose = useCallback(() => {
-        unselect();
-        onOpenChange(0);
-    }, [unselect, onOpenChange]);
+    }, [createEvent, event, handleClose]);
 
     return (
         <div className="w-full">
