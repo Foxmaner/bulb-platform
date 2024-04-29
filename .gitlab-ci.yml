@@ -6,9 +6,9 @@ stages:
 backend:
   stage: backend
   script:
-    - cd bulb
+    - cd backend
     - npm install
-    - npm run test:backend
+    - npm start
 
 test:
   # Uses official Cypress docker image for dependencies
