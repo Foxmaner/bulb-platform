@@ -16,7 +16,9 @@ test:
     # Runs tests in parallel and records to Cypress Cloud
     # https://docs.cypress.io/guides/cloud/projects#Set-up-a-project-to-record
     # https://docs.cypress.io/guides/guides/parallelization
-    - npm run test:backend
+
+    - npm run test:backend &
+    - npm run e2e:headless
     
     
   only:
