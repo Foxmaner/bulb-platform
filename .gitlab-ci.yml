@@ -18,8 +18,9 @@ test:
     # https://docs.cypress.io/guides/guides/parallelization
 
     - npm run test:backend &
+    - npx wait-on http://localhost:3001 http://localhost:3001
     - npm run e2e:headless
-    
+
     
   only:
     - testFix
