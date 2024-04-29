@@ -26,6 +26,8 @@ test:
     # https://docs.cypress.io/guides/cloud/projects#Set-up-a-project-to-record
     # https://docs.cypress.io/guides/guides/parallelization
 
-    - npm run e2e:headless
+    - npm install --save-dev wait-on
+    - npx wait-on http://localhost:3001 && npm run e2e:headless
+
   
     
