@@ -1,12 +1,20 @@
 stages:
+  - backend
   - test
 
+
+backend:
+  stage: backend
+  script:
+    - cd bulb
+    - npm install
+    - npm run test:backend
 
 test:
   # Uses official Cypress docker image for dependencies
   # https://docs.cypress.io/guides/continuous-integration/introduction#Official-Cypress-Docker-Images
   image: cypress/browsers:node-20.9.0-chrome-118.0.5993.88-1-ff-118.0.2-edge-118.0.2088.46-1
-  stage: test
+  stage: backend
   script:
     - cd bulb
     - npm install
@@ -17,10 +25,8 @@ test:
     # https://docs.cypress.io/guides/cloud/projects#Set-up-a-project-to-record
     # https://docs.cypress.io/guides/guides/parallelization
 
-    - npm run test:backend &
-    - npx wait-on http://localhost:3001 http://localhost:3001
     - npm run e2e:headless
-
+  
     
   only:
     - testFix
