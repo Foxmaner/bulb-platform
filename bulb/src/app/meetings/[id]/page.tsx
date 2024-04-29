@@ -22,18 +22,26 @@ import SectionForm from "app/components/sectionForm"
 import { Section, Paragraph } from "index";
 
 import { useMeetingContext } from "../../context/meetingProvider";
-import Tiptap from "app/components/tiptap";
-import { Toolbar } from "app/components/toolbar";
-import { useEditor } from "@tiptap/react";
+import { useRouter } from "next/navigation";
 
-import { useCurrentEditor } from "app/context/editorProvider";
 
 
 export default function MeetingPage() {
-    const { currentEditor, setCurrentEditor } = useCurrentEditor();
+    
     const { meeting, setMeeting } = useMeetingContext();
-    
-    
+    const router = useRouter();
+    const [titlevalue, setTitleValue] = useState("");
+
+
+    const addMeetingTitle = (text:string) => {
+        setTitleValue(text);
+        meeting.title = text;
+        setMeeting(prevMeeting => ({
+            ...prevMeeting,
+            title: text
+        }));
+    };
+
     const addSection = () => {
         const id = meeting.sections.length
         const newSection = {
@@ -45,9 +53,9 @@ export default function MeetingPage() {
         setMeeting({ ...meeting, sections: [...meeting.sections, newSection] })
     }
 
-   
+
     return (
-       
+
         <div className="flex w-screen h-screen content-center justify-center items-center">
             <div className="flex flex-row gap-10 bg-white w-[calc(95%)] h-[calc(95%)] ">
                 {/*Vänstra div den med loggan*/}
@@ -56,18 +64,18 @@ export default function MeetingPage() {
                         <Link href="/">
                             <h1 className="text-primary font-bold text-3xl">East <br /> Sweden <br /> MedTech</h1>
                         </Link>
-
+                        <div className="bg-primary h-1 w-5/6 content-center"></div>
                     </div>
                     {/*Katalogen*/}
                     <div className="bg-secondaryGrey h-1 w-full"></div>
                     <div className="flex flex-col justify-center py-2">
-                        <p className="text-center text-xl">Catalog</p>
+                        <p className="text-center text-xl">Katalog</p>
                         <ul className="flex flex-col py-2">
                             {
                                 meeting.sections.map((section: Section, index: number) => (
                                     <div className="flex items-center flex-col">
                                         <Tooltip content={section.title} isDisabled={!section.title}>
-                                            <Button variant="light" className="w-36 underline" key={index}>
+                                            <Button variant="light" size="sm" radius="none" className="w-36 underline" key={index}>
                                                 <p className="truncate">
                                                     {section.title}
                                                 </p>
@@ -75,7 +83,7 @@ export default function MeetingPage() {
                                         </Tooltip>
                                         {section.paragraphs?.map((paragraph: Paragraph, paragraphIndex: number) =>
                                             <Tooltip content={paragraph.title} isDisabled={!paragraph.title}>
-                                                <Button variant="light" className="w-28 underline" key={paragraphIndex}>
+                                                <Button variant="light" size="sm" radius="none" className="w-28" key={paragraphIndex}>
                                                     <p className="truncate">
                                                         {paragraph.title}
                                                     </p>
@@ -86,25 +94,25 @@ export default function MeetingPage() {
                                 ))}
                         </ul>
                     </div>
+                   
                 </div>
-
+                     
                 <div className="bg-secondaryGrey h-5/6 w-1 content-center"></div>
 
                 <div className="flex flex-col text-primaryText gap-5 w-11/12 py-5">
-                    <div className="flex flex-col gap-2 ">
-                        <Input variant="underlined" size="lg" disableAnimation={true} radius="lg" type={meeting.title} placeholder="Tomt möte" isRequired={true}></Input>
+                    <div className="flex flex-col gap-2 w-11/12">
+                        <Input classNames={{input: "text-3xl font-bold text-black placeholder:text-black"}} variant="underlined" disableAnimation={true} radius="lg" type={meeting.title} value={titlevalue} placeholder="Tomt möte" isRequired={true}></Input>
                         <p className="text-primaryText text-sm">2024 - 01 - 01</p>
                         <div className="flex flex-row bg-secondaryGrey h-1 w-11/12"></div>
                     </div>
                     <div className="flex flex-row gap-2">
-                        
+
                         <Button variant="solid" className="bg-primaryGrey border-2 border-edge" onClick={addSection}>Nytt avsnitt</Button>
-                      
-                        <Toolbar />
-                      
-                        
+
+
+
                     </div>
-                    
+
                     <ScrollShadow hideScrollBar size={20}>
                         <div className="w-full h-screen">
                             {
@@ -121,12 +129,18 @@ export default function MeetingPage() {
                         </div>
                     </ScrollShadow>
 
+                    <div className="place-self-end">
+                        <div className="flex flex-row gap-2">
+                            <Button color="primary" size="sm" onClick={() => router.push("/meetings")}>Gå tillbaka</Button>
+                            <Button color="primary" size="sm">Hjälp</Button>
+                            <Button color="primary" size="sm">Spara</Button>
+                            <Button color="primary" size="sm">Publicera</Button>
+                            <Button color="primary" size="sm">Dela</Button>
+                        </div>
+                    </div>
                 </div>
-
             </div>
-
         </div>
-       
     );
 
 }

@@ -15,10 +15,10 @@ import { Button, ButtonGroup, Dropdown, DropdownTrigger, DropdownMenu, DropdownI
 
 import { useState, useRef } from "react";
 import { useMeetingContext } from "app/context/meetingProvider";
-import { useEditorContext } from "app/context/editorProvider";
+
 
 import { Paragraph } from "index";
-import Tiptap from "./tiptap";
+
 
 
 interface IParagraphFormProps {
@@ -87,17 +87,34 @@ export default function ParagraphForm({ data }: IParagraphFormProps) {
 
             {
                 data.useTitle && (
-                    <Tiptap
-                        text={title}
-                        onChange={addParagraphTitle}
-                        
+                    <div className="border-solid rounded border">
+                    <Textarea
+                        variant="bordered"
+                        radius="none"
+                        labelPlacement="outside"
+                        placeholder="Underrubrik"
+                        className="flex"
+                        value={title || ""}
+                        onValueChange={addParagraphTitle}
+                        minRows={1}
                     />
+
+                    </div>
                 )
             }
-
             
-            <div className="flex flex-col gap-1">
-                <Tiptap text={text} onChange={addParagraphText} />
+            <div className="flex flex-col gap-1 border-solid rounded border h-22">
+            <Textarea
+                        variant="bordered"
+                        radius="none"
+                        labelPlacement="outside"
+                        placeholder="Text"
+                        className="flex"
+                        value={text || ""}
+                        onValueChange={addParagraphText}
+                        minRows={5}
+                    />
+
             </div>
 
 

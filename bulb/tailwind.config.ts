@@ -19,6 +19,7 @@ const config: Config = {
         'edge': "#D9D9D9", //Bordercolor
         'titleText':'#333333',
         'primaryText': "#888888",
+        'placeholderBlack':'#333333'
         
       },
 
