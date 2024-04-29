@@ -6,7 +6,7 @@ const app = require('./dist/app');
 const dotenv = require('dotenv');
 
 
-dotenv.config();
+dotenv.config({ path: './private.env' });
 
 const port = process.env.PORT || 3001;
 const db_uri = process.env.DB_URI;

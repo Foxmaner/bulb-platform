@@ -62,6 +62,13 @@ const run = async () => {
     app.use(cors(corsConfig));
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
+
+    app.use((req, res, next) => {
+
+        console.log(`Request: ${req.method} ${req.url}`);
+
+        next();
+    })
     
     app.use(runSessionMiddleware());
 
@@ -83,7 +90,7 @@ const run = async () => {
             res.locals.currentUser = req.user;
             res.locals.session = req.session;
 
-            next();
+            return next();
         });
 
         // Middleware that verifies the token when routing
