@@ -4,6 +4,7 @@ stages:
 
 
 backend:
+  image: node:14
   stage: backend
   script:
     - cd backend
