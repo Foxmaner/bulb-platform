@@ -1,12 +1,10 @@
 import { useState } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
-import { BsCalendarEvent, BsJustifyLeft, BsCalendarDate, BsCaretRightFill, BsBuilding } from "react-icons/bs";
-
+import { usePathname } from "next/navigation";
+import { BsCalendarEvent, BsFileEarmarkTextFill } from "react-icons/bs";
 import Link from "next/link";
 
-
 export default function Menu() {
-  const [isVisable, setIsVisable] = useState(true);
+  const [isVisable, setIsVisable] = useState(false);
 
   const toggleVisibility = () => {
     setIsVisable(!isVisable);
@@ -15,63 +13,38 @@ export default function Menu() {
     setIsVisable(false);
   };
   const pathname = usePathname();
-  const searchParams = useSearchParams();
 
   return (
-    <div className="w-full select-none">
-      {/* Hjälp */}
-            <Link
-        href="/help"
-        className={`text-gray-500 font-bold text-lg flex items-center mb-2 ${
-          pathname.includes("/help") ? "text-primary" : "hover:text-secondary"
-        }`}
-        onClick={setInvisible}
-      >
-        <BsCalendarDate
-          className="mr-1"
-          color={`${pathname.includes("/help") ? "#831843" : "#6b7280"}`}
-        />
-        Calendar
-      </Link>
+    <div className="">
       {/* Möten */}
       <div
-        className="text-gray-500 font-bold text-lg flex justify-between items-center mb-1 cursor-pointer"
+        className={`text-gray-500 font-bold text-lg flex items-center mb-1 cursor-pointer ${
+          pathname.includes("/meetings") || isVisable ? "text-primary" : ""
+        }`}
         onClick={toggleVisibility}
       >
-        <div className="flex items-center">
-          {/* Calender icon */}
-          <BsCalendarEvent
-            className="mr-1 mb-1"
-            color={`${
-              pathname.includes("/meetings") ? "#831843" : "#6b7280"
-            }`}
-          />
-          <h1 className={`${
-              pathname.includes("/meetings") ? "text-primary" : ""
-            }`}>
-            Möten 
-          </h1>
-        </div>
-        <BsCaretRightFill
-            className={`mr-1 mb-1 ${isVisable ? "transform rotate-90" : ""}`}
-            color={`${
-              pathname.includes("/meetings") ? "#831843" : "#6b7280"
-            }`}
-          />
+        {/* Calender icon */}
+        <BsCalendarEvent
+          className="mr-1"
+          color={`${
+            pathname.includes("/meetings") || isVisable ? "#831843" : "#6b7280"
+          }`}
+        />
+        Möten
       </div>
 
       {/* Mötesmenyn */}
       {isVisable && (
-        <div className="text-gray-500 font-bold flex flex-row w-full ml-2 mb-1">
-          <div className={`${pathname.includes("/meetings") ? "bg-primary bg-opacity-50" : "bg-secondaryGrey" } bg-opacity-50 w-0.5 mr-2`}></div>
-          <div className="flex flex-col w-[85%]">
-            <Link href={"/meetings?holder=user"} className={`px-1 mb-1 bg-opacity-50 rounded-md ${searchParams.get("holder") === "user" ? "text-primary bg-secondary" : "hover:text-secondary"}`}>
+        <div className="text-gray-500 font-bold flex flex-row">
+          <div className="bg-primary w-0.5 mx-2 mt-1 mb-2"></div>
+          <div className="flex flex-col">
+            <Link href={"/meetings"} className={`hover:text-primary ${pathname.includes("")}`}>
               Mina
             </Link>
-            <Link href={"/meetings?holder=shared"} className={`px-1 mb-1 bg-opacity-50 rounded-md ${searchParams.get("holder") === "shared" ? "text-primary bg-secondary" : "hover:text-secondary"}`}>
+            <Link href={"/meetings"} className={`hover:text-primary ${pathname.includes("/shared")}`}>
               Delade
             </Link>
-            <Link href={"/meetings?holder=published"} className={`px-1 mb-1 bg-opacity-50 rounded-md ${searchParams.get("holder") === "published" ? "text-primary bg-secondary" : "hover:text-secondary"}`}>
+            <Link href={"/meetings"} className={`hover:text-primary mb-2 ${pathname.includes("/published") ? "text-primary" : ""}`}>
               Publicerade
             </Link>
           </div>
@@ -79,32 +52,34 @@ export default function Menu() {
       )}
 
       {/* Mallar */}
-      <Link
+      <a
         href="/templates"
         className={`text-gray-500 font-bold text-lg flex items-center mb-1 ${
-          pathname.includes("/templates") ? "text-primary" : "hover:text-secondary"
+          pathname.includes("/templates") ? "text-primary" : ""
         }`}
         onClick={setInvisible}
       >
-        <BsJustifyLeft
+        <BsFileEarmarkTextFill
           className="mr-1"
           color={`${pathname.includes("/templates") ? "#831843" : "#6b7280"}`}
         />
         Mallar
-      </Link>
-      <Link
-        href="/companty"
-        className={`text-gray-500 font-bold text-lg flex items-center mb-1 ${
-          pathname.includes("/company") ? "text-primary" : "hover:text-secondary"
+      </a>
+
+      {/* Hjälp */}
+      <a
+        href="/help"
+        className={`text-gray-500 font-bold text-lg flex items-center mb-2 ${
+          pathname.includes("/help") ? "text-primary" : ""
         }`}
         onClick={setInvisible}
       >
-        <BsBuilding
+        <BsFileEarmarkTextFill
           className="mr-1"
-          color={`${pathname.includes("/company") ? "#831843" : "#6b7280"}`}
+          color={`${pathname.includes("/help") ? "#831843" : "#6b7280"}`}
         />
-        Organisation
-      </Link>
+        Hjälp
+      </a>
     </div>
   );
 }
