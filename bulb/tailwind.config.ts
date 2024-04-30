@@ -14,11 +14,13 @@ const config: Config = {
     extend: {
       colors:{
         'primary': '#512641',
+        'secondary': '#8B4270',
         'primaryGrey': '#F5F5F5', //Tidigare använd färg är bg-slate-100. Detta är den gråa färgen
         'secondaryGrey':'#888888', 
         'edge': "#D9D9D9", //Bordercolor
         'titleText':'#333333',
         'primaryText': "#888888",
+        'online': "#21E6C1",
         
       },
 
