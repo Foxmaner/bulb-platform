@@ -15,13 +15,13 @@ declare module "index" {
     type Section = {
         _id: string,
         title: string,
-        paragraphs?: paragraph[]
+        paragraphs: paragraph[]
     }
 
     type Paragraph = {
-        _id: string,
+        id: string,
         title?: string,
-        text: string,
+        content: string,
         useTitle?: boolean
     }
 
