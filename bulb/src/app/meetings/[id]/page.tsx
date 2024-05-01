@@ -13,7 +13,7 @@
 "use client";
 
 import { Button, ScrollShadow, ButtonGroup, Tooltip, Input } from "@nextui-org/react";
-import { FormEvent, useState } from "react";
+import { FormEvent, useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import AddSection from "../../components/defaultAddsection";
 
@@ -31,6 +31,26 @@ export default function MeetingPage() {
     const { meeting, setMeeting } = useMeetingContext();
     const router = useRouter();
     const [titlevalue, setTitleValue] = useState("");
+    const titleRef = useRef(null);
+
+    const scrollToTitle = (ref: string) => {
+        const section = meeting.sections.find(section => section.title === ref)
+       if(section){
+        const sectionIndex = meeting.sections.indexOf(section);
+        const sectionRef = sectionRefs.current[sectionIndex]?.current
+        if(sectionRef){
+            window.scrollTo({
+                top :sectionRef.offsetTop,
+                behavior: 'smooth'
+            })
+        }
+       }
+    };
+    
+    const sectionRefs = useRef<Array<React.RefObject<HTMLDivElement>>>([]);
+    const paragraphRefs = useRef<Array<Array<React.RefObject<HTMLDivElement>>>>([]);
+
+
 
 
     const addMeetingTitle = (text:string) => {
@@ -75,7 +95,7 @@ export default function MeetingPage() {
                                 meeting.sections.map((section: Section, index: number) => (
                                     <div className="flex items-center flex-col">
                                         <Tooltip content={section.title} isDisabled={!section.title}>
-                                            <Button variant="light" size="sm" radius="none" className="w-36 underline" key={index}>
+                                            <Button onClick = {() => scrollToTitle(section.title)} variant="light" size="sm" radius="none" className="w-36 underline" key={index}>
                                                 <p className="truncate">
                                                     {section.title}
                                                 </p>

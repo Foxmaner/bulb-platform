@@ -29,7 +29,8 @@ export default function ParagraphForm({ data }: IParagraphFormProps) {
     const [ title, setTitle ] = useState<string>(data.title || "")
     const { meeting, setMeeting } = useMeetingContext();
     const [ text, setTextValue ] = useState<string>(data.text || "");
-    
+    const paragraphRef = useRef<HTMLDivElement>(null)
+
     const addParagraphTitle = (title: string) => {
         setTitle(title);
 
@@ -87,7 +88,7 @@ export default function ParagraphForm({ data }: IParagraphFormProps) {
 
             {
                 data.useTitle && (
-                    <div className="border-solid rounded border">
+                    <div ref={paragraphRef} className="border-solid rounded border">
                     <Textarea
                         variant="bordered"
                         radius="none"
@@ -97,6 +98,7 @@ export default function ParagraphForm({ data }: IParagraphFormProps) {
                         value={title || ""}
                         onValueChange={addParagraphTitle}
                         minRows={1}
+                        
                     />
 
                     </div>
