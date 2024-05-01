@@ -1,0 +1,131 @@
+.fc tr:nth-child(2n) td:not(.fc-daygrid-day) {
+    border: none !important;
+}
+
+.fc td:not(.fc-daygrid-day):nth-child(odd) {
+    border: none !important;
+    color: #333333 !important;
+    font-weight: 300 !important;
+    font-size: small !important;
+}
+
+.fc
+    tr:nth-child(even) 
+    td:not(.fc-daygrid-day):nth-child(odd):nth-of-type(odd) {
+    position: relative !important;
+}
+
+.fc tr:nth-child(4n + 1) td::before {
+    content: "";
+    position: absolute;
+    top: -102%;
+    right: 0;
+    width: 0.4rem;
+    height: 1px;
+    background-color: #ddd;
+}
+
+.fc-day-today {
+    background-color: inherit !important;
+}
+
+.fc-col-header-cell-cushion {
+    color: #888;
+    font-weight: 300 !important;
+}
+
+.fc-toolbar-chunk {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.fc-col-header-cell {
+    padding: 0 !important; /* Remove default padding */
+    margin: 0 !important; /* Remove default margin */
+    position: relative !important;
+}
+
+.fc-col-header-cell:last-child::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 1px;
+    height: 0.4rem;
+    background-color: #ddd;
+}
+
+.fc-col-header-cell::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: -0.5px;
+    width: 1px;
+    height: 0.4rem;
+    background-color: #ddd;
+}
+
+.fc-next-button,
+.fc-prev-button {
+    background-color: transparent !important;
+    color: #333 !important;
+    border: none !important;
+    border-radius: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 2rem;
+    width: 2rem;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.fc-prev-button {
+    padding-right: 0.1rem !important;
+}
+
+.fc-next-button {
+    padding-left: 0.1rem !important;
+}
+
+.fc-prev-button:focus,
+.fc-next-button:focus {
+    outline: none !important;
+    border: none !important;
+}
+
+.fc-next-button:hover,
+.fc-prev-button:hover {
+    background-color: #ddd !important;
+}
+
+.fc-today-button,
+.fc-dayGridMonth-button,
+.fc-timeGridWeek-button,
+.fc-timeGridDay-button {
+    cursor: pointer;
+    border-radius: 0.5rem !important;
+    background-color: transparent !important;
+    color: #333 !important;
+    border: 2px solid #d9d9d9 !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.fc-today-button:hover {
+    background-color: #ddd !important;
+}
+
+.fc-scroller {
+    overflow: auto !important;
+}
+
+.fc-view table,
+.fc-view thead,
+.fc-view tbody,
+.fc-view tr,
+.fc-view th {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}

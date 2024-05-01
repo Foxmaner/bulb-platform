@@ -6,6 +6,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import sidebarImg from "../../../public/sidbarImg.svg";
 import Menu from "./menu";
 
@@ -13,20 +14,26 @@ import {
   Dropdown,
   DropdownTrigger,
   DropdownMenu,
-  DropdownSection,
-  DropdownItem
+  DropdownItem,
+  useDisclosure
 } from "@nextui-org/react";
+
 
 
 const navbarPaths = [
   "/meetings",
   "/calendar",
   "/help",
-  "/templates"
+  "/templates",
+  "/profile",
+  "/organisation",
+  "/admin/meetings",
 ];
 
 export default function Navbar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   //Detta för att inte visa sideBar på Skapasidan, en sk fulfix.
   if (!navbarPaths.includes(pathname)) {
@@ -34,9 +41,9 @@ export default function Navbar() {
   }
 
   return (
-    <div className="bg-primaryGrey h-screen flex flex-col">
+    <div className="bg-primaryGrey h-screen flex flex-col py-2.5">
       {/* Logo */}
-      <div className="p-5">
+      <div className="px-5 py-2">
         <Link href="/">
           <h1 className="text-primary font-bold text-3xl">
             East <br /> Sweden <br /> MedTech
@@ -80,7 +87,9 @@ export default function Navbar() {
       <div className="border-edge border-t-1 w-5/6 self-center" />
 
       <div className="flex p-1 mx-2 my-1 w-full">
-        <Dropdown>
+        <Dropdown
+          onSelect={(e) => {console.log("BBBB")}}
+        >
           <DropdownTrigger>
             <div className="h-14 cursor-pointer w-14 bg-secondary flex justify-center items-center text-white rounded-md relative">
                 <h1 className="text-2xl">
@@ -90,7 +99,10 @@ export default function Navbar() {
             </div>
           </DropdownTrigger>
           <DropdownMenu aria-label="Static Actions">
-            <DropdownItem color="secondary" key="profile">Profile</DropdownItem>
+            <DropdownItem color="warning" key="admin">Admin</DropdownItem>
+            <DropdownItem color="secondary" key="profile" onPress={(e) => router.push("/profile")}>
+              Profile
+            </DropdownItem>
             <DropdownItem color="danger" className="text-danger" key="signout">Signout</DropdownItem>
           </DropdownMenu>
         </Dropdown>

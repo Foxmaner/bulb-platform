@@ -1,15 +1,49 @@
 import PageHeader from "../components/pageHeader";
-import TemplateView from "../components/templateList";
+import TableView from "../../components/table/TableView";
+import { Meeting, Template } from "index";
 
-export default function documentPage() {
-  return (
-    <div className="bg-primaryGrey w-full h-screen py-3 pr-6">
-      <div className="flex flex-col rounded-2xl w-full h-full bg-white border-1 border-edge">
-        <div className="rounded-t-2xl overflow-hidden">
-          <PageHeader userName="Eskil" />
-        </div>
-        <TemplateView />
-      </div>
-    </div>
-  );
+
+const getDate = (index: number) => {
+	const date = new Date();
+	date.setDate(date.getDate() + index);
+	return date.toLocaleDateString("default", { day: "numeric", month: "long", year: "numeric" });
+}
+
+const templates: Template[] = Array.from({ length: 50 }, (_, index) => (
+	{
+		_id: index,
+		name: `Alperna ${index}`,
+        team: "alperna",
+        status: "done",
+		date: getDate(index),
+	}
+));
+
+const columns = [
+	{ name: "ID", uid: "_id" },
+	{ name: "NAME", uid: "name", sortable: true },
+	{ name: "TEAM", uid: "team" },
+	{ name: "DATE", uid: "date", sortable: true },
+	{ name: "ACTIONS", uid: "actions" },
+];
+
+
+export default function TemplatesPage() {
+	return (
+		<div className="flex-col h-[calc(100vh-2rem)] w-full bg-white border m-4 ml-0 rounded-lg">
+			<PageHeader contentTitle="Templates" />
+			<div className="h-[70%]">
+				<TableView<Meeting>
+					link="/templates/"
+					name="templates"
+					defaultVisibleColumns={["name", "date", "status", "actions"]}
+
+					
+					data={templates}
+					columns={columns}
+				/>
+			</div>
+
+		</div>
+	);
 }
