@@ -13,7 +13,7 @@ declare module "socket" {
         meetingID: string,
         sectionID: string,
         paragraphID: string,
-        patches: any,
+        change: any,
     }
 
     interface ICursor{

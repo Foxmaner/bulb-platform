@@ -1,10 +1,8 @@
 import { Paragraph } from "index";
 import { MeetingModel } from "../../models";
-import diff_match_patch from 'diff-match-patch';
 import { IParagraph, ISection, IParagraphEdit, ICursor, INote } from "socket";
-import { Socket } from "socket.io";
-
-const dmp = new diff_match_patch();
+import { Socket } from "socket.io"; 
+import Delta from "quill-delta";
 
 export class SocketController {
 
@@ -32,7 +30,7 @@ export class SocketController {
     static async create_paragraph(socket, data){
         const respMeeting = await MeetingModel.get(data.meetingID);
         const meeting = respMeeting.body.meeting;     
-        const res = await meeting.addParagaraph(data.sectionID);
+        const res = await meeting.addParagraph(data.sectionID);
         const paragraph = res.body;
         socket.broadcast.to(data.meetingID).emit('paragraph_created', {paragraph});
     }
@@ -48,20 +46,20 @@ export class SocketController {
         
         const respMeeting = await MeetingModel.get(data.meetingID);
         const meeting = respMeeting.body.meeting;
-        const paragraph = await meeting.getParagraph(data.sectionID, data.paragraphID)
-        const [newText, success] = dmp.patch_apply(data.patches, paragraph.text);
-
-        if(!success){
-            return
-        }
-
-        await paragraph.editPargraphText(newText, data.sectionID, data.paragraphID);
-
-        await paragraph.pushParagraphHistory({
-            user: socket.id,
-            patch: data.patches
+        const paragraph = await meeting.getParagraph(data.sectionID, data.paragraphID);
+        const delta = new Delta(paragraph.body);
+        delta.compose(data.change);
+        console.log(delta.ops);
+        let text = '';
+        delta.ops.forEach(op => {
+            if (op.insert) {
+                text += op.insert;
+            }
         });
+        console.log(text);
+    
 
         socket.to(socket.id).emit("document_content", data);
     };
+
 }

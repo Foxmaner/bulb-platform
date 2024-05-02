@@ -1,6 +1,6 @@
 import { TestDecorators } from "../../utils";
 import { IParagraphEdit } from "socket";
-
+import Delta from "quill-delta";
 @TestDecorators.describeSocket("Meeting Socket tests")
 class MeetingTest {
 
@@ -59,9 +59,6 @@ class MeetingTest {
         const resp = await req.post("/meeting/create").send({
             name: 'testMeeting',
         })
-
-        console.log(resp.body)
-
         const meetingID = resp.body.meeting._id;
 
         const socket1 = await openSocket();
@@ -86,8 +83,23 @@ class MeetingTest {
         socket2.on("connect", async () => {
     
             socket2.emit("join_room", meetingID);
+            await new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    resolve({id:3});
+                }, 50);
+            })
             socket2.emit("section_create", {meetingID});
+            await new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    resolve({id:3});
+                }, 100);
+            })
             socket2.emit("section_create", {meetingID});
+            await new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    resolve({id:3});
+                }, 100);
+            })
             socket2.emit("section_create", {meetingID});
 
 
@@ -103,25 +115,39 @@ class MeetingTest {
             const paramsCreate = {meetingID, sectionID}
             socket2.emit("paragraph_create", paramsCreate);
 
+            await new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    resolve({id:3});
+                }, 300);
+            })
+
+            socket2.emit("paragraph_create", paramsCreate);
+
 
             await new Promise((resolve, reject) => {
                 setTimeout(() => {
                     resolve({id:3});
-                }, 1000);
+                }, 50);
             })
 
             const resp3 = await req.get(`/meeting/${meetingID}`);
             const tmp = resp3.body.meeting.sections;
+            console.log(111, tmp);
             const paragraphID = tmp[0].contains[0]._id;
-            const patches = [{
-                diffs: [ [ 1, 'Hello World!' ] ],
-                start1: 0,
-                start2: 0,
-                length1: 0,
-                length2: 12
-            }]
-            const paramEdit : IParagraphEdit = {meetingID, sectionID, paragraphID, patches}
+            // const patches = [{
+            //     diffs: [ [ 1, 'Hello World!' ] ],
+            //     start1: 0,
+            //     start2: 0,
+            //     length1: 0,
+            //     length2: 12
+            // }]
+            let change = new Delta().insert('Hello, ').ops;
+            console.log(change);
+            const paramEdit : IParagraphEdit = {meetingID, sectionID, paragraphID, change}
             socket2.emit("paragraph_edit", paramEdit);
+
+            //change = new Delta().retain(7).insert('world!');
+
 
         });
 
