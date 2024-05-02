@@ -36,8 +36,9 @@ export async function middleware(req: NextRequest) {
         return NextResponse.next();
     }
 
+    let newConnectSid = ''
     let authorized = false;
-    if (connectSid) { // Check if both connect.sid
+    if (connectSid) { 
         const response = await fetch('http://localhost:3001/verify', {
             method: 'POST',
             credentials: 'include',
@@ -47,7 +48,7 @@ export async function middleware(req: NextRequest) {
                 'Referer': pathname
             }
         });
-        
+
         if (response.status === 200) {
             authorized = true;
         }
@@ -55,7 +56,8 @@ export async function middleware(req: NextRequest) {
 
     if (authorized) {
         if (pathname === '/auth/signin') {
-            return NextResponse.redirect(new URL('/meetings', req.nextUrl.origin));
+            const response = NextResponse.redirect(new URL('/meetings', req.nextUrl.origin))
+            return response;
         }
 
         return NextResponse.next();

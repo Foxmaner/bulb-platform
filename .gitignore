@@ -10,6 +10,7 @@ node_modules/
 */dist
 /.pnp
 .pnp.js
+*/private.env
 
 # testing
 */coverage

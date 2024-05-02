@@ -25,10 +25,12 @@ const runSessionMiddleware = () => {
 }
 
 const verifySession = (req: any, res: any, next: any) => {
-    if (req.isAuthenticated()) {
+    console.log(req.session, req.isAuthenticated(), req.url)
 
+    if (req.isAuthenticated()) {
         return next();
     } else {
+        console.log("Unauthorized")
         res.status(401).send("Unauthorized");
     }
 };
@@ -48,14 +50,14 @@ const updateSessionPath = (req: any, res) => {
     if (!req.headers.referer) {
         res.status(401).send("Invalid input");
     }
-
-    req.session.cookie.path = req.headers.referer;
     
+    req.session.cookie.path = req.headers.referer;
+
     req.session.save(err => {
         if (err) {
             console.error('Session save error:', err);
         }
-        res.status(200).send("Authorized");
+        return res.status(200).send("Authorized");
     });
 }
 
