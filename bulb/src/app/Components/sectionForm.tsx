@@ -31,9 +31,10 @@ import { useMeetingContext } from "../context/meetingProvider";
 
 interface SectionFormProps {
     data: Section // title, _id, paragraphs
+    selectedSectionTitle: string | null;
 }
 
-export default function SectionForm({ data }: SectionFormProps) {
+export default function SectionForm({ data, selectedSectionTitle }: SectionFormProps) {
     //Detta är till för att lägga till Rubriker i katalogen
     const [value, setValue] = useState("");
     const [menuOpen, setMenuOpen] = useState(false);
@@ -42,10 +43,16 @@ export default function SectionForm({ data }: SectionFormProps) {
     const popupRef = useRef<HTMLDivElement>(null);
     const { meeting, setMeeting } = useMeetingContext();
     const [ title, setTitle ] = useState<string>(data.title || "")
-
-    const toggleMenu = () => {
-        setMenuOpen(!menuOpen);
-    };
+    const sectionRef = useRef<HTMLTextAreaElement>(null)
+    
+    
+    useEffect(() => {
+        // Check if the section title matches the desired reference
+        if (data.title === selectedSectionTitle) {
+            // Scroll to the section
+            sectionRef.current?.scrollIntoView({ behavior: "smooth" });
+        }
+    }, [data.title, selectedSectionTitle]);
 
 
     useEffect(() => {
@@ -112,10 +119,10 @@ export default function SectionForm({ data }: SectionFormProps) {
             })
         }
     };
-    //Fortsätt här, fixa så att det blir samma som för paragraphs
+    
     const addSectionTitle = (title: string) => {
         setTitle(title);
-
+        
         setMeeting({
             ...meeting,
             sections: meeting.sections.map(section => {
@@ -137,7 +144,7 @@ export default function SectionForm({ data }: SectionFormProps) {
     
     return (
         <div className="flex flex-col gap-2">
-            <Textarea
+            <Textarea ref={sectionRef}
                 variant="underlined"
                 radius="none"
                 labelPlacement="outside"

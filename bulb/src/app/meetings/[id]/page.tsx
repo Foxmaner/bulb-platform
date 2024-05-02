@@ -12,7 +12,7 @@
 
 "use client";
 
-import { Button, ScrollShadow, ButtonGroup, Tooltip, Input } from "@nextui-org/react";
+import { Button, ScrollShadow, ButtonGroup, Tooltip, Input, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@nextui-org/react";
 import { FormEvent, useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import AddSection from "../../components/defaultAddsection";
@@ -20,7 +20,7 @@ import AddSection from "../../components/defaultAddsection";
 import SectionForm from "app/components/sectionForm"
 
 import { Section, Paragraph } from "index";
-
+import MeetingHelpInfo from "app/components/helpInfo";
 import { useMeetingContext } from "../../context/meetingProvider";
 import { useRouter } from "next/navigation";
 
@@ -28,10 +28,13 @@ import { useRouter } from "next/navigation";
 
 export default function MeetingPage() {
     
+    const {isOpen, onOpen, onOpenChange} = useDisclosure();
     const { meeting, setMeeting } = useMeetingContext();
     const router = useRouter();
     const [titlevalue, setTitleValue] = useState("");
     const titleRef = useRef(null);
+    const [selectedSectionTitle, setSelectedSectionTitle] = useState<string | null>(null);
+
 
     const scrollToTitle = (ref: string) => {
         const section = meeting.sections.find(section => section.title === ref)
@@ -47,6 +50,11 @@ export default function MeetingPage() {
        }
     };
     
+    const scrollToTitleButtonClick = (title: string) => {
+        scrollToTitle(title)
+        setSelectedSectionTitle(title);
+    };
+
     const sectionRefs = useRef<Array<React.RefObject<HTMLDivElement>>>([]);
     const paragraphRefs = useRef<Array<Array<React.RefObject<HTMLDivElement>>>>([]);
 
@@ -65,7 +73,7 @@ export default function MeetingPage() {
     const addSection = () => {
         const id = meeting.sections.length
         const newSection = {
-            _id: "",
+            _id: id.toString(),
             title: '',
             paragraphs: []
         }
@@ -93,16 +101,16 @@ export default function MeetingPage() {
                         <ul className="flex flex-col py-2">
                             {
                                 meeting.sections.map((section: Section, index: number) => (
-                                    <div className="flex items-center flex-col">
+                                    <div className="flex items-center flex-col" key={index}>
                                         <Tooltip content={section.title} isDisabled={!section.title}>
-                                            <Button onClick = {() => scrollToTitle(section.title)} variant="light" size="sm" radius="none" className="w-36 underline" key={index}>
+                                            <Button onClick = {() => scrollToTitleButtonClick(section.title)} variant="light" size="sm" radius="none" className="w-36 underline" key={index}>
                                                 <p className="truncate">
                                                     {section.title}
                                                 </p>
                                             </Button>
                                         </Tooltip>
                                         {section.paragraphs?.map((paragraph: Paragraph, paragraphIndex: number) =>
-                                            <Tooltip content={paragraph.title} isDisabled={!paragraph.title}>
+                                            <Tooltip content={paragraph.title} isDisabled={!paragraph.title} key={paragraphIndex}>
                                                 <Button variant="light" size="sm" radius="none" className="w-28" key={paragraphIndex}>
                                                     <p className="truncate">
                                                         {paragraph.title}
@@ -136,7 +144,7 @@ export default function MeetingPage() {
                     <ScrollShadow hideScrollBar size={20}>
                         <div className="w-full h-screen">
                             {
-                                meeting.sections.map((section: Section, index: number) => <SectionForm key={index} data={section} />)
+                                meeting.sections.map((section: Section, index: number) => <SectionForm key={index} data={section} selectedSectionTitle={selectedSectionTitle}/>)
                             }
                             {
                                 (meeting.sections.length == 0) && (
@@ -152,11 +160,27 @@ export default function MeetingPage() {
                     <div className="place-self-end">
                         <div className="flex flex-row gap-2">
                             <Button color="primary" size="sm" onClick={() => router.push("/meetings")}>Gå tillbaka</Button>
-                            <Button color="primary" size="sm">Hjälp</Button>
+                            <Button color="primary" size="sm" onPress={onOpen}>Hjälp</Button>
                             <Button color="primary" size="sm">Spara</Button>
                             <Button color="primary" size="sm">Publicera</Button>
                             <Button color="primary" size="sm">Dela</Button>
                         </div>
+                        <Modal backdrop="transparent" isOpen={isOpen} onOpenChange={onOpenChange} size="5xl">
+                            <ModalContent>
+                                {(onclose) =>(
+                                    <>
+                                    <ModalHeader className="flex flex-col gap-1">Hjälp</ModalHeader>
+                                    <ModalBody>
+                                        <MeetingHelpInfo/>
+                                    </ModalBody>
+                                    <ModalFooter>
+                                        <Button color="danger" variant="light" onClick={onclose}>Stäng</Button>
+                                    </ModalFooter>
+                                    </>
+                                )}
+                            </ModalContent>
+
+                        </Modal>
                     </div>
                 </div>
             </div>
