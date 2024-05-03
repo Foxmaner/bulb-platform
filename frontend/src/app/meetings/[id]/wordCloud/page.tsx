@@ -1,9 +1,10 @@
 "use client";
 import QRCodeWindow from "../../../components/qrCode";
 import React, { useCallback } from 'react';
-import WordCloud from 'react-d3-cloud';
+import dynamic from 'next/dynamic';
 import { scaleOrdinal } from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';
+const WordCloud = dynamic(() => import('../../../components/wordcloud'), { ssr: false });
 
 function generateData(str: string) {
   const words = str.split(' ');
