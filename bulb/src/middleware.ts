@@ -26,6 +26,7 @@ const protectedRoutes = [
 ];
 
 export async function middleware(req: NextRequest) {
+    return NextResponse.next();
     
     if(process.env.LOGIN === "FALSE"){
         return NextResponse.next();

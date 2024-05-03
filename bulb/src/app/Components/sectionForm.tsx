@@ -12,21 +12,21 @@
  */
 'use client';
 import {
-    Button, ButtonGroup, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Textarea, Modal,
+    Button, 
+    Textarea, 
+    Modal,
     ModalContent,
-    ModalHeader,
     ModalBody,
     ModalFooter,
     useDisclosure
 } from "@nextui-org/react";
-import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import ParagraphForm from "./paragraph";
 
 import { Section, Paragraph } from "index";
-import { title } from "process";
 import { useMeetingContext } from "../context/meetingProvider";
+
+import { useCurrentEditor } from '../context/editorProvider';
 
 
 interface SectionFormProps {
@@ -43,26 +43,12 @@ export default function SectionForm({ data }: SectionFormProps) {
     const { meeting, setMeeting } = useMeetingContext();
     const [ title, setTitle ] = useState<string>(data.title || "")
 
+    const { socket } = useCurrentEditor();
+
+
     const toggleMenu = () => {
         setMenuOpen(!menuOpen);
     };
-
-
-    useEffect(() => {
-        const handler = (event: MouseEvent) => {
-            if (popupRef.current && popupRef.current.contains(event.target as Node)) {
-                return;
-            }
-            setMenuOpen(false);
-        };
-        document.addEventListener("mousedown", handler);
-
-        return () => {
-            document.removeEventListener("mousedown", handler);
-        };
-    }, []);
-
-
 
     /**
     *  setMeeting(
@@ -73,27 +59,51 @@ export default function SectionForm({ data }: SectionFormProps) {
     *  Då kan vi lägga till qtt stycken vi vill i denna sektion
     *  Och bara returnera den sektionenerna
     */
-    const addParagraph = (useTitle?: boolean) => {
-        setMeeting({
-            ...meeting,
-            sections: meeting.sections.map(section => {
-                if (section._id === data._id) {
-                    const newPargraph: Paragraph = {
-                        title:"",
-                        text: "",
-                        _id: "",
-                        useTitle
-                    }
-
-                    return {
-                        ...section,
-                        paragraphs: [...(section.paragraphs || []), newPargraph]
-                    }
-                }
-                return section;
-            })
-        })
+    const createParagraph = (section: Section, _id: string, useTitle?: boolean) => {
+        const newPargraph: Paragraph = {
+            title: "",
+            text: "",
+            _id,
+            useTitle
+        }
+        return {
+            ...section,
+            paragraphs: [...(section.paragraphs || []), newPargraph]
+        }
     }
+
+    const addParagraph = useCallback((useTitle?: boolean) => {
+        socket.emit("addParagraph", { title: false }, (response: Paragraph) => {
+            setMeeting({
+                ...meeting,
+                sections: meeting.sections.map(section => {
+                    if (section._id === data._id) {
+                        return createParagraph(section, response._id, useTitle);
+                    }
+                    return section;
+                })
+            })
+        });
+    }, [meeting, setMeeting, data._id, socket]);
+
+    useEffect(() => {
+        const handler = (event: MouseEvent) => {
+            if (popupRef.current && popupRef.current.contains(event.target as Node)) {
+                return;
+            }
+            setMenuOpen(false);
+        };
+        document.addEventListener("mousedown", handler);
+
+        socket?.on("addParagraph", (data: any) => {
+            addParagraph();
+            console.log("addParagraph");
+        });
+
+        return () => {
+            document.removeEventListener("mousedown", handler);
+        };
+    }, [addParagraph, socket]);
 
     const deleteParagraph = (index: number) => {
         const isConfirmed = window.confirm("Är du säker på att du vill ta bort stycket?");
@@ -162,8 +172,7 @@ export default function SectionForm({ data }: SectionFormProps) {
                     </div>
                 )
 
-
-                )}
+            )}
 
             <div className="flex flex-col w-full h-full">
                 <div ref={popupRef} className="relative w-full h-full flex justify-center">

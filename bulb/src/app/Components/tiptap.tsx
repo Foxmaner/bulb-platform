@@ -6,38 +6,52 @@ Tiptap är till toolbaren på mötessidan
 
 'use client'
 
-import { useEditor, EditorContent, Editor } from '@tiptap/react'
-import StarterKit from '@tiptap/starter-kit'
-import { Toolbar } from './toolbar'
 
+import './tiptap.css';
+
+import Collaboration from "@tiptap/extension-collaboration";
+
+import StarterKit from "@tiptap/starter-kit";
+import { EditorContent, useEditor } from "@tiptap/react";
+import React from "react";
+import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
+
+import Placeholder from "@tiptap/extension-placeholder";
 
 import { useCurrentEditor } from '../context/editorProvider';
 
 
 interface ITiptapProps {
-  text: string;
-  onChange: (newText: string) => void;
-
+  id: string;
 }
 
+export default function Tiptap({ id }: ITiptapProps) {
 
-export default function Tiptap({ text, onChange }:
-  {
-    text: string
-    onChange: any
-  }) {
+  const { setCurrentEditor, provider, doc } = useCurrentEditor();
 
-  const { currentEditor, setCurrentEditor } = useCurrentEditor();
 
   const editor = useEditor({
-    extensions: [
-      StarterKit,
-    ],
-    content: text,
-    onUpdate: ({ editor }) => {
-      onChange(editor.getText())
-    },
-  })
+      extensions: [
+          StarterKit.configure({
+              history: false
+          }),
+          Collaboration.configure({
+              document: doc,
+              field: id
+          }),
+          CollaborationCursor.configure({
+              provider,
+              user: {
+                  name: "Cyndi",
+                  color: "#f783ac",
+              },
+          }),
+          Placeholder.configure({
+              placeholder:
+                  "Write something … Itll be shared with everyone else looking at this example.",
+          }),
+      ],
+  });
 
   const handleOnFocus = () => {
     if (editor) {

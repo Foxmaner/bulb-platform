@@ -17,10 +17,9 @@
 
 'use client';
 
-import { Toolbar } from "app/components/toolbar";
-import { Section, Paragraph, Meeting } from "index";
+import { Meeting } from "index";
 
-import React, { createContext, useState, useContext, ReactNode } from 'react';
+import React, { createContext, useState, useContext } from 'react';
 
 
 type MeetingContextType = {
@@ -67,3 +66,7 @@ export const useMeetingContext = () => {
 
   	return context;
 };
+function io(arg0: string) {
+	throw new Error("Function not implemented.");
+}
+

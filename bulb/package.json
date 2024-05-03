@@ -19,9 +19,12 @@
   },
   "dependencies": {
     "@nextui-org/react": "^2.2.10",
-    "@tiptap/pm": "^2.3.0",
-    "@tiptap/react": "^2.3.0",
-    "@tiptap/starter-kit": "^2.3.0",
+    "@tiptap/extension-collaboration": "^2.3.1",
+    "@tiptap/extension-collaboration-cursor": "^2.3.1",
+    "@tiptap/extension-paragraph": "^2.3.1",
+    "@tiptap/extension-placeholder": "^2.3.1",
+    "@tiptap/react": "^2.3.1",
+    "@tiptap/starter-kit": "^2.3.1",
     "cookie": "^0.6.0",
     "d3-scale": "^4.0.2",
     "d3-scale-chromatic": "^3.1.0",
@@ -31,7 +34,9 @@
     "react-d3-cloud": "^1.0.6",
     "react-dom": "^18",
     "react-icons": "^5.0.1",
-    "react-qr-code": "^2.0.12"
+    "react-qr-code": "^2.0.12",
+    "socket.io-client": "^4.7.5",
+    "y-socket.io": "^1.1.3"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.4.2",

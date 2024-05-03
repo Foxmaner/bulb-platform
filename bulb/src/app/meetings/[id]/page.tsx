@@ -13,7 +13,7 @@
 "use client";
 
 import { Button, ScrollShadow, ButtonGroup, Tooltip, Input } from "@nextui-org/react";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
 import AddSection from "../../components/defaultAddsection";
 
@@ -30,11 +30,10 @@ import { useCurrentEditor } from "app/context/editorProvider";
 
 
 export default function MeetingPage() {
-    const { currentEditor, setCurrentEditor } = useCurrentEditor();
     const { meeting, setMeeting } = useMeetingContext();
+    const { socket } = useCurrentEditor();
     
-    
-    const addSection = () => {
+    const addSection = (useSocket = false) => {
         const id = meeting.sections.length
         const newSection = {
             _id: "",
@@ -43,7 +42,18 @@ export default function MeetingPage() {
         }
 
         setMeeting({ ...meeting, sections: [...meeting.sections, newSection] })
+    
+        if (useSocket) {
+            socket?.emit('addSection')
+        }
     }
+
+    useEffect(() => {
+        socket?.on('addSection', () => {
+            console.log('addSection')
+            addSection();
+        })
+    })
 
    
     return (
@@ -65,7 +75,7 @@ export default function MeetingPage() {
                         <ul className="flex flex-col py-2">
                             {
                                 meeting.sections.map((section: Section, index: number) => (
-                                    <div className="flex items-center flex-col">
+                                    <div key={index} className="flex items-center flex-col">
                                         <Tooltip content={section.title} isDisabled={!section.title}>
                                             <Button variant="light" className="w-36 underline" key={index}>
                                                 <p className="truncate">
@@ -74,7 +84,7 @@ export default function MeetingPage() {
                                             </Button>
                                         </Tooltip>
                                         {section.paragraphs?.map((paragraph: Paragraph, paragraphIndex: number) =>
-                                            <Tooltip content={paragraph.title} isDisabled={!paragraph.title}>
+                                            <Tooltip key={paragraphIndex} content={paragraph.title} isDisabled={!paragraph.title}>
                                                 <Button variant="light" className="w-28 underline" key={paragraphIndex}>
                                                     <p className="truncate">
                                                         {paragraph.title}
@@ -98,11 +108,10 @@ export default function MeetingPage() {
                     </div>
                     <div className="flex flex-row gap-2">
                         
-                        <Button variant="solid" className="bg-primaryGrey border-2 border-edge" onClick={addSection}>Nytt avsnitt</Button>
+                        <Button variant="solid" className="bg-primaryGrey border-2 border-edge" onClick={() => addSection(true)}>Nytt avsnitt</Button>
                       
                         <Toolbar />
                       
-                        
                     </div>
                     
                     <ScrollShadow hideScrollBar size={20}>
@@ -113,7 +122,7 @@ export default function MeetingPage() {
                             {
                                 (meeting.sections.length == 0) && (
                                     <div className="flex w-11/12 h-11/12 py-5">
-                                        <AddSection addSection={addSection} />
+                                        <AddSection addSection={() => addSection(true)} />
                                     </div>
                                 )
                             }

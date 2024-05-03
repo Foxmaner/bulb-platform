@@ -85,19 +85,9 @@ export default function ParagraphForm({ data }: IParagraphFormProps) {
         
         <div className="flex flex-col gap-2">
 
-            {
-                data.useTitle && (
-                    <Tiptap
-                        text={title}
-                        onChange={addParagraphTitle}
-                        
-                    />
-                )
-            }
 
-            
             <div className="flex flex-col gap-1">
-                <Tiptap text={text} onChange={addParagraphText} />
+                <Tiptap id={data._id} />
             </div>
 
 
