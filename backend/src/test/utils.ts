@@ -182,7 +182,6 @@ class TestDecorators {
                 let connection: typeof mongoose;
 
                 beforeAll(async () => {
-                    console.log("AAAA")
                     connection = await connectDatabase();
                 });
 

@@ -13,6 +13,21 @@ import { Response as res } from "../../utils.service";
  * This class contains all the methods that can be used by the MeetingService class
  */
 export class MethodSectionService extends mongoose.Model<Meeting> {
+    async getSection(sectionID) {
+
+        const section = await MeetingModel.aggregate([
+            { $match: { _id: this._id } },
+            { $unwind: '$sections' },
+            { $match: { 'sections._id': sectionID } },
+            { $project: { 'sections': sectionID } }
+        ])
+
+        if (!section) {
+            return res.status(404).json({ message: "No meeting" });
+        }
+
+        return res.status(200).json(section[0].sections);
+    }
 
     async addSection (name: string = "Untitled Section") {
         var _id = Math.max(...this.sections.map((section: any) => section._id),

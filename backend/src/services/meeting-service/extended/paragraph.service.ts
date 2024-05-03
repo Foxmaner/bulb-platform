@@ -11,15 +11,21 @@ import { Response as res } from "../../utils.service";
  */
 export class MethodParagraphService extends mongoose.Model<Meeting> {
     async getParagraph(sectionID, paragraphID) {
+        console.log(sectionID, paragraphID)
+
         const paragraph = await MeetingModel.aggregate([
-            { $match: { "sections._id": sectionID, "meeting._id": this._id } },
-            { $project: { _id: paragraphID } },
-        ]);
+            { $match: { _id: this._id } },
+            { $unwind: '$sections' },
+            { $unwind: '$sections.contains' },
+            { $match: { 'sections.contains._id': paragraphID } },
+            { $project: { 'sections.contains': sectionID } }
+        ])
 
         if (!paragraph) {
             return res.status(404).json({ message: "No meeting" });
         }
-        return res.status(200).json(paragraph);
+
+        return res.status(200).json(paragraph[0].sections.contains);
     }
 
     async editPargraphText(text, sectionID, paragraphID) {
