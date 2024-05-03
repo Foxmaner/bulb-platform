@@ -12,36 +12,40 @@
  */
 'use client';
 import {
-    Button, 
-    Textarea, 
-    Modal,
+    Button, ButtonGroup, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Textarea, Modal,
     ModalContent,
+    ModalHeader,
     ModalBody,
     ModalFooter,
     useDisclosure
 } from "@nextui-org/react";
+import Image from "next/image";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, useRef, useCallback } from "react";
 import ParagraphForm from "./paragraph";
 
 import { Section, Paragraph } from "index";
+import { title } from "process";
 import { useMeetingContext } from "../context/meetingProvider";
 
 import { useCurrentEditor } from '../context/editorProvider';
 
 
 interface SectionFormProps {
-    data: Section // title, _id, paragraphs
+    data: Section; // title, _id, paragraphs
+    selectedSectionTitle: string | null;
 }
 
-export default function SectionForm({ data }: SectionFormProps) {
+export default function SectionForm({ data, selectedSectionTitle }: SectionFormProps) {
     //Detta är till för att lägga till Rubriker i katalogen
-    const [value, setValue] = useState("");
     const [menuOpen, setMenuOpen] = useState(false);
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     //Måste berätta för Typescript att det är en sjukt nice 
     const popupRef = useRef<HTMLDivElement>(null);
     const { meeting, setMeeting } = useMeetingContext();
     const [ title, setTitle ] = useState<string>(data.title || "")
+
+    const sectionRef = useRef<HTMLTextAreaElement>(null)
 
     const { socket } = useCurrentEditor();
 
@@ -59,32 +63,41 @@ export default function SectionForm({ data }: SectionFormProps) {
     *  Då kan vi lägga till qtt stycken vi vill i denna sektion
     *  Och bara returnera den sektionenerna
     */
-    const createParagraph = (section: Section, _id: string, useTitle?: boolean) => {
+
+    const addParagraph = useCallback((_id: string) => {
+        console.log('addParagraph', _id)
+
         const newPargraph: Paragraph = {
             title: "",
             text: "",
-            _id,
-            useTitle
+            _id
         }
-        return {
-            ...section,
-            paragraphs: [...(section.paragraphs || []), newPargraph]
-        }
-    }
 
-    const addParagraph = useCallback((useTitle?: boolean) => {
-        socket.emit("addParagraph", { title: false }, (response: Paragraph) => {
-            setMeeting({
-                ...meeting,
-                sections: meeting.sections.map(section => {
-                    if (section._id === data._id) {
-                        return createParagraph(section, response._id, useTitle);
+        setMeeting({
+            ...meeting,
+            sections: meeting.sections.map(section => {
+                if (section._id === data._id) {
+                    return {
+                        ...section,
+                        paragraphs: [...(section.paragraphs || []), newPargraph]
                     }
-                    return section;
-                })
+                }
+                return section;
             })
+        })
+    }, [data._id, meeting, setMeeting]);
+
+    const sendAddParagraph = useCallback((useTitle?: boolean) => {
+        console.log('addParagraph')
+        socket.emit("addParagraph", { title: false }, (response: any) => {
+
+            console.log('response', response)
+
+            addParagraph(response.id.toString())
+            
         });
-    }, [meeting, setMeeting, data._id, socket]);
+    }, [socket, addParagraph]);
+
 
     useEffect(() => {
         const handler = (event: MouseEvent) => {
@@ -93,17 +106,25 @@ export default function SectionForm({ data }: SectionFormProps) {
             }
             setMenuOpen(false);
         };
+
+        if (data.title === selectedSectionTitle) {
+            //Scroll to the section
+            sectionRef.current?.scrollIntoView({ behavior: "smooth" });
+        }
+
         document.addEventListener("mousedown", handler);
 
         socket?.on("addParagraph", (data: any) => {
-            addParagraph();
+
+            console.log(data);
+            addParagraph(data.id);
             console.log("addParagraph");
         });
 
         return () => {
             document.removeEventListener("mousedown", handler);
         };
-    }, [addParagraph, socket]);
+    }, [socket, selectedSectionTitle, data.title, addParagraph]);
 
     const deleteParagraph = (index: number) => {
         const isConfirmed = window.confirm("Är du säker på att du vill ta bort stycket?");
@@ -188,10 +209,10 @@ export default function SectionForm({ data }: SectionFormProps) {
                                 <>
                                     <ModalBody>
                                         <p className="block text-center text-lg text-bold text-primaryText select-none">Lägg till stycke</p>
-                                        <button onClick={() => {addParagraph(); onClose()}} className="block px-4 py-2 text-lg text-primaryText hover:bg-gray-100">
+                                        <button onClick={() => {sendAddParagraph(); onClose()}} className="block px-4 py-2 text-lg text-primaryText hover:bg-gray-100">
                                             Stycke
                                         </button>
-                                        <button onClick={() => {addParagraph(true); onClose()}} className="block px-4 py-2 text-lg text-primaryText hover:bg-gray-100">
+                                        <button onClick={() => {sendAddParagraph(); onClose()}} className="block px-4 py-2 text-lg text-primaryText hover:bg-gray-100">
                                             Stycke med underrubrik
                                         </button>
                                         <button className="block px-4 py-2 text-lg text-primaryText hover:bg-gray-100">

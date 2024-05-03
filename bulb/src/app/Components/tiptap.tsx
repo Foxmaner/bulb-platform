@@ -27,6 +27,8 @@ interface ITiptapProps {
 
 export default function Tiptap({ id }: ITiptapProps) {
 
+  console.log("AAAAAAAAAAAAnders!!!!!!!!", id)
+
   const { setCurrentEditor, provider, doc } = useCurrentEditor();
 
 
@@ -42,7 +44,7 @@ export default function Tiptap({ id }: ITiptapProps) {
           CollaborationCursor.configure({
               provider,
               user: {
-                  name: "Cyndi",
+                  name: "Anders",
                   color: "#f783ac",
               },
           }),

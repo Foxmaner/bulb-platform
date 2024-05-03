@@ -29,6 +29,8 @@ export default function ParagraphForm({ data }: IParagraphFormProps) {
     const [ title, setTitle ] = useState<string>(data.title || "")
     const { meeting, setMeeting } = useMeetingContext();
     const [ text, setTextValue ] = useState<string>(data.text || "");
+
+    console.log("ParagraphForm", data)
     
     const addParagraphTitle = (title: string) => {
         setTitle(title);
@@ -80,6 +82,9 @@ export default function ParagraphForm({ data }: IParagraphFormProps) {
         })
     }
 
+    if (!data._id) {
+        return <></>
+    }
 
     return (
         
@@ -87,7 +92,7 @@ export default function ParagraphForm({ data }: IParagraphFormProps) {
 
 
             <div className="flex flex-col gap-1">
-                <Tiptap id={data._id} />
+                <Tiptap id={data._id.toString()} />
             </div>
 
 
