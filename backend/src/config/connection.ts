@@ -2,11 +2,11 @@ import mongoose from 'mongoose';
 import * as dotenv from "dotenv";
 
 
-dotenv.config();
+//dotenv.config();
 
 export async function connectDatabase() {
     try {
-        if (process.env.NODE_ENV === "test") {
+        if (process.env.NODE_ENV === "TEST") {
             return;
         }
 

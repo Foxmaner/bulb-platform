@@ -15,9 +15,9 @@
 import { Button, ScrollShadow, ButtonGroup, Tooltip, Input, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@nextui-org/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import AddSection from "../../components/defaultAddsection";
+import AddSection from "../../components/section/defaultAddsection";
 
-import SectionForm from "app/components/sectionForm"
+import SectionForm from "app/components/section/sectionForm"
 
 import { Section, Paragraph } from "index";
 

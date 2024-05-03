@@ -10,6 +10,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Switch } from "@nextui-org/react";
 import sidebarImg from "../../../public/sidbarImg.svg";
+import SignOutButton from "./SignOutBtn";
 
 export function Sidebar() {
   const pathname = usePathname();
@@ -106,6 +107,7 @@ export function Sidebar() {
             <p className="text-gray-500"> Darkmode</p>
           </Switch>
         }
+        <SignOutButton />
       </div>
 
       <div className="flex">

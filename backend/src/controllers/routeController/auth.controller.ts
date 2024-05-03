@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-import { UserModel } from '../models';
+import { UserModel } from '../../models';
 
 
 

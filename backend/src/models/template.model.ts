@@ -22,8 +22,8 @@ class TemplateModel extends BaseModel<Template, typeof StaticTemplateService, ty
                 type: Date,
                 required: [true, "The creation date is required."]
             },
-            mainDocumentSections: { type: [Utils.sectionSchema()], default: [] },
-            summaryDocumentSections: { type: {}, default: [] }
+            sections: { type: [Utils.sectionSchema()], default: [] },
+            summerySections: { type: {}, default: [] }
         };
         
         super({

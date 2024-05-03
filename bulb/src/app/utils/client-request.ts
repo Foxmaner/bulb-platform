@@ -1,3 +1,5 @@
+import { getCookie } from "cookies-next";
+
 
 /*
  * This file is responsible for making requests to the server.
@@ -33,6 +35,9 @@ export default class RequestApi {
     }
 
     static requestApi(method: string, props: IRequestProps): Promise<Response> {
+        const cookie = getCookie('connect.sid');
+        console.log(cookie);
+
         const body = props.body ?? {}
         const header = props.header ?? {}
 
@@ -41,9 +46,10 @@ export default class RequestApi {
             credentials: 'include',
             headers: {
                 ...header,
-                'Content-Type': 'application/json'
-            }, 
-            body: JSON.stringify(body)
+                'Content-Type': 'application/json',
+                'Cookie': `connect.sid=${cookie}`,
+                'Referer': props.url
+            }
         });
     }
 }

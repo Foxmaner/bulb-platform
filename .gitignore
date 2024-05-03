@@ -3,11 +3,14 @@
 
 ### NextJS ###
 # dependencies
-*/node_modules
 bulb/node_modules
+backend/node_modules/
+node_modules/
+*/coverage
 */dist
 /.pnp
 .pnp.js
+*/private.env
 
 # testing
 */coverage
@@ -33,6 +36,7 @@ yarn-error.log*
 
 # local env files
 .env*.local
+backend/.env
 
 # vercel
 .vercel

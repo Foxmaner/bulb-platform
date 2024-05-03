@@ -16,8 +16,8 @@
 
 import { useEffect, useState, useRef } from "react";
 
-import InputField from "./inputField";
-import paragraphForm from "./paragraph";
+import InputField from "../inputField";
+import paragraphForm from "../paragraph/paragraph";
 
 
 

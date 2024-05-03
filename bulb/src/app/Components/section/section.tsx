@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import InputField from "./inputField";
+import InputField from "../inputField";
 
 
 export default function AddSection() {

@@ -1,5 +1,5 @@
 import express, { Express, Request, Response, Router } from 'express';
-import ParagraphController from '../controllers/paragraph.controller';
+import ParagraphController from '../controllers/routeController/paragraph.controller';
 
 
 const paragraphRoutes: Router = Router();

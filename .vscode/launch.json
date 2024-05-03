@@ -4,19 +4,16 @@
         {
             "name": "Dev",
             "configurations": ["Backend", "Frontend"]
-        }
-        ,{
+        }        ,{
             "name": "Dev without login",
             "configurations": ["Backend-without-login", "Frontend-without-login"]
         }
-
     ],
     "configurations": [
         {
             "type": "node-terminal",
             "request": "launch",
             "name": "Backend",
-            
             "cwd": "${workspaceFolder}/backend",
             "command": "npm start",
         },
@@ -25,7 +22,7 @@
             "cwd": "${workspaceFolder}/bulb",
             "name": "Frontend",
             "request": "launch",
-            "type": "node-terminal"
+            "type": "node-terminal"        
         },
         {
             "command": "npx next dev",

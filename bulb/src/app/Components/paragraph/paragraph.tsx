@@ -18,19 +18,18 @@ import { useMeetingContext } from "app/context/meetingProvider";
 import { useEditorContext } from "app/context/editorProvider";
 
 import { Paragraph } from "index";
-import Tiptap from "./tiptap";
+import Tiptap from "../tiptap";
 
 
 interface IParagraphFormProps {
-    data: Paragraph
+    data: Paragraph;
+    sectionID: string;
 }
 
-export default function ParagraphForm({ data }: IParagraphFormProps) {
+export default function ParagraphForm({ sectionID, data }: IParagraphFormProps) {
     const [ title, setTitle ] = useState<string>(data.title || "")
     const { meeting, setMeeting } = useMeetingContext();
     const [ text, setTextValue ] = useState<string>(data.text || "");
-
-    console.log("ParagraphForm", data)
     
     const addParagraphTitle = (title: string) => {
         setTitle(title);
@@ -55,8 +54,6 @@ export default function ParagraphForm({ data }: IParagraphFormProps) {
             })
         })
     }
-
-
 
     const addParagraphText = (text: string) => {
         setTextValue(text);
@@ -89,13 +86,9 @@ export default function ParagraphForm({ data }: IParagraphFormProps) {
     return (
         
         <div className="flex flex-col gap-2">
-
-
             <div className="flex flex-col gap-1">
-                <Tiptap id={data._id.toString()} />
+                <Tiptap id={`${sectionID}.${data._id.toString()}`} />
             </div>
-
-
         </div>
     )
 

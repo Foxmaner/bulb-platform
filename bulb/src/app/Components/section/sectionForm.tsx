@@ -22,13 +22,13 @@ import {
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, useRef, useCallback } from "react";
-import ParagraphForm from "./paragraph";
+import ParagraphForm from "../paragraph/paragraph";
 
 import { Section, Paragraph } from "index";
 import { title } from "process";
-import { useMeetingContext } from "../context/meetingProvider";
+import { useMeetingContext } from "../../context/meetingProvider";
 
-import { useCurrentEditor } from '../context/editorProvider';
+import { useCurrentEditor } from '../../context/editorProvider';
 
 
 interface SectionFormProps {
@@ -38,7 +38,6 @@ interface SectionFormProps {
 
 export default function SectionForm({ data, selectedSectionTitle }: SectionFormProps) {
     //Detta är till för att lägga till Rubriker i katalogen
-    const [menuOpen, setMenuOpen] = useState(false);
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     //Måste berätta för Typescript att det är en sjukt nice 
     const popupRef = useRef<HTMLDivElement>(null);
@@ -49,11 +48,6 @@ export default function SectionForm({ data, selectedSectionTitle }: SectionFormP
 
     const { socket } = useCurrentEditor();
 
-
-    const toggleMenu = () => {
-        setMenuOpen(!menuOpen);
-    };
-
     /**
     *  setMeeting(
     *   ...meting = shallow copy
@@ -63,7 +57,6 @@ export default function SectionForm({ data, selectedSectionTitle }: SectionFormP
     *  Då kan vi lägga till qtt stycken vi vill i denna sektion
     *  Och bara returnera den sektionenerna
     */
-
     const addParagraph = useCallback((_id: string) => {
         console.log('addParagraph', _id)
 
@@ -98,34 +91,6 @@ export default function SectionForm({ data, selectedSectionTitle }: SectionFormP
         });
     }, [socket, addParagraph]);
 
-
-    useEffect(() => {
-        const handler = (event: MouseEvent) => {
-            if (popupRef.current && popupRef.current.contains(event.target as Node)) {
-                return;
-            }
-            setMenuOpen(false);
-        };
-
-        if (data.title === selectedSectionTitle) {
-            //Scroll to the section
-            sectionRef.current?.scrollIntoView({ behavior: "smooth" });
-        }
-
-        document.addEventListener("mousedown", handler);
-
-        socket?.on("addParagraph", (data: any) => {
-
-            console.log(data);
-            addParagraph(data.id);
-            console.log("addParagraph");
-        });
-
-        return () => {
-            document.removeEventListener("mousedown", handler);
-        };
-    }, [socket, selectedSectionTitle, data.title, addParagraph]);
-
     const deleteParagraph = (index: number) => {
         const isConfirmed = window.confirm("Är du säker på att du vill ta bort stycket?");
         if (isConfirmed) {
@@ -144,17 +109,14 @@ export default function SectionForm({ data, selectedSectionTitle }: SectionFormP
         }
     };
     //Fortsätt här, fixa så att det blir samma som för paragraphs
-    const addSectionTitle = (title: string) => {
+    const updateSectionTitle = (title: string) => {
         setTitle(title);
 
         setMeeting({
             ...meeting,
             sections: meeting.sections.map(section => {
                 if (section._id === data._id) {
-                    
-                    
                     section.title = title;
-                    
                     return {
                         ...section,
                         
@@ -165,7 +127,43 @@ export default function SectionForm({ data, selectedSectionTitle }: SectionFormP
         })
     }
 
-    
+    useEffect(() => {
+        const socketHandler = () => {
+            socket?.on("addParagraph", (data: any) => {
+                addParagraph(data.id);
+            });
+
+            socket?.on("removeParagraph", (data: any) => {
+                addParagraph(data.id);
+            });
+
+            return () => {
+                socket?.off("addParagraph");
+                socket?.off("removeParagraph");
+            };
+        }
+
+        const handler = (event: MouseEvent) => {
+            if (popupRef.current && popupRef.current.contains(event.target as Node)) {
+                return;
+            }
+        };
+
+        if (data.title === selectedSectionTitle) {
+            //Scroll to the section
+            sectionRef.current?.scrollIntoView({ behavior: "smooth" });
+        }
+
+        const socketOff = socketHandler();
+
+        document.addEventListener("mousedown", handler);
+
+        return () => {
+            socketOff();
+            document.removeEventListener("mousedown", handler);
+        };
+    }, [socket, selectedSectionTitle, data.title, addParagraph]);
+
     return (
         <div className="flex flex-col gap-2">
             <Textarea
@@ -175,14 +173,14 @@ export default function SectionForm({ data, selectedSectionTitle }: SectionFormP
                 placeholder="Titel"
                 className="flex w-11/12 truncate"
                 value={title}
-                onValueChange={addSectionTitle}
+                onValueChange={updateSectionTitle}
                 minRows={1}
                 style={{ fontWeight: 'bold', fontSize: '16px' }}
             />
             {
                 data.paragraphs?.map((paragraph: Paragraph, index: number) => (
                     <div key={index}>
-                        <ParagraphForm data={paragraph} />
+                        <ParagraphForm sectionID={data._id} data={paragraph} />
                         <Button
                             onClick={() => deleteParagraph(index)}
                             variant="light"
@@ -200,8 +198,6 @@ export default function SectionForm({ data, selectedSectionTitle }: SectionFormP
                     <div className="border-2 w-11/12 h-11/12 text-center border-dashed cursor-pointer" onClick={onOpen}>
                         <p className="text-3xl select-none">+</p>
                     </div>
-
-
 
                     <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
                         <ModalContent>

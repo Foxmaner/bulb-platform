@@ -1,5 +1,5 @@
 import express, { Express, Request, Response, Router } from 'express';
-import ImageController from '../controllers/image.controller';
+import ImageController from '../controllers/routeController/image.controller';
 
 
 const imageRoutes: Router = Router();
