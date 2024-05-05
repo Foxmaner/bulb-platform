@@ -1,3 +1,4 @@
+import { rejects } from "assert";
 import { TestDecorators } from "../../utils";
 import { IParagraphEdit } from "socket";
 
@@ -16,11 +17,23 @@ class BrainstormTest{
         const resp = await req.post("/meeting/create").send({
             name: 'testMeeting',
         })
+        resp.code.expect(200);
 
         const meetingID = resp.body.meeting._id;
 
         const socket1 = await openSocket();
 
+        const cursorMovedPromise = new Promise<void>((resolve) => {
+            socket1.on("cursor_moved", async (cursor) => {
+                    // Add expectations here to check if the cursor's x and y positions match the expected values
+                    expect(cursor.xPos).toBe(10);
+                    expect(cursor.yPos).toBe(10);
+                    resolve();
+              
+            });
+        });
+
+        //const isCursorMovedCorrectly = await cursorMovedPromise;
 
 
         socket1.on("connect", () => {
@@ -37,6 +50,7 @@ class BrainstormTest{
             socket1.emit("cursor_move", {xPos: 10, yPos: 10});
         });
 
+
         const socket2 = await openSocket();
 
         socket2.on("connect", () => {
@@ -52,7 +66,8 @@ class BrainstormTest{
                 resolve({id:3});
             }, 1000);
         })
-        
+        //expect(isCursorMovedCorrectly).toBe(true);
+
     }
 
     @TestDecorators.test("create note")

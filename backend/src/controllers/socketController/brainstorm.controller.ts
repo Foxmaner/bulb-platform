@@ -34,34 +34,24 @@ export class BrainstormController {
             xPos: data.xPos,
             yPos: data.yPos,
         };
-        socket.broadcast.emit('notes_moved', out);
+        socket.broadcast.to(data.meetingID).emit('notes_moved', out);
     }
 
-    static async create_note(socket: Socket, data: INote){
+    static async create_note(socket: Socket, data){
 
-        const meetingID = await MeetingModel.get(data.meetingID);
-        const sectionId = await meetingID.body.meeting.getSection(data.sectionID);
-        const paragraphID = await sectionId.getParagraph(data.paragraphID);
-        const out = {
-            noteID: data.noteID,
-            sectionID: sectionId,
-            paragraphID: paragraphID,
-            xPos: data.xPos,
-            yPos: data.yPos,
-        };
-        socket.broadcast.emit('note_created', out);
+        const respMeeting = await MeetingModel.get(data.meetingID);
+        const meeting = respMeeting.body.meeting;     
+        const res = await meeting.addAnswer(data.sectionID, data.paragraphID, data.text);
+        const  answer = res.body;
+        socket.broadcast.to(data.meetingID).emit('note_created', {answer});
     }
 
-    static async delete_note(socket: Socket, data: INote){
+    static async delete_note(socket: Socket, data){
 
-        const meetingID = await MeetingModel.get(data.meetingID);
-        const sectionId = await meetingID.body.meeting.getSection(data.sectionID);
-        const paragraphID = await sectionId.getParagraph(data.paragraphID);
-        const out = {
-            noteID: data.noteID,
-            sectionID: sectionId,
-            paragraphID: paragraphID,
-        };
-        socket.broadcast.emit('note_deleted', out);
+        const respMeeting = await MeetingModel.get(data.meetingID);
+        const meeting = respMeeting.body.meeting;     
+        const res = await meeting.removeAnswer(data.sectionID, data.paragraphID, data.answerID);
+        const  answer = res.body;
+        socket.broadcast.to(data.meetingID).emit('note_deleted', {answer});
     }
 }
