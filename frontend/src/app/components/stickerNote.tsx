@@ -39,7 +39,7 @@ function generateStickerNotes(sampleData: any) {
                 const widthRatio = newWindowSize.width / windowSize.width;
                 const heightRatio = newWindowSize.height / windowSize.height;
         
-                const newPositions = positions.map(position => ({
+                const newPositions = positions.map((position: { x: number; y: number; }) => ({
                   x: position.x * widthRatio,
                   y: position.y * heightRatio,
                 }));
