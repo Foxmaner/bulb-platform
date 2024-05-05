@@ -21,7 +21,7 @@ let sampleData = {
         }
     }
 }
-
+const [data, setData] = useState([]);
 
 
 function GenerateStickerNotes(sampleData: any) {
@@ -47,10 +47,16 @@ function GenerateStickerNotes(sampleData: any) {
                 setPositions(newPositions);
                 setWindowSize(newWindowSize);
               }
-          
-
         };
-    
+        
+        const fetchData = async () => {
+          const response = await fetch('/brainstorm'); // replace with your URL
+          const text = await response.text();
+          setData(JSON.parse(text));
+        };
+        
+        fetchData();
+
         window.addEventListener('resize', handleResize);
     // @ts-ignore
         return () => {
@@ -86,7 +92,7 @@ export default function StickerNote() {
     return (
         
         <> 
-        {GenerateStickerNotes(Object.values(sampleData))}
+        {GenerateStickerNotes(Object.values(data))}
         </>
         
     );
