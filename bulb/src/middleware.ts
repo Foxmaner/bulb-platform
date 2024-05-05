@@ -26,11 +26,6 @@ const protectedRoutes = [
 ];
 
 export async function middleware(req: NextRequest) {
-    return NextResponse.next();
-    
-    if(process.env.LOGIN === "FALSE"){
-        return NextResponse.next();
-    }
     const cookieHeader = req.headers.get("cookie") || '';
     const cookies = parse(cookieHeader);
     const connectSid = cookies['connect.sid'];
@@ -41,7 +36,6 @@ export async function middleware(req: NextRequest) {
         return NextResponse.next();
     }
 
-    let newConnectSid = ''
     let authorized = false;
     if (connectSid) { 
         const response = await fetch('http://localhost:3001/verify', {
@@ -75,3 +69,9 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
 }
 
+
+export const config = {
+    matcher: [
+      '/((?!api|_next/static|_next/image|favicon.ico).*)'
+    ]
+}

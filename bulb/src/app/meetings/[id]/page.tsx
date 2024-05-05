@@ -12,7 +12,7 @@
 
 "use client";
 
-import { Button, ScrollShadow, ButtonGroup, Tooltip, Input, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@nextui-org/react";
+import { Button, ScrollShadow, ButtonGroup, Tooltip, Input, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Spinner } from "@nextui-org/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import AddSection from "../../components/section/defaultAddsection";
@@ -22,7 +22,7 @@ import SectionForm from "app/components/section/sectionForm"
 import { Section, Paragraph } from "index";
 
 import { useMeetingContext } from "../../context/meetingProvider";
-import Tiptap from "app/components/tiptap";
+import Tiptap from "app/components/paragraph/tiptap/tiptap";
 import { Toolbar } from "app/components/toolbar";
 import { useEditor } from "@tiptap/react";
 
@@ -37,9 +37,8 @@ export default function MeetingPage() {
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
     const { meeting, setMeeting } = useMeetingContext();
     const router = useRouter();
-    const [titlevalue, setTitleValue] = useState("");
-    const titleRef = useRef(null);
     const { socket } = useCurrentEditor();
+    
     
     const [ selectedSectionTitle, setSelectedSectionTitle ] = useState<string | null>(null);
     const sectionRefs = useRef<Array<React.RefObject<HTMLDivElement>>>([]);
@@ -67,29 +66,37 @@ export default function MeetingPage() {
         const newSection: Section = {
             _id: _id,
             title: "Nytt Avsnitt",
-            paragraphs: []
+            contains: []
         }
 
         setMeeting({ ...meeting, sections: [...meeting.sections, newSection] })
     }, [meeting, setMeeting]);
 
     const sendAddSection = useCallback((useTitle?: boolean) => {
-        console.log('addSection')
-        socket.emit("addSection", { title: false }, (response: Paragraph) => {
-
-            console.log('response', response)
-
-            addSection({ _id: response._id})
-            
+        console.log('section_create')
+        console.log(meeting)
+        socket?.emit("section_create", { meetingID: meeting._id }, (data: any) => {
+            addSection(data.section);
         });
-    }, [socket, addSection]);
+    }, [addSection, meeting, socket]);
 
     useEffect(() => {
-        socket?.on('addSection', ({ _id }) => {
-            addSection({ _id });
-        })
-    })
+        if (socket) {
+            socket.on('section_created', (data: any) => {
+                console.log('section_created 788', data)
+                addSection(data.section);
+            })
+        }
+    }, [socket, addSection])
 
+    if (meeting._id === "") {
+        return (
+            <div className="w-screen h-screen flex justify-center items-center">
+                <Spinner />
+            </div>
+        );
+    }
+ 
     return (
        
         <div className="flex w-screen h-screen content-center justify-center items-center">
@@ -117,11 +124,11 @@ export default function MeetingPage() {
                                                 </p>
                                             </Button>
                                         </Tooltip>
-                                        {section.paragraphs?.map((paragraph: Paragraph, paragraphIndex: number) =>
-                                            <Tooltip key={paragraphIndex} content={paragraph.title} isDisabled={!paragraph.title}>
+                                        {section.contains?.map((paragraph: Paragraph, paragraphIndex: number) =>
+                                            <Tooltip key={paragraphIndex} content={paragraph.title?.text} isDisabled={!paragraph.title?.text}>
                                                 <Button variant="light" className="w-28 underline" key={paragraphIndex}>
                                                     <p className="truncate">
-                                                        {paragraph.title}
+                                                        {paragraph.title?.text}
                                                     </p>
                                                 </Button>
                                             </Tooltip>
@@ -145,7 +152,7 @@ export default function MeetingPage() {
                                 }} 
                                 disableAnimation={true} 
                                 radius="lg" 
-                                type={meeting.title} 
+                                type={meeting.name} 
                                 placeholder="Tomt möte" 
                                 isRequired={true}
                             />
@@ -159,7 +166,7 @@ export default function MeetingPage() {
 
                     <div className="flex flex-row gap-2">
                         
-                        <Button variant="solid" className="bg-primaryGrey border-2 border-edge" onClick={() => addSection(true)}>Nytt avsnitt</Button>
+                        <Button variant="solid" className="bg-primaryGrey border-2 border-edge" onClick={() => sendAddSection()}>Nytt avsnitt</Button>
                       
                         <Toolbar />
                       

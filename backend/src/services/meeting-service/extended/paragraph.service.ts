@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 import { MeetingModel } from "../../../models";
-import { Answer, Meeting } from "index";
+import { Answer, Meeting, Paragraph } from "index";
 
 import { Response as res } from "../../utils.service";
 
@@ -69,9 +69,14 @@ export class MethodParagraphService extends mongoose.Model<Meeting> {
             _id = 1;
         }
 
-        const newParagraph = {
+        const newParagraph: Paragraph = {
             _id,
-            dateCreated: new Date(),
+            title: {
+                text: ""
+            },
+            body: {
+                text: ""
+            }
         };
 
         await this.updateOne(

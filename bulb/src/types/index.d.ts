@@ -1,27 +1,58 @@
 
 
 declare module "index" {
-    
-    import { useEditor } from "@tiptap/react"
-    type Meeting = {
-        _id: string,
-        title: string,
-        sections: Section[],
-        
+    type User = {
+        _id: number;
+        name: string;
+        role: string;
+        team: string;
+        status: string;
+        age: string;
+        avatar: string;
+        email: string;
     }
 
-    
+    type Company = {
+        companyID: ObjectId,
+        name: string
+    }
+
+    type Meeting = {
+        _id: string,
+        name: string,
+        team: string,
+        status: string,
+        date: string,
+        sections: Section[],
+        summerySections?: Section,
+        members?: Member[]
+    }
+
+    type Template = {
+        _id: string,
+        name: string,
+        team: string,
+        status: string,
+        date: string,
+        sections?: Section[]
+    }
+
+    type Text = {
+        comments: Comment[],
+        history: [],
+        text: string
+    }
 
     type Section = {
         _id: string,
         title: string,
-        paragraphs?: paragraph[]
+        contains: paragraph[]
     }
 
     type Paragraph = {
         _id: string,
-        title?: string,
-        text: string,
+        title?: Text,
+        body: Text,
         useTitle?: boolean
     }
 

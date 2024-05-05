@@ -41,7 +41,18 @@ class MeetingModel extends BaseModel<Meeting, typeof StaticMeetingService, Metho
             summerySections: { type: {}, default: [] },
             history: { type: [Utils.sectionSchema()], default: [] },
             members: { type: [MeetingModel.memberSchema()], default: [] },
-            published: { type: Boolean, default: false }
+            published: { type: Boolean, default: false },
+            status: {
+                type: String,
+                enum: ['inprogress', 'done', 'upcomming'],
+                required: false
+            },
+            scheduledStart: { 
+                type: Date 
+            },
+            scheduledEnd: { 
+                type: Date 
+            }
         };
         
         super({

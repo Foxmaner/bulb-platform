@@ -18,8 +18,11 @@
 'use client';
 
 import { Meeting } from "index";
+import { usePathname } from "next/navigation";
 
-import React, { createContext, useState, useContext } from 'react';
+import RequestApi from "app/utils/client-request";
+
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
 
 type MeetingContextType = {
@@ -28,10 +31,13 @@ type MeetingContextType = {
 };
 
 const defaultMeeting: Meeting = {		
-    _id: '',
-	title:"",
-    sections: [],
-	
+	_id: "",
+	name: "",
+	team: "",
+	status: "",
+	date: "",
+	sections: [],
+	members: []
 }
 
 const MeetingContext = createContext<MeetingContextType>({
@@ -44,8 +50,32 @@ interface MeetingProviderProps {
 };
 
 export const MeetingProvider: React.FC<MeetingProviderProps> = ({ children }) => {
-	const [meeting, setMeeting] = useState<Meeting>(defaultMeeting);
+	const path = usePathname();
+    const room = path.split("/");
 	
+	const [meeting, setMeeting] = useState<Meeting>(defaultMeeting);
+
+	useEffect(() => {
+		const handleMeeting = async () => {
+			if (meeting._id === "" && path.includes("meetings") && room.length > 2) {
+				const resp = await RequestApi.get({
+					url: `/meeting/${room[2]}`
+				})
+
+				if (resp.status === 200) {
+					const data = await resp.json();
+
+					console.log("GOT MEETING!!", data.meeting)
+					setMeeting(data.meeting);
+				} else {
+					console.log("Status", resp.status)
+				}
+			}
+		}
+
+		handleMeeting();
+	}, [meeting, path, room]);
+
 	const value = {
 		meeting,
 		setMeeting

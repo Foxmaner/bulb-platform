@@ -1,13 +1,13 @@
-import express, { Express, Request, Response, Router } from 'express';
+import { Router } from 'express';
 import { MeetingController } from '../controllers';
 
 const routes: Router = Router();
 
-routes.get('/', MeetingController.load);
+routes.get('/user', MeetingController.loadUser);
+routes.get('/shared', MeetingController.loadPublished);
+routes.get('/published', MeetingController.loadShared);
 
 routes.post('/create', MeetingController.create);
-
-routes.get('/published', MeetingController.loadPublished);
 
 //loadAdvanced has filter, sort, and type in body
 routes.post('/advanced', MeetingController.advancedLoad);

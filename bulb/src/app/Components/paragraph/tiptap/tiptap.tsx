@@ -16,9 +16,15 @@ import { EditorContent, useEditor } from "@tiptap/react";
 import React from "react";
 import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
 
+import BulletList from '@tiptap/extension-bullet-list'
+import Document from '@tiptap/extension-document'
+import ListItem from '@tiptap/extension-list-item'
+import Paragraph from '@tiptap/extension-paragraph'
+import Text from '@tiptap/extension-text'
+
 import Placeholder from "@tiptap/extension-placeholder";
 
-import { useCurrentEditor } from '../context/editorProvider';
+import { useCurrentEditor } from '../../../context/editorProvider';
 
 
 interface ITiptapProps {
@@ -27,16 +33,25 @@ interface ITiptapProps {
 
 export default function Tiptap({ id }: ITiptapProps) {
 
-  console.log("AAAAAAAAAAAAnders!!!!!!!!", id)
-
   const { setCurrentEditor, provider, doc } = useCurrentEditor();
 
+  if (doc === null) {
+    throw new Error('doc is null');
+  }
+  if (provider === null) {
+    throw new Error('provider is null');
+  }
 
   const editor = useEditor({
+      content: doc,
       extensions: [
-          StarterKit.configure({
-              history: false
+          Document, 
+          Paragraph, 
+          Text, 
+          BulletList.configure({
+            keepAttributes: true,
           }),
+          ListItem,
           Collaboration.configure({
               document: doc,
               field: id
@@ -63,6 +78,10 @@ export default function Tiptap({ id }: ITiptapProps) {
 
   return (
     <div className='flex flex-col'>
+      <button
+        onClick={() => editor?.chain().focus().toggleBulletList().run()}
+        className={editor?.isActive('bulletList') ? 'is-active' : ''}
+      >test </button>
       <EditorContent onFocus={handleOnFocus} editor={editor} />
     </div>
   )

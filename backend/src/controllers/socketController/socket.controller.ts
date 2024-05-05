@@ -12,12 +12,19 @@ export class SocketController {
         socket.broadcast.to(roomID).emit('user_joined', socket.id);
     }
 
-    static async create_section(socket : Socket, data){
+    static async create_section(socket : Socket, data, callback){
+        console.log(data);
         const respMeeting = await MeetingModel.get(data.meetingID);
         const meeting = respMeeting.body.meeting;
-        const res = await meeting.addSection();
-        const section = res.body;
-        socket.broadcast.to(data.meetingID).emit('section_created', {section});
+
+        if (meeting) {
+            const res = await meeting.addSection();
+            const section = res.body;
+            socket.to(data.meetingID).emit('section_created', { section });
+            callback({ section });
+        } else {
+            socket.emit('error', { message: 'Meeting not found' });
+        }
     }
 
     static async delete_section(socket, data){
@@ -27,12 +34,18 @@ export class SocketController {
         socket.broadcast.to(data.meetingID).emit('section_deleted', { resp });
     }
 
-    static async create_paragraph(socket, data){
+    static async create_paragraph(socket, data, callback){
         const respMeeting = await MeetingModel.get(data.meetingID);
         const meeting = respMeeting.body.meeting;     
-        const res = await meeting.addParagraph(data.sectionID);
-        const paragraph = res.body;
-        socket.broadcast.to(data.meetingID).emit('paragraph_created', {paragraph});
+
+        if (meeting) {
+            const res = await meeting.addParagraph(data.sectionID);
+            const paragraph = res.body;
+            socket.broadcast.to(data.meetingID).emit('paragraph_created', { paragraph });
+            callback({ paragraph });
+        } else {
+            socket.emit('error', { message: 'Meeting not found' });
+        }
     }
 
     static async delete_paragraph(socket, data: IParagraph){

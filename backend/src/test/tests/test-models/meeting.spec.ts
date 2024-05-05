@@ -94,6 +94,27 @@ class MeetingTests {
 		expect(meetings[0].name).toBe("Meeting 1");
 	}
 
+	/**
+	 * Create Meeting
+	 */
+	@TestDecorators.test("Create multiple meeting")
+	async createMultipleMeeting() {
+		// Setup
+		const company = await MeetingTests.createCompany("Company 1");
+		var user = await MeetingTests.createUser("User 1", company._id);
+
+		const resp1 = await user.createMeeting({name: "Meeting 1"});
+		const resp2 = await user.createMeeting({name: "Meeting 2"});
+		const resp3 = await user.createMeeting({name: "Meeting 3"});
+
+		// Check if the company was created
+		const meetings = await MeetingModel.find();
+
+		expect(meetings.length).toBe(3);
+
+		console.log(meetings)
+	}
+
 	/* DEPRECATED
 	@TestDecorators.test("Create a meeting with invalid input")
 	async createInvalidMeeting() {

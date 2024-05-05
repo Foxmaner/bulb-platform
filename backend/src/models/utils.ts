@@ -8,7 +8,7 @@ export default class Utils {
 
     static sectionSchema () {
         return new Schema({
-            _id: Number,
+            _id: { type: Number, unique: false },
             title: String,
             contains: { type: [this.paragraphSchema()], default: [] },
             history: { type: [this.paragraphSchema()], default: [] },
@@ -27,7 +27,7 @@ export default class Utils {
 
     static paragraphSchema () {
         return new Schema({
-            _id: Number,
+            _id: { type: Number, unique: false },
             responses: { type: [], default: null },
             title: this.textSchema(),
             body: this.textSchema(),

@@ -4,7 +4,7 @@ import { MeetingModel, UserModel } from '../../models';
 
 export class MeetingController {
 
-    static async load(req: any, res: Response) {
+    static async loadUser(req: any, res: Response) {
         const userID = req.session.passport.user
         const respUser = await UserModel.get(userID);
         const user = respUser.body.user;
@@ -23,7 +23,51 @@ export class MeetingController {
             return res.status(resp.statusCode).json(resp.body)
         }
 
-        res.status(200).json({meetings: resp.body});
+        res.status(200).json({ meetings: resp.body });
+    }
+
+    static async loadPublished(req: any, res: Response) {
+        const userID = req.session.passport.user
+        const respUser = await UserModel.get(userID);
+        const user = respUser.body.user;
+
+        if(respUser.statusCode != 200){
+            return res.status(401).json(respUser.body)
+        }
+
+        const resp = await user.getPublishedMeetings();
+
+        if(process.env.DEBUG == "true"){
+            console.log(resp.body)
+        }
+
+        if(resp.statusCode != 200){
+            return res.status(resp.statusCode).json(resp.body)
+        }
+
+        res.status(200).json({ meetings: resp.body });
+    }
+
+    static async loadShared(req: any, res: Response) {
+        const userID = req.session.passport.user
+        const respUser = await UserModel.get(userID);
+        const user = respUser.body.user;
+
+        if(respUser.statusCode != 200){
+            return res.status(401).json(respUser.body)
+        }
+
+        const resp = await user.getPublishedMeetings();
+
+        if(process.env.DEBUG == "true"){
+            console.log(resp.body)
+        }
+
+        if(resp.statusCode != 200){
+            return res.status(resp.statusCode).json(resp.body)
+        }
+
+        res.status(200).json({ meetings: resp.body });
     }
     
     static async id(req: any, res: Response) {
@@ -38,6 +82,8 @@ export class MeetingController {
 
         const resp = await user.getMeeting(meetingId);
         const userMeeting = resp.body.meeting;
+
+        console.log(resp.body.meeting)
 
         if(process.env.DEBUG == "true"){
             console.log(resp.body)
@@ -173,30 +219,6 @@ export class MeetingController {
         }
         
         res.status(200).json({message : "meeting published"});
-    }
-
-
-    static async loadPublished(req: any, res: Response) {
-        const userID = req.session.passport.user;
-        const respUser = await UserModel.get(userID);
-        const user = respUser.body.user;
-    
-        if (respUser.statusCode != 200) {
-           return res.status(401).json(respUser.body);
-        }
-    
-        //getpublishedmeetings return all meetings it seems
-        const resp = await user.getPublishedMeetings();
-    
-        if (process.env.DEBUG == "true") {
-           console.log(resp.body);
-        }
-    
-        if (resp.statusCode != 200) {
-           return res.status(resp.statusCode).json(resp.body);
-        }
-    
-        res.status(200).json({ meetings: resp.body });
     }
 
     static async changeAccessLevel(req: any, res: Response){

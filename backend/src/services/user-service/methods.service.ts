@@ -14,12 +14,19 @@ import { Response as res } from "../utils.service";
  */
 export class MethodUserService extends mongoose.Model<User> {
 
-    async getSharedMeeting({ filter = {} }: { filter: { companyIDs?: ObjectId[], userIDs?: ObjectId[] } }) {
-
-
+    async getSharedMeeting() {
+        const pipelineResult = await MeetingModel.aggregate([
+            { 
+                $addFields: {
+                    "members.role": { $cond: { if: { $ne: ["$members.role", "owner"] }, then: "$members.role", else: "owner" } },
+                    "members.userID": this._id
+                }
+            }
+        ]);
+        return res.status(200).json(pipelineResult);
     }
 
-    /* async getPublishedMeetings() {
+    async getPublishedMeetings() {
         const meetings = await MeetingModel.aggregate([
             {
                 $match: {
@@ -29,7 +36,7 @@ export class MethodUserService extends mongoose.Model<User> {
         ]);
 
         return res.status(200).json(meetings);
-    } */
+    }
 
     async publishMeeting(meetingID: ObjectId) {
         await MeetingModel.findByIdAndUpdate(meetingID, { published: true });
@@ -106,7 +113,6 @@ export class MethodUserService extends mongoose.Model<User> {
                 ]
             });
             await meeting.save();
-            
             await this.addMeeting(meeting._id);
 
             return res.status(201).json(meeting);
@@ -130,17 +136,15 @@ export class MethodUserService extends mongoose.Model<User> {
     async getMeeting(meetingID) {
         if (!mongoose.Types.ObjectId.isValid(meetingID)) {
             return res.status(400).json({ message: "Invalid ObjectID." });
-        }
+        } 
 
-        const meeting = await MeetingModel.aggregate([
-            { $addFields: { "_id": meetingID as ObjectId } }
-        ]);
+        const meeting = await MeetingModel.get(meetingID as ObjectId)
 
         if (!meeting) {
             return res.status(404).json({ message: "Meeting not found" });
         }
 
-        return res.status(200).json({ meeting: meeting[0]});
+        return res.status(200).json({ meeting: meeting.body.meeting });
     }
 
     /*async addUserToMeeting (user: Member, meetingID: Schema.Types.ObjectId, res: Response) {

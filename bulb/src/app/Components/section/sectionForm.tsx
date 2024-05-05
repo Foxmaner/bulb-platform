@@ -61,18 +61,27 @@ export default function SectionForm({ data, selectedSectionTitle }: SectionFormP
         console.log('addParagraph', _id)
 
         const newPargraph: Paragraph = {
-            title: "",
-            text: "",
+            title: {
+                text: "",
+                comments: [],
+                history: []
+            },
+            body: {
+                text: "",
+                comments: [],
+                history: []
+            },
             _id
         }
 
         setMeeting({
             ...meeting,
             sections: meeting.sections.map(section => {
+                console.log('section. id', section._id)
                 if (section._id === data._id) {
                     return {
                         ...section,
-                        paragraphs: [...(section.paragraphs || []), newPargraph]
+                        contains: [...(section.contains || []), newPargraph]
                     }
                 }
                 return section;
@@ -81,15 +90,15 @@ export default function SectionForm({ data, selectedSectionTitle }: SectionFormP
     }, [data._id, meeting, setMeeting]);
 
     const sendAddParagraph = useCallback((useTitle?: boolean) => {
-        console.log('addParagraph')
-        socket.emit("addParagraph", { title: false }, (response: any) => {
+        console.log('paragraph_create')
+        socket?.emit("paragraph_create", { meetingID: meeting._id, sectionID: data._id }, (response: any) => {
 
             console.log('response', response)
 
-            addParagraph(response.id.toString())
+            addParagraph(response.paragraph.toString())
             
         });
-    }, [socket, addParagraph]);
+    }, [socket, meeting._id, data._id, addParagraph]);
 
     const deleteParagraph = (index: number) => {
         const isConfirmed = window.confirm("Är du säker på att du vill ta bort stycket?");
@@ -100,7 +109,7 @@ export default function SectionForm({ data, selectedSectionTitle }: SectionFormP
                     if (section._id === data._id) {
                         return {
                             ...section,
-                            paragraphs: section.paragraphs?.filter((section, i) => i !== index)
+                            contains: section.contains?.filter((section, i) => i !== index)
                         };
                     }
                     return section;
@@ -129,8 +138,8 @@ export default function SectionForm({ data, selectedSectionTitle }: SectionFormP
 
     useEffect(() => {
         const socketHandler = () => {
-            socket?.on("addParagraph", (data: any) => {
-                addParagraph(data.id);
+            socket?.on("paragraph_created", (data: any) => {
+                addParagraph(data.paragraph.id);
             });
 
             socket?.on("removeParagraph", (data: any) => {
@@ -178,7 +187,7 @@ export default function SectionForm({ data, selectedSectionTitle }: SectionFormP
                 style={{ fontWeight: 'bold', fontSize: '16px' }}
             />
             {
-                data.paragraphs?.map((paragraph: Paragraph, index: number) => (
+                data.contains?.map((paragraph: Paragraph, index: number) => (
                     <div key={index}>
                         <ParagraphForm sectionID={data._id} data={paragraph} />
                         <Button

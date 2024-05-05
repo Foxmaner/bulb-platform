@@ -4,12 +4,18 @@ declare module "index" {
         name: string,
         progress?: number,
         completed?: boolean,
-        date: Date,
+        scheduledStart?: Date,
+        scheduledEnd?: Date,
+        created: Date,
         sections?: [Section],
         summerySections?: [Section, Integer],
         history?: [MeetingHistory],
-        members?: [Member]
+        members?: [Member],
+        published?: boolean
+        status?: Status
     }
+
+    type Status = "inprogress" | "done" | "upcomming"
 
     type Template = {
         name: string,
@@ -51,7 +57,7 @@ declare module "index" {
     
     type Text = {
         text: string,
-        textHistory?: [ParagraphHistory],
+        history?: [ParagraphHistory],
         comments?: [Comment]
     }
 

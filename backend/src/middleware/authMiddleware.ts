@@ -25,8 +25,6 @@ const runSessionMiddleware = () => {
 }
 
 const verifySession = (req: any, res: any, next: any) => {
-    console.log(req.session, req.isAuthenticated(), req.url)
-
     if (req.isAuthenticated()) {
         return next();
     } else {
@@ -36,15 +34,14 @@ const verifySession = (req: any, res: any, next: any) => {
 };
 
 const verifySocket = (socket, next) => {
-    if (!socket.request.session || !socket.request.session.user){
+    console.log(socket.request.session)
+
+    if (!socket.request.session || !socket.request.session.passport.user) {
         console.log("Not authorized")
         next(new Error("Not authorized"));
     }
     next();
 }
-
-const wrap = expressMiddleware => (socket, next) =>
-    expressMiddleware(socket.request, {}, next);
 
 const updateSessionPath = (req: any, res) => {
     if (!req.headers.referer) {
@@ -68,4 +65,4 @@ const corsConfig = {
     allowedHeaders: 'Content-Type,Authorization'
 }
 
-export { verifySession, verifySocket, wrap, runSessionMiddleware, corsConfig, updateSessionPath }
+export { verifySession, verifySocket, runSessionMiddleware, corsConfig, updateSessionPath }

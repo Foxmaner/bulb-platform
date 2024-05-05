@@ -17,6 +17,13 @@ interface IRequestProps {
     body?: any;
 }
 
+interface IOptions {
+    method: string;
+    credentials: string;
+    headers: { [key: string]: string };
+    body?: string;
+}
+
 export default class RequestApi {
     static post(props: IRequestProps) {
         return RequestApi.requestApi("POST", props);
@@ -41,7 +48,7 @@ export default class RequestApi {
         const body = props.body ?? {}
         const header = props.header ?? {}
 
-        return fetch(`http://localhost:3001${props.url}`, { 
+        const options: IOptions = { 
             method, 
             credentials: 'include',
             headers: {
@@ -50,6 +57,12 @@ export default class RequestApi {
                 'Cookie': `connect.sid=${cookie}`,
                 'Referer': props.url
             }
-        });
+        }
+
+        if (method !== 'GET') {
+            options.body = JSON.stringify(body);
+        }
+
+        return fetch(`http://localhost:3001${props.url}`, options as RequestInit);
     }
 }

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import SignInButton from "./Components/SignInBtn";
+import SignInButton from "./components/SignInBtn";
 
 export default function Home() {
   return (

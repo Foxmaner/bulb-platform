@@ -17,7 +17,6 @@
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
 
   /*Fick problem med SVG och children i Meetings*/
   /*background: linear-gradient(

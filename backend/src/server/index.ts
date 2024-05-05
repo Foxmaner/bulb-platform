@@ -1,4 +1,3 @@
-import { Socket } from 'socket.io';
 import { SocketController, BrainstormController  } from '../controllers';
 
 function connectionHandler(socket: any): void {
@@ -28,16 +27,16 @@ function connectionHandler(socket: any): void {
         BrainstormController.delete_note(socket,data);
     });
 
-    socket.on("section_create", (data) => {
-        SocketController.create_section(socket, data);
+    socket.on("section_create", (data, callback) => {
+        SocketController.create_section(socket, data, callback);
     });
 
     socket.on('section_delete', (data) => {
         SocketController.delete_section(socket, data);
     });
 
-    socket.on('paragraph_create', (data) => {
-        SocketController.create_paragraph(socket, data);
+    socket.on('paragraph_create', (data, callback) => {
+        SocketController.create_paragraph(socket, data, callback);
     });
 
     socket.on('paragraph_delete', (data) => {

@@ -1,6 +1,9 @@
+import { cookies } from "next/headers";
+
 import Stripes from 'app/components/stripes';
 import { MeetingProvider } from '../../context/meetingProvider';
 import { EditorProvider } from 'app/context/editorProvider';
+
 
 
 interface layoutProps {
@@ -8,16 +11,14 @@ interface layoutProps {
 }
 
 export default function LayoutPage({ children }: layoutProps) {
-
+    const cookieStore = cookies()
+    const cookie = cookieStore.get('connect.sid');
 
     return (
         <div className="relative">
             <div className='relative z-10'>
-                
-                <EditorProvider>
-                    <MeetingProvider>
-                        {children}
-                    </MeetingProvider>
+                <EditorProvider cookie={cookie?.value ?? ""}>
+                    {children}
                 </EditorProvider>
             </div>
             <Stripes/>

@@ -8,7 +8,6 @@ import { connectionHandler } from "./server";
 import { createServer } from "http";
 
 import cors from "cors";
-import cookieParser from "cookie-parser";
 import passport from "passport";
 
 import { setupPassport } from "./config/passport-setup";
@@ -34,7 +33,7 @@ import { connectDatabase as testConnectDatabase } from "./config/test-connection
 
 import { 
     verifySession, 
-    wrap, 
+    verifySocket,
     runSessionMiddleware,
     corsConfig,
     updateSessionPath
@@ -55,25 +54,26 @@ const run = async () => {
 
     const app = express();
     const httpServer = createServer(app);
-    const io = new Server(httpServer, {});
+    const io = new Server(httpServer, { cors: { origin: "*" } });
+
+    const ysocketio = new YSocketIO(io)
+    ysocketio.initialize()
     
     app.use(cors(corsConfig));
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
 
     app.use((req, res, next) => {
-
         console.log(`Request: ${req.method} ${req.url}`);
-
         next();
     })
     
-    app.use(runSessionMiddleware());
+    const sessionMiddleware = runSessionMiddleware()
+    app.use(sessionMiddleware);
 
     // Passport setup, for authentication
     setupPassport(app);
 
-    app.use(cookieParser());
     app.use(passport.authenticate("session"));
     app.use(passport.initialize());
     app.use(passport.session());
@@ -130,11 +130,11 @@ const run = async () => {
     app.use("/template", templateRoutes);
     app.use("/wordcloud", wordcloudRoutes); 
 
-    const ysocketio = new YSocketIO(io)
-    ysocketio.initialize()
-
-    io.use(wrap(runSessionMiddleware()))
-    //io.use(verifySocket);
+    io.use(function(socket, next){
+        socket.request.headers.cookie = socket.handshake.auth.cookie;
+        sessionMiddleware(socket.request, {}, next);
+    })
+    io.use(verifySocket);
     io.on('connection', connectionHandler);
 
     const closeServer = () => {

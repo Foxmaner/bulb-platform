@@ -1,8 +1,8 @@
 'use client'
-import QRCode from "react-qr-code"
+import QRCode from "@wojtekmaj/react-qr-svg"
 import { BsX } from "react-icons/bs";
 
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from "@nextui-org/react";
+import { Modal, ModalContent, ModalBody, Button, useDisclosure } from "@nextui-org/react";
 
 import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/react";
 import { useState } from "react";

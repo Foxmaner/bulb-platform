@@ -1,60 +1,52 @@
-"use client";
-import {
-  Button,
-  ButtonGroup,
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownItem,
-} from "@nextui-org/react";
+import React from "react";
+import MenuBtn from "../../components/btn/MenuBtn";
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
 
-function capitalizeFirstLetter(string: string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
+
+interface PageHeaderProps {
+	children?: React.ReactNode;
+	contentTitle: string;
 }
 
-export default function PageHeader({ userName }: { userName: string }) {
-  //We use slice to get rid of the "/" in the beginning of pathname
-  const pathName = usePathname().slice(1)
-  const router = useRouter();
-  return (
-        <div className="bg-primaryGrey w-full flex-col justify-between">
-            <div className="bg-white w-full">
-                <h2 className="text-black">Good afternoon, {userName}</h2>
-            </div>
+export default function PageHeader({ children, contentTitle }: PageHeaderProps) {
+	const username = "Test User1";
+	const times = [
+		"Morning",
+		"Afternoon",
+		"Evening"
+	]
 
-      <div className="flex justify-between border-2 border-primaryBorder w-full items-center overflow-hidden">
-        <div className="flex items-start">
-          <h1 className="text-black font-bold text-7xl mx-5">
-            {capitalizeFirstLetter(pathName)}
-          </h1>
-        </div>
-        <div className="flex-shrink-0">
-          <Image src="/placeholder.jpg" alt="" height={122} width={400}></Image>
-        </div>
-      </div>
-            
-    <div className="flex gap-1 bg-white w-full">
-      <Button
-        onClick={() => router.push("/meetings/create")}
-        className="bg-white border-2 border-edge text-primaryText w-5 h-7 m-2"
-      >
-        Skapa
-      </Button>
-      <Button className="bg-white border-2 border-edge text-primaryText w-5 h-7 m-2">
-        Företag
-      </Button>
-      <Button className="bg-white border-2 border-edge text-primaryText w-5 h-7 m-2">
-        Månad
-      </Button>
-      <Button className="bg-white border-2 border-edge text-primaryText w-5 h-7 m-2">
-        01
-      </Button>
-      <Button className="bg-white border-2 border-edge text-primaryText w-5 h-7 m-2">
-        Filter
-      </Button>
-    </div>
-    </div >
-  );
+	const getTimes = (): string => {
+		const date = new Date();
+		const hours = date.getHours();
+
+		if (hours >= 0 && hours < 12) {
+			return times[0];
+		} else if (hours >= 12 && hours < 18) {
+			return times[1];
+		} else {
+			return times[2];
+		}
+	}
+
+	return (
+		<div className=" w-full flex-col justify-between mb-2">
+			<div className="w-full px-5 py-2">
+				<h2 className="text-titleText font-medium">Good {getTimes()}, {username.split(" ")[0]}!</h2>
+			</div>
+
+			<div className="bg-primaryGrey w-full flex flex-row justify-between items-center pl-4 border-y border-primaryBorder overflow-hidden">
+				<div className="w-full flex flex-col items-start pr-2">
+					<h1 className="text-black font-bold text-7xl">
+						{contentTitle}
+					</h1>
+					{children}
+				</div>
+				
+				<div className="flex-shrink-0">
+					<Image src="/placeholder.jpg" alt="" height={130} width={500}></Image>
+				</div>
+			</div>	
+		</div>
+	);
 }

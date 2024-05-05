@@ -18,7 +18,7 @@ import { useMeetingContext } from "app/context/meetingProvider";
 import { useEditorContext } from "app/context/editorProvider";
 
 import { Paragraph } from "index";
-import Tiptap from "../tiptap";
+import Tiptap from "./tiptap/tiptap";
 
 
 interface IParagraphFormProps {
@@ -27,9 +27,11 @@ interface IParagraphFormProps {
 }
 
 export default function ParagraphForm({ sectionID, data }: IParagraphFormProps) {
-    const [ title, setTitle ] = useState<string>(data.title || "")
+    const [ title, setTitle ] = useState<string>(data.title?.text || "")
     const { meeting, setMeeting } = useMeetingContext();
-    const [ text, setTextValue ] = useState<string>(data.text || "");
+    const [ text, setTextValue ] = useState<string>(data.body.text || "");
+
+    const { provider } = useEditorContext();
     
     const addParagraphTitle = (title: string) => {
         setTitle(title);
@@ -38,14 +40,14 @@ export default function ParagraphForm({ sectionID, data }: IParagraphFormProps) 
             ...meeting,
             sections: meeting.sections.map(section => {
 
-                section.paragraphs?.map(paragraph => {
+                section.contains?.map(paragraph => {
                     if (paragraph._id === data._id) {
 
 
                         paragraph.title = title
                         return {
                             ...section,
-                            paragraphs: [(section.paragraphs || []), paragraph]
+                            contains: [(section.contains || []), paragraph]
                         }
                     }
                 })
@@ -55,7 +57,7 @@ export default function ParagraphForm({ sectionID, data }: IParagraphFormProps) 
         })
     }
 
-    const addParagraphText = (text: string) => {
+    /*const addParagraphText = (text: string) => {
         setTextValue(text);
 
         setMeeting({
@@ -77,9 +79,9 @@ export default function ParagraphForm({ sectionID, data }: IParagraphFormProps) 
                 return section;
             })
         })
-    }
+    }*/
 
-    if (!data._id) {
+    if (!data._id || !provider) {
         return <></>
     }
 
@@ -87,7 +89,7 @@ export default function ParagraphForm({ sectionID, data }: IParagraphFormProps) 
         
         <div className="flex flex-col gap-2">
             <div className="flex flex-col gap-1">
-                <Tiptap id={`${sectionID}.${data._id.toString()}`} />
+                <Tiptap id={`${sectionID}.${data._id}`} />
             </div>
         </div>
     )
