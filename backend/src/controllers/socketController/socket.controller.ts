@@ -41,18 +41,26 @@ export class SocketController {
         if (meeting) {
             const res = await meeting.addParagraph(data.sectionID);
             const paragraph = res.body;
-            socket.broadcast.to(data.meetingID).emit('paragraph_created', { paragraph });
+            socket.broadcast.to(data.meetingID).emit(`paragraph_created`, { paragraph });
             callback({ paragraph });
         } else {
             socket.emit('error', { message: 'Meeting not found' });
         }
     }
 
-    static async delete_paragraph(socket, data: IParagraph){
+    static async delete_paragraph(socket, data: IParagraph, callback){
         const respMeeting = await MeetingModel.get(data.meetingID);
         const meeting = respMeeting.body.meeting;
         const resp = await meeting.removeParagraph(data.sectionID, data.paragraphID);
-        socket.broadcast.to(data.meetingID).emit('paragraph_deleted', { resp });
+
+        console.log("9999", resp)
+
+        if (resp.statusCode === 200) {
+            socket.broadcast.to(data.meetingID).emit(`paragraph_${data.sectionID}.${data.paragraphID}_deleted`, { resp });
+            callback({ "message": `${data.sectionID}.${data.paragraphID} was removed` });
+        } else {
+            socket.emit('error', { message: 'Paragraph not found' });
+        }
     }
 
     static async edit_paragraph(socket, data: IParagraphEdit) {

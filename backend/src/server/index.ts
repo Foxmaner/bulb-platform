@@ -39,8 +39,8 @@ function connectionHandler(socket: any): void {
         SocketController.create_paragraph(socket, data, callback);
     });
 
-    socket.on('paragraph_delete', (data) => {
-        SocketController.delete_paragraph(socket, data);
+    socket.on('paragraph_delete', (data, callback) => {
+        SocketController.delete_paragraph(socket, data, callback);
     });
 
     socket.on('paragraph_edit', (data) => {

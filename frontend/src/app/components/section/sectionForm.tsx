@@ -10,7 +10,8 @@
  * Usage:
  * <SectionForm data={sectionData} />
  */
-'use client';
+"use client";
+
 import {
     Button, ButtonGroup, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Textarea, Modal,
     ModalContent,
@@ -23,12 +24,12 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, useRef, useCallback } from "react";
 import ParagraphForm from "../paragraph/paragraph";
-
+import { RxCross2 } from "react-icons/rx";
 import { Section, Paragraph } from "index";
 import { title } from "process";
 import { useMeetingContext } from "../../context/meetingProvider";
 
-import { useCurrentEditor } from '../../context/editorProvider';
+import { useEditorContext } from '../../context/editorProvider';
 
 
 interface SectionFormProps {
@@ -46,7 +47,7 @@ export default function SectionForm({ data, selectedSectionTitle }: SectionFormP
 
     const sectionRef = useRef<HTMLTextAreaElement>(null)
 
-    const { socket } = useCurrentEditor();
+    const { doc, currentEditor, setCurrentEditor, socket } = useEditorContext();
 
     /**
     *  setMeeting(
@@ -90,33 +91,10 @@ export default function SectionForm({ data, selectedSectionTitle }: SectionFormP
     }, [data._id, meeting, setMeeting]);
 
     const sendAddParagraph = useCallback((useTitle?: boolean) => {
-        
         socket?.emit("paragraph_create", { meetingID: meeting._id, sectionID: data._id }, (response: any) => {
-
-            
-
             addParagraph(response.paragraph.toString())
-            
         });
     }, [socket, meeting._id, data._id, addParagraph]);
-
-    const deleteParagraph = (index: number) => {
-        const isConfirmed = window.confirm("Är du säker på att du vill ta bort stycket?");
-        if (isConfirmed) {
-            setMeeting({
-                ...meeting,
-                sections: meeting.sections.map(section => {
-                    if (section._id === data._id) {
-                        return {
-                            ...section,
-                            contains: section.contains?.filter((section, i) => i !== index)
-                        };
-                    }
-                    return section;
-                })
-            })
-        }
-    };
     
     const updateSectionTitle = (title: string) => {
         setTitle(title);
@@ -143,13 +121,8 @@ export default function SectionForm({ data, selectedSectionTitle }: SectionFormP
                 addParagraph(data.paragraph.id);
             });
 
-            socket?.on("removeParagraph", (data: any) => {
-                
-                addParagraph(data.id);
-            });
-
             return () => {
-                socket?.off("addParagraph");
+                socket?.off("section_deleted");
                 socket?.off("removeParagraph");
             };
         }
@@ -175,6 +148,39 @@ export default function SectionForm({ data, selectedSectionTitle }: SectionFormP
         };
     }, [socket, selectedSectionTitle, data.title, addParagraph]);
 
+    const deleteParagraph = useCallback((editor: any, id: string) => {
+
+        if (!editor) {
+            console.warn("CURRENT IS NULL");
+            return;
+        }
+
+        editor.destroy();
+                
+        setMeeting(prevMeeting => ({
+            ...prevMeeting,
+            sections: prevMeeting.sections.map(section => {
+                if (section._id === data._id) {
+
+                    return ({
+                        ...section,
+                        contains: section.contains.filter(paragraph => paragraph._id !== id)
+                    });
+                }
+                return section;
+            })
+        }));
+    }, [meeting, currentEditor]);
+
+    const sendDeleteParagraph = useCallback((editor: any, id: string) => {
+        console.log("EMIT!!")
+        socket?.emit("paragraph_delete", ({ meetingID: meeting._id, sectionID: data._id, paragraphID: id }), (data: any) => {
+            console.log("7777", data)
+            deleteParagraph(editor, id);
+        })
+
+    }, [currentEditor, data._id, doc.share, setMeeting]);
+
     return (
         <div className="flex flex-col gap-2 w-full items-center">
             <Textarea
@@ -188,13 +194,18 @@ export default function SectionForm({ data, selectedSectionTitle }: SectionFormP
                 minRows={1}
                 style={{ fontWeight: 'bold', fontSize: '16px' }}
             />
+            
             {
                 data.contains?.map((paragraph: Paragraph, index: number) => (
                     <div key={index} className="flex justify-center items-center w-full px-2">
-                        <ParagraphForm sectionID={data._id} data={paragraph} />
+                        <ParagraphForm 
+                            sendDeleteParagraph={sendDeleteParagraph}
+                            deleteParagraph={deleteParagraph} 
+                            sectionID={data._id} 
+                            data={paragraph} 
+                        />
                     </div>
                 )
-
             )}
 
             <div className="flex flex-col w-full h-full">

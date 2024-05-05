@@ -1,6 +1,5 @@
 "use client";
 
-import "./tiptap.css";
 
 import Collaboration from "@tiptap/extension-collaboration";
 
@@ -22,8 +21,6 @@ interface ITiptapProps {
 export default function Tiptap({ id }: ITiptapProps) {
   const { setCurrentEditor, provider, doc } = useCurrentEditor();
   const [ style, setStyle ] = useState<string>("min-h-10");
-
-  console.log(id)
 
   const { user } = useUserContext();
 
