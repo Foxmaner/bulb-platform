@@ -1,6 +1,6 @@
 "use client";
 import QRCodeWindow from "app/components/QrCode";
-import React, { useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import { scaleOrdinal } from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';
@@ -26,8 +26,21 @@ let sampleString = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nul
 
 export default function Page({ params }: { params: { id: string } }) {
   const schemeCategory10ScaleOrdinal = scaleOrdinal(schemeCategory10);
-  let data = generateData(sampleString)
+
+  const [data, setData] = useState([]);
   const rotate = useCallback((word: any) => word.value % 2, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch('/wordcloud'); // replace with your URL
+      const text = await response.text();
+      setData(JSON.parse(text));
+    };
+
+    fetchData();
+  }, []);
+
+
   return (
 
     <div className="w-screen h-screen">
