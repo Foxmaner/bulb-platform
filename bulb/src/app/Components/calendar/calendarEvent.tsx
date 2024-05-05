@@ -16,11 +16,11 @@ import { User } from "index";
 
 import Image from "next/image";
 
-import * as clockIcon from "../../../public/icons/clock.svg";
-import * as userIcon from "../../../public/icons/user.svg";
-import * as mapPointIcon from "../../../public/icons/map-point.svg";
-import * as textIcon from "../../../public/icons/text.svg";
-import * as xIcon from "../../../public/icons/x.svg";
+import * as clockIcon from "app/../../public/icons/clock.svg";
+import * as userIcon from "app/../../public/icons/user.svg";
+import * as mapPointIcon from "app/../../public/icons/map-point.svg";
+import * as textIcon from "app/../../public/icons/text.svg";
+import * as xIcon from "app/../../public/icons/x.svg";
 
 import React from "react";
 

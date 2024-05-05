@@ -1,7 +1,5 @@
 export * from './auth.route';
 
-export * from './example.route';
-
 export * from './history.route';
 
 export * from './image.route';

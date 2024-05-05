@@ -104,12 +104,14 @@ export default function MeetingsPage() {
 		const fetchMeetings = async () => {
 			let holder = searchParams.get("holder");
 
-			if (!holder) {
+			const valid = ["user", "shared", "published"];
+
+			if (!holder || !valid.includes(holder)) {
 				holder = "user"
 			}
 
 			const resp = await Request.get({
-				url: "/meeting"
+				url: "/meeting/"+holder
 			});
 
 			setLoading(false);

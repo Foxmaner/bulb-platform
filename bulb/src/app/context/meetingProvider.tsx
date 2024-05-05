@@ -64,12 +64,8 @@ export const MeetingProvider: React.FC<MeetingProviderProps> = ({ children }) =>
 
 				if (resp.status === 200) {
 					const data = await resp.json();
-
-					console.log("GOT MEETING!!", data.meeting)
 					setMeeting(data.meeting);
-				} else {
-					console.log("Status", resp.status)
-				}
+				} 
 			}
 		}
 

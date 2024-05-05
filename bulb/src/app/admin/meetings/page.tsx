@@ -22,8 +22,8 @@ const statusColorMap: Record<string, ChipProps["color"]> = {
 const meetings: Meeting[] = Array.from({ length: 50 }, (_, index) => (
 	{
 		_id: index,
-		name: `Alperna ${index}`,
-        team: "alperna",
+		name: `test ${index}`,
+        team: "test",
         status: "done",
 		date: new Date().toISOString(),
 	}

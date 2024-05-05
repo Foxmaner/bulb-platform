@@ -15,7 +15,7 @@ router.get(
     "/google/redirect",
     passport.authenticate('google', { 
         failureRedirect: 'http://localhost:3000/auth/signIn',
-        successRedirect: 'http://localhost:3000/meetings'
+        successRedirect: 'http://localhost:3000/meetings?holder=user'
     })
 );
 

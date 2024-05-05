@@ -17,6 +17,9 @@ import {
   DropdownItem,
   useDisclosure
 } from "@nextui-org/react";
+import SignOutButton from "./SignOutBtn";
+import RequestApi from "app/utils/client-request";
+import { useUserContext } from "app/context/userProvider";
 
 
 
@@ -33,12 +36,24 @@ const navbarPaths = [
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { user } = useUserContext();
 
   //Detta för att inte visa sideBar på Skapasidan, en sk fulfix.
   if (!navbarPaths.includes(pathname)) {
     return <></>;
   }
+
+  const handleOAuth = async () => {
+		const response = await RequestApi.post({
+            url: "/auth/logout",
+        });
+
+        if (response.status === 200) {
+            window.location.href = "/login";
+        }
+	};
+
+  console.log(user)
 
   return (
     <div className="bg-primaryGrey h-screen flex flex-col py-2.5">
@@ -87,28 +102,29 @@ export default function Navbar() {
       <div className="border-edge border-t-1 w-5/6 self-center" />
 
       <div className="flex p-1 mx-2 my-1 w-full">
-        <Dropdown
-          onSelect={(e) => {console.log("BBBB")}}
-        >
+        <Dropdown>
           <DropdownTrigger>
             <div className="h-14 cursor-pointer w-14 bg-secondary flex justify-center items-center text-white rounded-md relative">
                 <h1 className="text-2xl">
-                  M
+                  {
+                    user?.name?.charAt(0).toUpperCase()
+                  }
                 </h1>
               <div className="w-3 h-3 bg-online rounded-full absolute right-1 bottom-1 border-2 border-secondaryGrey"/>
             </div>
           </DropdownTrigger>
           <DropdownMenu aria-label="Static Actions">
-            <DropdownItem color="warning" key="admin">Admin</DropdownItem>
             <DropdownItem color="secondary" key="profile" onPress={(e) => router.push("/profile")}>
               Profile
             </DropdownItem>
-            <DropdownItem color="danger" className="text-danger" key="signout">Signout</DropdownItem>
+            <DropdownItem color="danger" className="text-danger" key="signout" onPress={handleOAuth}>
+              SignOut
+            </DropdownItem>
           </DropdownMenu>
         </Dropdown>
         <div className="flex flex-col justify-center items-start mx-2">
-          <h1 className="text-primary font-bold text-md p-0">User Test</h1>
-          <h2 aria-label="East Sweden Medtech" className="text-gray-500 text-xs p-0 -mt-1 w-24 truncate">East Sweden Medtech</h2>
+          <h1 className="text-primary font-bold text-md p-0">{user?.name}</h1>
+          <h2 aria-label="East Sweden Medtech" className="text-gray-500 text-xs p-0 -mt-1 w-24 truncate">{user?.team}</h2>
         </div>
       </div>
     </div>

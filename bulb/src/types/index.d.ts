@@ -2,13 +2,11 @@
 
 declare module "index" {
     type User = {
-        _id: number;
+        _id: string;
         name: string;
         role: string;
         team: string;
         status: string;
-        age: string;
-        avatar: string;
         email: string;
     }
 

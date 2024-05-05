@@ -131,7 +131,6 @@ export default function TableView<T extends { _id: string }>({
         }
 
         for (const key in externalFilters) {
-            console.log(key, externalFilters[key].filterValue);
             if (
                 externalFilters[key].filterValue !== undefined &&
                 externalFilters[key].filterValue !== "all" &&

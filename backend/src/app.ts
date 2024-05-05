@@ -16,7 +16,6 @@ import { YSocketIO } from 'y-socket.io/dist/server'
 
 import {
     authRoutes,
-    exampleRoutes,
     historyRoutes,
     imageRoutes,
     meetingRoutes,
@@ -38,6 +37,7 @@ import {
     corsConfig,
     updateSessionPath
 } from "./middleware/authMiddleware";
+import { userRoutes } from "./routes/user.route";
 
 
 dotenv.config();
@@ -121,7 +121,7 @@ const run = async () => {
         app.post("/verify", updateSessionPath);
     });
 
-    app.use("/example", exampleRoutes);
+    app.use("/user", userRoutes);
     app.use("/history", historyRoutes);
     app.use("/image", imageRoutes);
     app.use("/meeting", meetingRoutes);

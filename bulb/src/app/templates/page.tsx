@@ -12,8 +12,8 @@ const getDate = (index: number) => {
 const templates: Template[] = Array.from({ length: 50 }, (_, index) => (
 	{
 		_id: index,
-		name: `Alperna ${index}`,
-        team: "alperna",
+		name: `test ${index}`,
+        team: "test",
         status: "done",
 		date: getDate(index),
 	}

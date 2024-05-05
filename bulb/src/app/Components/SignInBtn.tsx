@@ -12,7 +12,7 @@ const SignInButton = () => {
     return (
         <div className="flex flex-col">
 			<button onClick={handleOAuth} className="bg-slate-600 px-4 py-2 text-white m-2">
-				Login with Google
+				Logga in med Google
 			</button>
         </div>
     );

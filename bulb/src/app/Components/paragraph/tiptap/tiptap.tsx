@@ -59,7 +59,7 @@ export default function Tiptap({ id }: ITiptapProps) {
           CollaborationCursor.configure({
               provider,
               user: {
-                  name: "Anders",
+                  name: "Test User",
                   color: "#f783ac",
               },
           }),

@@ -2,9 +2,9 @@ import { Dispatch, RefObject, SetStateAction, useEffect, useState } from "react"
 import FullCalendar from "@fullcalendar/react";
 
 
-import * as nextArrow from "../../../public/icons/next-arrow.svg";
-import * as prevArrow from "../../../public/icons/prev-arrow.svg";
-import * as settings from "../../../public/icons/settings.svg";
+import * as nextArrow from "app/../../public/icons/next-arrow.svg";
+import * as prevArrow from "app/../../public/icons/prev-arrow.svg";
+import * as settings from "app/../../public/icons/settings.svg";
 
 import Image from "next/image";
 import {

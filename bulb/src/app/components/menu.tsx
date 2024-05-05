@@ -21,15 +21,15 @@ export default function Menu() {
     <div className="w-full select-none">
       {/* Hjälp */}
             <Link
-        href="/help"
+        href="/calendar"
         className={`text-gray-500 font-bold text-lg flex items-center mb-2 ${
-          pathname.includes("/help") ? "text-primary" : "hover:text-secondary"
+          pathname.includes("/calendar") ? "text-primary" : "hover:text-secondary"
         }`}
         onClick={setInvisible}
       >
         <BsCalendarDate
           className="mr-1"
-          color={`${pathname.includes("/help") ? "#831843" : "#6b7280"}`}
+          color={`${pathname.includes("/calendar") ? "#831843" : "#6b7280"}`}
         />
         Calendar
       </Link>
@@ -65,7 +65,7 @@ export default function Menu() {
         <div className="text-gray-500 font-bold flex flex-row w-full ml-2 mb-1">
           <div className={`${pathname.includes("/meetings") ? "bg-primary bg-opacity-50" : "bg-secondaryGrey" } bg-opacity-50 w-0.5 mr-2`}></div>
           <div className="flex flex-col w-[85%]">
-            <Link href={"/meetings?holder=user"} className={`px-1 mb-1 bg-opacity-50 rounded-md ${searchParams.get("holder") === "user" ? "text-primary bg-secondary" : "hover:text-secondary"}`}>
+            <Link href={"/meetings?holder=user"} className={`px-1 mb-1 bg-opacity-50 rounded-md ${searchParams.get("holder") === "user" || !searchParams.get("holder") ? "text-primary bg-secondary" : "hover:text-secondary"}`}>
               Mina
             </Link>
             <Link href={"/meetings?holder=shared"} className={`px-1 mb-1 bg-opacity-50 rounded-md ${searchParams.get("holder") === "shared" ? "text-primary bg-secondary" : "hover:text-secondary"}`}>

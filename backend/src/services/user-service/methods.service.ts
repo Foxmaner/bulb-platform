@@ -83,6 +83,13 @@ export class MethodUserService extends mongoose.Model<User> {
         return res.status(200).json({ message: "Meeting added" });
     }
 
+    async removeAllMeetings () {
+        await MeetingModel.findMany({ 
+            accessibleMeetings: this._id 
+        });
+        return res.status(200).json({ message: "All meetings removed" });
+    }
+
     async removeMeeting (meetingID: ObjectId) {
         await this.updateOne({ $pull: { accessibleMeetings: meetingID }});
 
