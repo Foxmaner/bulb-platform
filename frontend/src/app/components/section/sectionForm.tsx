@@ -117,7 +117,7 @@ export default function SectionForm({ data, selectedSectionTitle }: SectionFormP
             })
         }
     };
-    //Fortsätt här, fixa så att det blir samma som för paragraphs
+    
     const updateSectionTitle = (title: string) => {
         setTitle(title);
 
@@ -174,13 +174,13 @@ export default function SectionForm({ data, selectedSectionTitle }: SectionFormP
     }, [socket, selectedSectionTitle, data.title, addParagraph]);
 
     return (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 w-full items-center">
             <Textarea
                 variant="underlined"
                 radius="none"
                 labelPlacement="outside"
                 placeholder="Titel"
-                className="flex w-11/12 truncate"
+                className="flex w-full truncate"
                 value={title}
                 onValueChange={updateSectionTitle}
                 minRows={1}
@@ -188,15 +188,8 @@ export default function SectionForm({ data, selectedSectionTitle }: SectionFormP
             />
             {
                 data.contains?.map((paragraph: Paragraph, index: number) => (
-                    <div key={index}>
+                    <div key={index} className="flex justify-center items-center w-full px-2">
                         <ParagraphForm sectionID={data._id} data={paragraph} />
-                        <Button
-                            onClick={() => deleteParagraph(index)}
-                            variant="light"
-                            size="sm"
-                            radius="full"
-                            color="danger"
-                            >Delete </Button>
                     </div>
                 )
 

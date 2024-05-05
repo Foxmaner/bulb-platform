@@ -1,18 +1,49 @@
 .tiptap {
-
     ul,
     ol {
         padding: 0 1rem;
     }
 
-    li {
-      list-style:disc;
+    ul {
+        list-style: disc;
     }
 
+    div {
+        outline: none;
+    }
+
+    div:focus {
+        outline: none !important;
+    }
+
+    ol {
+        list-style-type: decimal;
+    }
+
+    h1 {
+        font-size: 12x;
+    }
+    h2 {
+        font-size: 18px;
+    }
+    h3 {
+        font-size: 24px;
+    }
+    h4 {
+        font-size: 30px;
+    }
 
     li::marker {
-      color: #adb5bd;
+        color: #adb5bd;
     }
+
+    p {
+        padding: 0.3rem;
+    }
+}
+
+.ProseMirror:focus {
+    outline: none;
 }
 
 /* Placeholder (at the top) */
@@ -33,6 +64,17 @@
     pointer-events: none;
     position: relative;
     word-break: normal;
+}
+
+.bullet_class {
+    list-style: inside;
+    margin: 0;
+    padding: 0;
+}
+
+.ordered_class {
+    list-style: decimal;
+    list-style-position: inside;
 }
 
 /* Render the username above the caret */
