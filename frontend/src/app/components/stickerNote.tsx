@@ -22,19 +22,33 @@ let sampleData = {
     }
 }
 
-function onDragEvent(i: number) {
-    console.log((sampleData[i].position.x).toString());
-    
-}
 
 
 function generateStickerNotes(sampleData: any) {
+    
     const [windowSize, setWindowSize] = useState({ width: window.innerWidth, height: window.innerHeight });
+    const [positions, setPositions] = useState(sampleData.map((item: { position: { x: number; y: number; }; }) => ({
+        x: item.position.x * windowSize.width,
+        y: item.position.y * windowSize.height,
+      })));
 
     useEffect(() => {
         const handleResize = () => {
-          console.log('resizing');  
-          setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+            if (typeof window !== 'undefined') {
+                const newWindowSize = { width: window.innerWidth, height: window.innerHeight };
+                const widthRatio = newWindowSize.width / windowSize.width;
+                const heightRatio = newWindowSize.height / windowSize.height;
+        
+                const newPositions = positions.map(position => ({
+                  x: position.x * widthRatio,
+                  y: position.y * heightRatio,
+                }));
+        
+                setPositions(newPositions);
+                setWindowSize(newWindowSize);
+              }
+          
+
         };
     
         window.addEventListener('resize', handleResize);
@@ -44,20 +58,26 @@ function generateStickerNotes(sampleData: any) {
         };
       }, []);
 
-    let stickerNotes = [];
-    for (let i = 0; i < sampleData.length; i++) {
-        let position = {
-            x: sampleData[i].position.x * windowSize.width,
-            y: sampleData[i].position.y * windowSize.height,
-          };
-
+    let stickerNotes:any = [];
+    positions.map((position:any, index:any) => (
         stickerNotes.push(
-            <Draggable defaultPosition={position} position={position} bounds="parent" onDrag={() => onDragEvent(DraggableData)}>
-                <div className="bg-yellow-200 p-4 aspect-square shadow-xl cursor-grab active:cursor-grabbing w-fit max-w-40 text-balance">
-                    <p className="text-yellow-800 text-sm">{sampleData[i].content}</p>
-                </div>
-            </Draggable>
-        );
+        <Draggable
+          defaultPosition={position}
+          position={position}
+          bounds="parent"
+          onStop={(event, data) => onStopEvent(event, data, index)}
+        >
+          <div className="bg-yellow-200 p-4 aspect-square shadow-xl cursor-grab active:cursor-grabbing w-fit max-w-40 text-balance">
+            <p className="text-yellow-800 text-sm">{sampleData[index].content}</p>
+          </div>
+        </Draggable>
+        )
+      ))
+
+    function onStopEvent(event: any, data: any, index: any) {
+        const newPositions = [...positions];
+        newPositions[index] = { x: data.x, y: data.y };
+        setPositions(newPositions);
     }
     return stickerNotes;
 }
