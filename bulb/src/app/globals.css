@@ -27,22 +27,3 @@ body {
     )
     rgb(var(--background-start-rgb));*/
 }
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-}
-
-.textBoxLines{
-  height: 80px;
-  line-height: 22px;
-  background: repeating-linear-gradient(
-  0,
-  #222,
-  #222 1px,
-  #fff 1px,
-  #fff 20px
-);
- color: black; 
-}
