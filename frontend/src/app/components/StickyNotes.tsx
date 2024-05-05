@@ -21,12 +21,20 @@ let sampleData = {
         }
     }
 }
-const [data, setData] = useState([]);
 
 
-function GenerateStickerNotes(sampleData: any) {
+
+
+
+export default function StickerNote() {
+  const [data, setData] = useState([]);  
+  
+  function GenerateStickerNotes(sampleData: any) {
     
-    const [windowSize, setWindowSize] = useState({ width: window.innerWidth, height: window.innerHeight });
+    const [windowSize, setWindowSize] = useState({
+      width: typeof window !== 'undefined' ? window.innerWidth : 1000, // default width
+      height: typeof window !== 'undefined' ? window.innerHeight : 1000, // default height
+    });
     const [positions, setPositions] = useState(sampleData.map((item: { position: { x: number; y: number; }; }) => ({
         x: item.position.x * windowSize.width,
         y: item.position.y * windowSize.height,
@@ -87,9 +95,7 @@ function GenerateStickerNotes(sampleData: any) {
     }
     return stickerNotes;
 }
-
-export default function StickerNote() {
-    return (
+  return (
         
         <> 
         {GenerateStickerNotes(Object.values(data))}

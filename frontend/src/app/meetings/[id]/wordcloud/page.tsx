@@ -33,8 +33,8 @@ export default function Page({ params }: { params: { id: string } }) {
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch('/wordcloud'); // replace with your URL
-      const text = await response.text();
-      setData(JSON.parse(text));
+      const text = await response.json();
+      setData(text);
     };
 
     fetchData();
