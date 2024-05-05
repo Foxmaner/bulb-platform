@@ -26,7 +26,7 @@ let sampleData = {
         }
     }
 }
-
+const [data, setData] = useState([]);
 interface Position { 
   id: number,
   content: string,

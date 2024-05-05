@@ -12,7 +12,9 @@
 
 "use client";
 
-import { Button, ScrollShadow, ButtonGroup, Tooltip, Input, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Spinner } from "@nextui-org/react";
+import Image from "next/image";
+
+import { Button, ScrollShadow, Tooltip, Input, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Spinner } from "@nextui-org/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import AddSection from "../../components/section/defaultAddsection";
@@ -20,11 +22,24 @@ import AddSection from "../../components/section/defaultAddsection";
 import SectionForm from "app/components/section/sectionForm"
 
 import { Section, Paragraph } from "index";
+import { VerticalDotsIcon } from "components/btn/VerticalDotBtn";
+import {
+    Dropdown,
+    DropdownTrigger,
+    DropdownMenu,
+    DropdownSection,
+    DropdownItem
+  } from "@nextui-org/dropdown";
 
+  
 import { useMeetingContext } from "../../context/meetingProvider";
-import Tiptap from "app/components/paragraph/tiptap/tiptap";
 import { Toolbar } from "app/components/toolbar";
-import { useEditor } from "@tiptap/react";
+
+import bgSqures from "app/../../public/bg-squares.svg";
+import bgC from "app/../../public/bg-C.svg";
+import bgHalfCircle from "app/../../public/bg-halfCircle.svg";
+import bgLeafRight from "app/../../public/bg-leafRight.svg";
+import bgLeafLeft from "app/../../public/bg-leafLeft.svg";
 
 import { useCurrentEditor } from "app/context/editorProvider";
 import MeetingHelpInfo from "app/components/MeetingHelpInfo";
@@ -98,124 +113,126 @@ export default function MeetingPage() {
     }
  
     return (
-       
-        <div className="flex w-screen h-screen content-center justify-center items-center">
-            <div className="flex flex-row gap-10 bg-white w-[calc(95%)] h-[calc(95%)] ">
-                {/*Vänstra div den med loggan*/}
-                <div className="flex flex-col text-black">
-                    <div className='p-5'>
-                        <Link href="/">
-                            <h1 className="text-primary font-bold text-3xl">East <br /> Sweden <br /> MedTech</h1>
-                        </Link>
+        <div>
+            <div className="absolute w-screen h-screen inset-0 z-0">
+                <Image className="absolute top-0 left-0  w-[1.5%]" src={bgSqures} alt="bg-squares"></Image>
 
-                    </div>
-                    {/*Katalogen*/}
-                    <div className="bg-secondaryGrey h-1 w-full"></div>
-                    <div className="flex flex-col justify-center py-2">
-                        <p className="text-center text-xl">Catalog</p>
-                        <ul className="flex flex-col py-2">
-                            {
-                                meeting.sections.map((section: Section, index: number) => (
-                                    <div key={index} className="flex items-center flex-col">
-                                        <Tooltip content={section.title} isDisabled={!section.title}>
-                                            <Button isDisabled={!section.title} onClick = {() => scrollToTitleButtonClick(section.title)} variant="light" className="w-36 underline" key={index}>
-                                                <p className="truncate">
-                                                    {section.title}
-                                                </p>
-                                            </Button>
-                                        </Tooltip>
-                                        {section.contains?.map((paragraph: Paragraph, paragraphIndex: number) =>
-                                            <Tooltip key={paragraphIndex} content={paragraph.title?.text} isDisabled={!paragraph.title?.text}>
-                                                <Button variant="light" className="w-28 underline" key={paragraphIndex}>
-                                                    <p className="truncate">
-                                                        {paragraph.title?.text}
-                                                    </p>
-                                                </Button>
-                                            </Tooltip>
-                                        )}
-                                    </div>
-                                ))}
-                        </ul>
-                    </div>
-                </div>
+                <Image className="absolute bottom-0 left-0 w-[10%]" src={bgC} alt="bg-C"></Image>
 
-                <div className="bg-secondaryGrey h-5/6 w-1 content-center"></div>
-
-                <div className="flex flex-col text-primaryText gap-5 w-11/12 py-5">
-
-                    <div className="flex flex-row border-b-1 border-edge">                    
-                        <div className="flex flex-col gap-2 w-11/12">
-                            <Input
-                                classNames={{
-                                    input: "text-3xl font-bold text-black placeholder:text-black bg-transparent",
-                                    inputWrapper: "bg-transparent shadow-none border-none",
-                                }} 
-                                disableAnimation={true} 
-                                radius="lg" 
-                                type={meeting.name} 
-                                placeholder="Tomt möte" 
-                                isRequired={true}
-                            />
-                            <p className="text-primaryText text-sm">2024 - 01 - 01</p>
+                <Image className="absolute bottom-0 right-12" src={bgHalfCircle} alt="halfcircle"></Image>
+                <Image className="absolute top-48 right-28" src={bgLeafRight} alt="leafRight"></Image>
+                <Image className="absolute top-0 right-0" src={bgLeafLeft} alt="leafLeft"></Image>
+                <Image className="absolute bottom-0 right-0  w-[1.2%]" src={bgSqures} alt="bg-squares"></Image>
+            </div>
+            <div className="flex w-screen h-screen content-center justify-center items-center relative">
+                <div className="flex flex-row mr-[10%] bg-white w-[calc(85%)] h-[calc(98%)] px-4">
+                    {/*Vänstra div den med loggan*/}
+                    <div className="flex flex-col text-black">
+                        <div className='px-5 pt-6 pb-4'>
+                            <Link href="/">
+                                <h1 className="text-primary font-bold text-3xl">East <br /> Sweden <br /> MedTech</h1>
+                            </Link>
                         </div>
-                        <div className="flex flex-row gap-2">
-                            <Button color="primary" size="sm">Publicera</Button>
-                            <Button color="primary" size="sm">Dela</Button>
+                        {/*Katalogen*/}
+                        <div className="flex flex-col justify-center h-5/6 border-t-1 border-edge py-4">
+                            <p className="text-center text-xl">Catalog</p>
+                            <ScrollShadow hideScrollBar isEnabled={false}>
+                                <ul className="flex flex-col py-2 h-[25%]">
+                                    
+                                    {
+                                        meeting.sections.map((section: Section, index: number) => (
+                                            <div key={index} className="flex items-center flex-col">
+                                                <Tooltip content={section.title} isDisabled={!section.title}>
+                                                    <Button isDisabled={!section.title} onClick = {() => scrollToTitleButtonClick(section.title)} variant="light" className="w-36 underline" key={index}>
+                                                        <p className="truncate">
+                                                            {section.title}
+                                                        </p>
+                                                    </Button>
+                                                </Tooltip>
+                                            </div>
+                                        ))}
+                                    
+                                </ul>
+                            </ScrollShadow>
                         </div>
                     </div>
 
-                    <div className="flex flex-row gap-2">
+                    <div className="bg-edge h-[95%] w-[1px] content-center ml-4 mt-6"></div>
+
+                    <div className="flex flex-col text-primaryText gap-5 w-11/12 py-5 px-8">
+
+                        <div className="flex flex-row border-b-1 border-edge">                    
+                            <div className="flex flex-col gap-2 w-11/12">
+                                <Input
+                                    classNames={{
+                                        input: "text-3xl font-bold text-black placeholder:text-black bg-transparent",
+                                        inputWrapper: "bg-transparent shadow-none border-none",
+                                    }} 
+                                    disableAnimation={true} 
+                                    radius="lg" 
+                                    type={meeting.name} 
+                                    placeholder="Tomt möte" 
+                                    isRequired={true}
+                                />
+                                {new Date(meeting.date).toLocaleDateString("sv", { day: "numeric", month: "short", year: "numeric" })}
+                            </div>
+                            <div className="flex flex-row gap-2">
+                                <Button color="primary" size="sm">Publicera</Button>
+                                <Button color="primary" size="sm">Dela</Button>
+                            </div>
+                        </div>
+
+                        <div className="flex flex-row gap-2 border-1 border-x-0 border-t-0 px-4">
                         
-                        <Button variant="solid" className="bg-primaryGrey border-2 border-edge" onClick={() => sendAddSection()}>Nytt avsnitt</Button>
-                      
-                        <Toolbar />
-                      
-                    </div>
-                    
-                    <ScrollShadow hideScrollBar size={20}>
-                        <div className="w-full h-screen">
-                            {
-                                meeting.sections.map((section: Section, index: number) => <SectionForm key={index} data={section} selectedSectionTitle={selectedSectionTitle}/>)
-                            }
-                            {
-                                (meeting.sections.length == 0) && (
-                                    <div className="flex w-11/12 h-11/12 py-5">
-                                        <AddSection addSection={() => sendAddSection()} />
-                                    </div>
-                                )
-                            }
-
+                            <Toolbar />
+                            
                         </div>
-                    </ScrollShadow>
-                    <div className="place-self-end">
-                        <div className="flex flex-row gap-2">
-                            <Button color="primary" size="sm" onClick={() => router.push("/meetings")}>Stäng</Button>
-                            <Button color="primary" size="sm">Publicera</Button>
-                            <Button color="primary" size="sm">Dela</Button>
-                        </div>
-                        <Modal backdrop="transparent" isOpen={isOpen} onOpenChange={onOpenChange} size="5xl">
-                            <ModalContent>
-                                {(onclose) =>(
-                                    <>
-                                    <ModalHeader className="flex flex-col gap-1">Hjälp</ModalHeader>
-                                    <ModalBody>
-                                        <MeetingHelpInfo/>
-                                    </ModalBody>
-                                    <ModalFooter>
-                                        <Button color="danger" variant="light" onClick={onclose}>Stäng</Button>
-                                    </ModalFooter>
-                                    </>
-                                )}
-                            </ModalContent>
+                        
+                        <ScrollShadow hideScrollBar isEnabled={false}>
+                            <div className="w-full h-screen">
+                                {
+                                    meeting.sections.map((section: Section, index: number) => <SectionForm key={index} data={section} selectedSectionTitle={selectedSectionTitle}/>)
+                                }
+                                {
+                                    (meeting.sections.length == 0) && (
+                                        <div className="flex h-full w-full py-5">
+                                            <AddSection addSection={() => sendAddSection()} />
+                                        </div>
+                                    )
+                                }
 
-                        </Modal>
+                            </div>
+                        </ScrollShadow>
+                        <div className="place-self-end">
+                            <div className="flex flex-row gap-2">
+                                <Button color="primary" size="sm" onClick={() => sendAddSection()}>Nytt avsnitt</Button>
+                                <Button color="primary" size="sm" onClick={() => router.push("/meetings")}>Stäng</Button>
+                                <Button color="primary" size="sm">Publicera</Button>
+                                <Button color="primary" size="sm">Dela</Button>
+                            </div>
+                            <Modal backdrop="transparent" isOpen={isOpen} onOpenChange={onOpenChange} size="5xl">
+                                <ModalContent>
+                                    {(onclose) =>(
+                                        <>
+                                        <ModalHeader className="flex flex-col gap-1">Hjälp</ModalHeader>
+                                        <ModalBody>
+                                            <MeetingHelpInfo/>
+                                        </ModalBody>
+                                        <ModalFooter>
+                                            <Button color="danger" variant="light" onClick={onclose}>Stäng</Button>
+                                        </ModalFooter>
+                                        </>
+                                    )}
+                                </ModalContent>
+
+                            </Modal>
+                        </div>
                     </div>
+
                 </div>
 
             </div>
-
         </div>
-       
     );
 
 }
