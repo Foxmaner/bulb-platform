@@ -9,7 +9,7 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
-  Button,
+  Button
 } from "@nextui-org/react";
 import { FaUnderline, FaBold, FaItalic } from "react-icons/fa";
 

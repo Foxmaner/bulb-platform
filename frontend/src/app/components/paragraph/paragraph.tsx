@@ -11,6 +11,7 @@
  * <ParagraphForm data={paragraphData} />
  */
 "use client";
+
 import {
     Button,
     ButtonGroup,
@@ -21,12 +22,13 @@ import {
     Textarea,
 } from "@nextui-org/react";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
 import { useMeetingContext } from "app/context/meetingProvider";
 import { useEditorContext } from "app/context/editorProvider";
 import { VerticalDotsIcon } from "components/btn/VerticalDotBtn";
 import { Paragraph } from "index";
 import Tiptap from "./tiptap/tiptap";
+
 
 interface IParagraphFormProps {
     data: Paragraph;
@@ -41,9 +43,9 @@ export default function ParagraphForm({
     const { meeting, setMeeting } = useMeetingContext();
     const [text, setTextValue] = useState<string>(data.body.text || "");
 
-    const { provider } = useEditorContext();
+    const { provider, doc } = useEditorContext();
 
-    const addParagraphTitle = (title: string) => {
+    /*const addParagraphTitle = (title: string) => {
         setTitle(title);
 
         setMeeting({
@@ -62,32 +64,35 @@ export default function ParagraphForm({
                 return section;
             }),
         });
-    };
-
-    /*const addParagraphText = (text: string) => {
-        setTextValue(text);
-
-        setMeeting({
-            ...meeting,
-            sections: meeting.sections.map(section => {
-
-                section.paragraphs?.map(paragraph => {
-                    if (paragraph._id === data._id) {
+    };*/
 
 
-                        paragraph.text = text
-                        return {
+    const deleteParagraph = useCallback((id: string) => {
+        const isConfirmed = window.confirm("Är du säker på att du vill ta bort stycket?");
+        if (isConfirmed) {
+            console.log(doc.share)
+            console.log("9999", `${sectionID}.${id}`)
+
+            doc.share.delete(id);
+
+            setMeeting(prevMeeting => ({
+                ...prevMeeting,
+                sections: prevMeeting.sections.map(section => {
+                    if (section._id === sectionID) {
+                        console.log(section.contains.filter(paragraph => paragraph._id !== id))
+                        console.log("id", id)
+                        
+                        return ({
                             ...section,
-                            paragraphs: [(section.paragraphs || []), paragraph]
-                        }
-                    }   
+                            contains: section.contains.filter(paragraph => paragraph._id !== id)
+                        });
+                    }
+                    return section;
                 })
-
-                return section;
-            })
-        })
-    }*/
-
+            }));
+        }
+    }, [setMeeting])
+    
     if (!data._id || !provider) {
         return <></>;
     }
@@ -97,16 +102,16 @@ export default function ParagraphForm({
             <div className="flex flex-row gap-1 w-full relative">
                 <Tiptap id={`${sectionID}.${data._id}`} />
                 <div className="absolute right-0 top-1">
-                    <Dropdown>
+                    <Dropdown >
                         <DropdownTrigger>
                             <Button isIconOnly size="sm" variant="light">
                                 <VerticalDotsIcon className="text-edge" />
                             </Button>
                         </DropdownTrigger>
-                        <DropdownMenu>
+                        <DropdownMenu aria-label="static-actions">
                             <DropdownItem>View</DropdownItem>
                             <DropdownItem>Edit</DropdownItem>
-                            <DropdownItem>Delete</DropdownItem>
+                            <DropdownItem onPress={()=>deleteParagraph(data._id)}>Delete</DropdownItem>
                         </DropdownMenu>
                     </Dropdown>
                 </div>

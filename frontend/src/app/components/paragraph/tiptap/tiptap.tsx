@@ -13,7 +13,7 @@ import Placeholder from "@tiptap/extension-placeholder";
 
 import { useCurrentEditor } from "../../../context/editorProvider";
 import { useUserContext } from "app/context/userProvider";
-import { use } from "chai";
+
 
 interface ITiptapProps {
   id: string;
@@ -22,6 +22,8 @@ interface ITiptapProps {
 export default function Tiptap({ id }: ITiptapProps) {
   const { setCurrentEditor, provider, doc } = useCurrentEditor();
   const [ style, setStyle ] = useState<string>("min-h-10");
+
+  console.log(id)
 
   const { user } = useUserContext();
 

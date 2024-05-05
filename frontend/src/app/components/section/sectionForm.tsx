@@ -77,7 +77,7 @@ export default function SectionForm({ data, selectedSectionTitle }: SectionFormP
         setMeeting({
             ...meeting,
             sections: meeting.sections.map(section => {
-                console.log('section. id', section._id)
+                
                 if (section._id === data._id) {
                     return {
                         ...section,
@@ -90,10 +90,10 @@ export default function SectionForm({ data, selectedSectionTitle }: SectionFormP
     }, [data._id, meeting, setMeeting]);
 
     const sendAddParagraph = useCallback((useTitle?: boolean) => {
-        console.log('paragraph_create')
+        
         socket?.emit("paragraph_create", { meetingID: meeting._id, sectionID: data._id }, (response: any) => {
 
-            console.log('response', response)
+            
 
             addParagraph(response.paragraph.toString())
             
@@ -139,10 +139,12 @@ export default function SectionForm({ data, selectedSectionTitle }: SectionFormP
     useEffect(() => {
         const socketHandler = () => {
             socket?.on("paragraph_created", (data: any) => {
+                
                 addParagraph(data.paragraph.id);
             });
 
             socket?.on("removeParagraph", (data: any) => {
+                
                 addParagraph(data.id);
             });
 
@@ -210,12 +212,7 @@ export default function SectionForm({ data, selectedSectionTitle }: SectionFormP
                                         <button onClick={() => {sendAddParagraph(); onClose()}} className="block px-4 py-2 text-lg text-primaryText hover:bg-gray-100">
                                             Stycke
                                         </button>
-                                        <button onClick={() => {sendAddParagraph(); onClose()}} className="block px-4 py-2 text-lg text-primaryText hover:bg-gray-100">
-                                            Stycke med underrubrik
-                                        </button>
-                                        <button className="block px-4 py-2 text-lg text-primaryText hover:bg-gray-100">
-                                            Bild
-                                        </button>
+                                        
                                     </ModalBody>
                                     <ModalFooter>
                                         <Button color="danger" variant="light" onPress={onClose}>

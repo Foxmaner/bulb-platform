@@ -134,7 +134,7 @@ export default function MeetingPage() {
                             </Link>
                         </div>
                         {/*Katalogen*/}
-                        <div className="flex flex-col justify-center h-5/6 border-t-1 border-edge py-4">
+                        <div className="flex flex-col h-4/5 border-t-1 border-edge py-4">
                             <p className="text-center text-xl">Catalog</p>
                             <ScrollShadow hideScrollBar isEnabled={false}>
                                 <ul className="flex flex-col py-2 h-[25%]">
