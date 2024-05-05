@@ -26,8 +26,6 @@ const protectedRoutes = [
 ];
 
 export async function middleware(req: NextRequest) {
-    return NextResponse.next();
-
     const cookieHeader = req.headers.get("cookie") || '';
     const cookies = parse(cookieHeader);
     const connectSid = cookies['connect.sid'];
@@ -56,7 +54,7 @@ export async function middleware(req: NextRequest) {
     }
 
     if (authorized) {
-        if (pathname === '/auth/signin') {
+        if (pathname === '/login') {
             const response = NextResponse.redirect(new URL('/meetings', req.nextUrl.origin))
             return response;
         }
@@ -64,7 +62,7 @@ export async function middleware(req: NextRequest) {
         return NextResponse.next();
     } else {
         if (protectedRoutes.some(protectedRoute => pathname.startsWith(protectedRoute))) {
-            return NextResponse.redirect(new URL('/auth/signIn', req.nextUrl.origin));
+            return NextResponse.redirect(new URL('/login', req.nextUrl.origin));
         }
     }
 

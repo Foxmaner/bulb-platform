@@ -18,9 +18,21 @@ export default class UserControllerController {
 
     static async delete(req: any, res: Response) {
         const userID = req.session.passport.user
-        const respUser = await UserModel.delete(userID);
 
-        if (respUser.statusCode !== 200) {
+        const respUser = await UserModel.get(userID);
+        const user = respUser.body.user;
+    
+        const resp = await user.deleteUser();
+
+        if (resp.statusCode !== 200) {
+            console.log(resp.body);
+            return res.status(500).json({ message: "Error deleting user" });
+        }
+
+        const deleteUser = await UserModel.delete(userID);
+
+        if (deleteUser.statusCode !== 200) {
+            console.log(deleteUser.body);
             return res.status(403).json({ message: respUser.body.message });
         }
 

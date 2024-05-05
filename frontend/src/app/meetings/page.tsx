@@ -4,7 +4,7 @@ import PageHeader from "../components/pageHeader";
 import TableView from "../../components/table/TableView";
 import { Meeting } from "index";
 
-import { Selection, Chip, ChipProps, DropdownTrigger, Dropdown, DropdownMenu, DropdownItem } from "@nextui-org/react";
+import { Selection, ChipProps } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
