@@ -52,7 +52,7 @@ function GenerateStickerNotes(sampleData: any) {
         };
     
         window.addEventListener('resize', handleResize);
-    
+    // @ts-ignore
         return () => {
           window.removeEventListener('resize', handleResize);
         };
