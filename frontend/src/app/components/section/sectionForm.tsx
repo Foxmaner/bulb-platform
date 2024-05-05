@@ -28,7 +28,7 @@ import { Section, Paragraph } from "index";
 import { title } from "process";
 import { useMeetingContext } from "../../context/meetingProvider";
 
-import { useCurrentEditor } from '../../context/editorProvider';
+import { useCurrentEditor, useEditorContext } from '../../context/editorProvider';
 
 
 interface SectionFormProps {
@@ -42,7 +42,9 @@ export default function SectionForm({ data, selectedSectionTitle }: SectionFormP
     //Måste berätta för Typescript att det är en sjukt nice 
     const popupRef = useRef<HTMLDivElement>(null);
     const { meeting, setMeeting } = useMeetingContext();
-    const [ title, setTitle ] = useState<string>(data.title || "")
+    const [ title, setTitle ] = useState<string>(data.title || "");
+
+    const { doc, currentEditor, setCurrentEditor } = useEditorContext();
 
     const sectionRef = useRef<HTMLTextAreaElement>(null)
 
@@ -100,24 +102,6 @@ export default function SectionForm({ data, selectedSectionTitle }: SectionFormP
         });
     }, [socket, meeting._id, data._id, addParagraph]);
 
-    const deleteParagraph = (index: number) => {
-        const isConfirmed = window.confirm("Är du säker på att du vill ta bort stycket?");
-        if (isConfirmed) {
-            setMeeting({
-                ...meeting,
-                sections: meeting.sections.map(section => {
-                    if (section._id === data._id) {
-                        return {
-                            ...section,
-                            contains: section.contains?.filter((section, i) => i !== index)
-                        };
-                    }
-                    return section;
-                })
-            })
-        }
-    };
-    
     const updateSectionTitle = (title: string) => {
         setTitle(title);
 
@@ -175,6 +159,35 @@ export default function SectionForm({ data, selectedSectionTitle }: SectionFormP
         };
     }, [socket, selectedSectionTitle, data.title, addParagraph]);
 
+    const deleteParagraph = useCallback((id: string) => {
+        const isConfirmed = window.confirm("Är du säker på att du vill ta bort stycket?");
+        if (isConfirmed) {
+
+            currentEditor?.destroy();
+            setCurrentEditor(null);
+
+            console.log(doc.share)
+            console.log("9999", `${data._id}.${id}`)
+
+             
+            setMeeting(prevMeeting => ({
+                ...prevMeeting,
+                sections: prevMeeting.sections.map(section => {
+                    if (section._id === data._id) {
+                        console.log(section.contains.filter(paragraph => paragraph._id !== id))
+                        console.log("id", id)
+                        
+                        return ({
+                            ...section,
+                            contains: section.contains.filter(paragraph => paragraph._id !== id)
+                        });
+                    }
+                    return section;
+                })
+            }));
+        }
+    }, [currentEditor, data._id, doc.share, setMeeting, setCurrentEditor]);
+
     return (
         <div className="flex flex-col gap-2 w-full items-center">
             <Textarea
@@ -191,7 +204,7 @@ export default function SectionForm({ data, selectedSectionTitle }: SectionFormP
             {
                 data.contains?.map((paragraph: Paragraph, index: number) => (
                     <div key={index} className="flex justify-center items-center w-full px-2">
-                        <ParagraphForm sectionID={data._id} data={paragraph} />
+                        <ParagraphForm deleteParagraph={deleteParagraph} sectionID={data._id} data={paragraph} />
                     </div>
                 )
 

@@ -33,11 +33,13 @@ import Tiptap from "./tiptap/tiptap";
 interface IParagraphFormProps {
     data: Paragraph;
     sectionID: string;
+    deleteParagraph: (id: string) => void;
 }
 
 export default function ParagraphForm({
     sectionID,
     data,
+    deleteParagraph
 }: IParagraphFormProps) {
     const [title, setTitle] = useState<string>(data.title?.text || "");
     const { meeting, setMeeting } = useMeetingContext();
@@ -65,33 +67,6 @@ export default function ParagraphForm({
             }),
         });
     };*/
-
-
-    const deleteParagraph = useCallback((id: string) => {
-        const isConfirmed = window.confirm("Är du säker på att du vill ta bort stycket?");
-        if (isConfirmed) {
-            console.log(doc.share)
-            console.log("9999", `${sectionID}.${id}`)
-
-            doc.share.delete(id);
-
-            setMeeting(prevMeeting => ({
-                ...prevMeeting,
-                sections: prevMeeting.sections.map(section => {
-                    if (section._id === sectionID) {
-                        console.log(section.contains.filter(paragraph => paragraph._id !== id))
-                        console.log("id", id)
-                        
-                        return ({
-                            ...section,
-                            contains: section.contains.filter(paragraph => paragraph._id !== id)
-                        });
-                    }
-                    return section;
-                })
-            }));
-        }
-    }, [setMeeting])
     
     if (!data._id || !provider) {
         return <></>;
