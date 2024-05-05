@@ -24,7 +24,7 @@ let sampleData = {
 
 
 
-function generateStickerNotes(sampleData: any) {
+function GenerateStickerNotes(sampleData: any) {
     
     const [windowSize, setWindowSize] = useState({ width: window.innerWidth, height: window.innerHeight });
     const [positions, setPositions] = useState(sampleData.map((item: { position: { x: number; y: number; }; }) => ({
@@ -86,7 +86,7 @@ export default function StickerNote() {
     return (
         
         <> 
-        {generateStickerNotes(Object.values(sampleData))}
+        {GenerateStickerNotes(Object.values(sampleData))}
         </>
         
     );
