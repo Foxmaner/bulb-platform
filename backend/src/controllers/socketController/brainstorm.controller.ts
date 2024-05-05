@@ -3,8 +3,8 @@ import { MeetingModel } from "../../models";
 import diff_match_patch from 'diff-match-patch';
 import { ICursor, INote } from "socket";
 import { Socket } from "socket.io";
+import { log } from "console";
 
-const dmp = new diff_match_patch();
 
 export class BrainstormController {
     static async cursor_move(socket: Socket, data: ICursor){
@@ -23,18 +23,19 @@ export class BrainstormController {
     } 
 
     static async notes_move(socket: Socket, data: INote){
-
-        const meetingID = await MeetingModel.get(data.meetingID);
-        const sectionId = await meetingID.body.meeting.getSection(data.sectionID);
-        const paragraphID = await sectionId.getParagraph(data.paragraphID);
+        console.log("8888",data);
+        //const meetingID = await MeetingModel.get(data.meetingID);
+        //const sectionId = await meetingID.body.meeting.getSection(data.sectionID);
+        //const paragraphID = await sectionId.getParagraph(data.paragraphID);
         const out = {
-            noteID: data.noteID,
-            sectionID: sectionId,
-            paragraphID: paragraphID,
+            answerID: data.answerID,
+           //sectionID: sectionId,
+           // paragraphID: paragraphID,
             xPos: data.xPos,
             yPos: data.yPos,
         };
-        socket.broadcast.emit('notes_moved', out);
+
+        socket.broadcast.to(data.meetingID).emit('notes_moved', out);
     }
 
     static async create_note(socket: Socket, data: INote){
@@ -43,7 +44,7 @@ export class BrainstormController {
         const sectionId = await meetingID.body.meeting.getSection(data.sectionID);
         const paragraphID = await sectionId.getParagraph(data.paragraphID);
         const out = {
-            noteID: data.noteID,
+            answerID: data.answerID,
             sectionID: sectionId,
             paragraphID: paragraphID,
             xPos: data.xPos,
@@ -58,7 +59,7 @@ export class BrainstormController {
         const sectionId = await meetingID.body.meeting.getSection(data.sectionID);
         const paragraphID = await sectionId.getParagraph(data.paragraphID);
         const out = {
-            noteID: data.noteID,
+            answerID: data.answerID,
             sectionID: sectionId,
             paragraphID: paragraphID,
         };
