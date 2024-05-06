@@ -61,9 +61,7 @@ export class MethodParagraphService extends mongoose.Model<Meeting> {
             return res.status(404).json({ message: "Section not found" });
         }
 
-        let _id =
-            Math.max(...section.contains.map((p: any) => p._id), ...section.history.map((p: any) => p._id)) +
-            1;
+        let _id = section.contains.length + section.history.length + 1;
 
         if (_id < 0) {
             _id = 1;
@@ -92,6 +90,10 @@ export class MethodParagraphService extends mongoose.Model<Meeting> {
     }
 
     async removeParagraph(sectionID: number, paragraphID: number) {
+        if (!sectionID || !paragraphID) {
+            return res.status(404).json({ message: "No section or paragraph" });
+        }
+
         await this.updateOne(
             {
                 $push: {

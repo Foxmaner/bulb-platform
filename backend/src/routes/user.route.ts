@@ -7,6 +7,8 @@ const userRoutes: Router = Router();
 
 userRoutes.get('/', UserController.load)
 
+userRoutes.get('/all', UserController.loadAll)
+
 userRoutes.post('/delete', UserController.delete)
 
 export { userRoutes }

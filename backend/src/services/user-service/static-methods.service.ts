@@ -123,6 +123,14 @@ export class StaticUserService {
         return res.status(200).json(User);
     }
 
+    static async findUsers(ids: mongoose.Types.ObjectId[]) {
+        const users = await UserModel.find({
+            _id: { $in: ids }
+        })
+
+        return res.status(200).json({ users });
+    }
+
     static async getByEmail(email: string) {
 
         const User = await UserModel.findOne({ email });

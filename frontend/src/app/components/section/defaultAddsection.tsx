@@ -54,8 +54,8 @@ export default function AddSection({ addSection }: IAddSection) {
 
     return (
         <div className="relative w-full h-full flex justify-center">
-            <div className="border-2 w-11/12 h-11/12 text-center border-dashed cursor-pointer" onClick={toggleMenu}>
-                <p className="text-3xl select-none">----Lägg till avsnitt----</p>
+            <div className="flex justify-center items-center border-2 w-11/12 h-24 text-center border-dashed cursor-pointer" onClick={toggleMenu}>
+                <p className="text-3xl select-none">---- Lägg till avsnitt ----</p>
             </div>
         </div>
     );

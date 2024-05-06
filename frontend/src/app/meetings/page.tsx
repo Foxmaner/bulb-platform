@@ -129,7 +129,7 @@ export default function MeetingsPage() {
 		}
 
 		fetchMeetings();
-	}, [searchParams]);
+	}, [searchParams, setMeetingList]);
 
 	return (
 		<div className="flex-col h-[calc(100vh-2rem)] w-full bg-white border m-4 ml-0 rounded-lg">

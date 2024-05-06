@@ -71,9 +71,6 @@ export default function Home() {
 				<h1 className="font-bold text-5xl text-white text-left w-full px-16">Vården</h1>
 				<h2 className="font-bold text-2xl text-primary text-left w-full px-16">Skapa ditt nästa möte nu</h2>
 
-				<p className="text-4xl text-white border-primary ml-16 mt-4">
-				Vården är som en varm, fluffig filt som omsorgsfullt sveper omkring dig, kryddad med kärlek och malet av dina unika behov.
-				</p>
 				<p className="max-w-3xl text-xl text-primary border-primary ml-16 mt-8">
 					Du kan bli en del redan idag.
 				</p>

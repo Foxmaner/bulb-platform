@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid/index.js";
@@ -21,25 +21,12 @@ import { CalendarHeader } from "app/components/calendar/calendarHeader";
 import { Event } from "app/components/calendar/calendarEvent";
 import CalenderPopover from "app/components/calendar/calendarPopover";
 import CalenderDayHeader from "app/components/calendar/calendarDayHeader";
-
-const INITIAL_EVENTS = [
-    {
-        id: 123,
-        title: "All-day event",
-        start: "2024-04-21T11:00:00",
-        end: "2024-04-21T12:00:00",
-    },
-    {
-        id: 456,
-        title: "Timed event",
-        start: "2024-04-22T10:00:00",
-        end: "2024-04-22T12:00:00",
-    },
-];
+import RequestApi from "app/utils/client-request";
+import { Meeting } from "index";
 
 
 export default function Calender() {
-    const [open, setOpen] = useState<number>(0);
+    const [open, setOpen] = useState<string>("0");
 
     const [id, setId] = useState<number>(0); // TMP
 
@@ -48,11 +35,44 @@ export default function Calender() {
     );
     const ref = useRef<FullCalendar>(null);
     const [event, setEvent] = useState<Event>();
-    const [allEvents, setAllEvents] = useState<Event[]>(INITIAL_EVENTS);
+    const [allEvents, setAllEvents] = useState<Event[]>([]);
 
     const createEvent = (event: Event) => {
         setAllEvents([...allEvents, event]);
     };
+
+    useEffect(() => {
+        const fetchEvents = async () => {
+            const resp = await RequestApi.get({
+                url: "/meeting/user"
+            });
+
+            if (resp.status === 200) {
+                const data = await resp.json();
+                
+                console.log("999", data.meetings);
+
+                const newMeetings = data.meetings.filter(
+                    (meeting: Meeting) => meeting.scheduledStart && meeting.scheduledEnd
+                );
+
+                console.log("888", newMeetings);
+
+                const newEvents = newMeetings.map((meeting: Meeting) => {
+                    return {
+                        title: meeting.name,
+                        start: new Date(meeting.scheduledStart!),
+                        end: new Date(meeting.scheduledEnd!),
+                        id: meeting._id,
+                    };
+                })
+
+                setAllEvents(newEvents);
+            }
+        };
+
+        fetchEvents();
+    }, [setAllEvents])
 
     const handleEventClick = (arg: any) => {
         setEvent({
@@ -74,10 +94,10 @@ export default function Calender() {
                 title: "",
                 start: new Date(arg.start),
                 end: new Date(arg.end),
-                id: newId,
+                id: newId.toString(),
             });
 
-            setOpen(newId);
+            setOpen(newId.toString());
         },
         [setEvent, id, setId]
     );

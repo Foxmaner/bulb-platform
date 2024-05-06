@@ -53,11 +53,15 @@ export class MeetingController {
         const respUser = await UserModel.get(userID);
         const user = respUser.body.user;
 
+        console.log(user)
+        
         if(respUser.statusCode != 200){
             return res.status(401).json(respUser.body)
         }
 
-        const resp = await user.getPublishedMeetings();
+        const resp = await user.getSharedMeeting();
+
+        console.log(resp)
 
         if(process.env.DEBUG == "true"){
             console.log(resp.body)
@@ -239,6 +243,58 @@ export class MeetingController {
         }
         
         res.status(200).json({message : "access level changed"});
+    }
+
+    static async getMembers(req: any, res: Response) {
+  
+        const meetingId = req.params.id
+
+        const respMeeting = await MeetingModel.get(meetingId);
+        const meeting = respMeeting.body.meeting;
+
+        if(respMeeting.statusCode != 200){
+            return res.status(401).json(respMeeting.body)
+        }
+
+        const resp = await UserModel.findUsers(meeting.members.map((member: any) => member.userID));
+
+        if(resp.statusCode != 200){
+            return res.status(resp.statusCode).json(resp.body)
+        }
+        
+        console.log(resp.body.users)
+
+        const members = resp.body.users.map((member: any) => {
+            return {
+                name: member.name,
+                id: member._id,
+                role: member.role
+            };
+        });
+
+        res.status(200).json({ members });
+    }
+
+    static async addMember(req: any, res: Response) {
+
+        const meetingId = req.params.id
+
+        const resp = await MeetingModel.get(meetingId);
+        const meeting = resp.body.meeting;
+
+        const { userID } = req.body
+
+        if (resp.statusCode != 200) {
+            return res.status(resp.statusCode).json(resp.body);
+        }
+
+        const respAdd = await meeting.addMember(userID)
+
+        if(respAdd.statusCode != 200){
+            return res.status(resp.statusCode).json(resp.body)
+        }
+
+        res.status(200).json({message : "member added"});
     }
 
     static async advancedLoad(req: any, rep: Response){

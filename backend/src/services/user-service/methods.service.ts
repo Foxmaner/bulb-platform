@@ -15,14 +15,12 @@ import { Response as res } from "../utils.service";
 export class MethodUserService extends mongoose.Model<User> {
 
     async getSharedMeeting() {
-        const pipelineResult = await MeetingModel.aggregate([
-            { 
-                $addFields: {
-                    "members.role": { $cond: { if: { $ne: ["$members.role", "owner"] }, then: "$members.role", else: "owner" } },
-                    "members.userID": this._id
-                }
-            }
-        ]);
+        const pipelineResult = await MeetingModel.find({
+            "members": { $elemMatch: { "userID": this._id, "role": { $ne: "owner" } } }
+        });
+        
+        console.log(pipelineResult);
+
         return res.status(200).json(pipelineResult);
     }
 
@@ -110,33 +108,47 @@ export class MethodUserService extends mongoose.Model<User> {
         return res.status(200).json({ message: "Access level changed" });
     }
 
-    async createMeeting(props: { name: string }) {
+    async createMeeting(props: any) {
         try {
-            const meeting = new MeetingModel({
-                name: props.name,
-                date: new Date(),
-                members: [
-                    { userID: this._id, role: "owner" }
-                ]
-            });
+            console.log(props);
+
+            let meeting;
+            if (props.scheduledStart && props.scheduledEnd) {
+                meeting = new MeetingModel({
+                    name: props.name,
+                    scheduledStart: new Date(props.scheduledStart),
+                    scheduledEnd: new Date(props.scheduledEnd),
+                    date: new Date(),
+                    members: [
+                        { userID: this._id, role: "owner" }
+                    ]
+                });
+            } else {
+                meeting = new MeetingModel({
+                    name: props.name,
+                    date: new Date(),
+                    members: [
+                        { userID: this._id, role: "owner" }
+                    ]
+                });
+            }
+
             await meeting.save();
             await this.addMeeting(meeting._id);
 
             return res.status(201).json(meeting);
         } catch (error: any) {
+            console.log(error.message)
             return res.status(500).json({ error: error.message });
         }
     }
 
     async getMeetings () {
-        const pipelineResult = await MeetingModel.aggregate([
-            { 
-                $addFields: {
-                    "members.role": "owner",
-                    "members.userID": this._id
-                }
-            }
-        ]);
+        const pipelineResult = await MeetingModel.find({
+            "members.userID": this._id,
+            "members.role": "owner"
+        });
+
         return res.status(200).json(pipelineResult);
     }
 

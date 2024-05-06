@@ -48,7 +48,7 @@ class MeetingModel extends BaseModel<Meeting, typeof StaticMeetingService, Metho
                 required: false
             },
             scheduledStart: { 
-                type: Date 
+                type: Date
             },
             scheduledEnd: { 
                 type: Date 

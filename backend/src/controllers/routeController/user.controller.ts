@@ -4,6 +4,23 @@ import { UserModel } from '../../models';
 
 export default class UserControllerController {
 
+    static async loadAll(req: any, res: Response) {
+        const resp = await UserModel.list();
+
+        if (resp.statusCode !== 200) {
+            return res.status(401).json({ message: "Users not found" });
+        }
+
+        const users = resp.body.map((user: any) => {
+            return {
+                id: user._id,
+                name: user.name
+            };
+        });
+
+        res.status(200).json({ users });
+    }
+
     static async load(req: any, res: Response) {
         const userID = req.session.passport.user
         const respUser = await UserModel.get(userID);

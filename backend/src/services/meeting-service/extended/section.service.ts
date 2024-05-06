@@ -1,5 +1,5 @@
 
-import mongoose, { ObjectId } from "mongoose";
+import mongoose from "mongoose";
 
 
 import { MeetingModel, UserModel } from "../../../models";

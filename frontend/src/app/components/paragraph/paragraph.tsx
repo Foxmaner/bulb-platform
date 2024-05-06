@@ -28,12 +28,10 @@ import { useUserContext } from "app/context/userProvider";
 
 import {
   Button,
-  ButtonGroup,
   Dropdown,
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
-  Textarea,
 } from "@nextui-org/react";
 
 import { useMeetingContext } from "app/context/meetingProvider";
@@ -47,21 +45,20 @@ interface IParagraphFormProps {
   sectionID: string;
   deleteParagraph: (editor: any, id: string) => void;
   sendDeleteParagraph: (editor: any, id: string) => void;
+  select: boolean;
 }
 
 export default function ParagraphForm({
   sectionID,
   data,
   deleteParagraph,
-  sendDeleteParagraph
+  sendDeleteParagraph,
+  select
 }: IParagraphFormProps) {
-  const [title, setTitle] = useState<string>(data.title?.text || "");
-  const { meeting, setMeeting } = useMeetingContext();
-  const [text, setTextValue] = useState<string>(data.body.text || "");
 
-  const { provider, doc, currentEditor, setCurrentEditor, socket } = useEditorContext();
+  const { provider, doc, setCurrentEditor, socket } = useEditorContext();
 
-  const [style, setStyle] = useState<string>("min-h-10");
+  const [ style, setStyle ] = useState<string>("min-h-10");
 
   const { user } = useUserContext();
 
@@ -94,7 +91,17 @@ export default function ParagraphForm({
 
         deleteParagraph(editor, data._id);
     });
-  })
+
+    if (editor && select) {
+        editor.commands.focus();
+    } else {
+        console.warn("EDITOR IS NULL")
+    }
+
+    return () => {
+        socket?.off(`paragraph_${sectionID}.${data._id}_deleted`);
+    }
+  }, [socket, deleteParagraph, editor, data._id, sectionID, select])
 
   const handleOnFocus = useCallback(() => {
     if (editor) {
@@ -113,9 +120,6 @@ export default function ParagraphForm({
         "Är du säker på att du vill ta bort stycket?"
       );
       if (isConfirmed) {
-        const old_editor = currentEditor;
-
-        setCurrentEditor(old_editor);
 
         if (editor !== null) {
             sendDeleteParagraph(editor, data._id);
@@ -124,10 +128,11 @@ export default function ParagraphForm({
         }
       }
     },
-    [setMeeting, setCurrentEditor]
+    [editor, sendDeleteParagraph, data._id]
   );
 
-  if (!data._id || !provider || editor) {
+  if (!data._id || !provider) {
+    console.warn(data);
     return <></>;
   }
 

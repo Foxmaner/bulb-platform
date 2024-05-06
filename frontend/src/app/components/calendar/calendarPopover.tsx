@@ -8,8 +8,8 @@ interface CalenderPopoverProps {
     calendarRef: RefObject<FullCalendar>;
     event: Event;
     createEvent: (event: Event) => void;
-    open: number;
-    setOpen: (open: number) => void;
+    open: string;
+    setOpen: (open: string) => void;
 }
 
 export default function CalenderPopover({
@@ -26,7 +26,7 @@ export default function CalenderPopover({
 
     const handleToggleEvent = useCallback(() => {
         if (open === event.id) {
-            setOpen(0);
+            setOpen("0");
         } else {
             setOpen(event.id);
         }
@@ -34,17 +34,16 @@ export default function CalenderPopover({
 
     return (
         <Popover aria-label='event' isOpen={open === event?.id} onOpenChange={() => {
-            setOpen(0);
+            setOpen("0");
             handleCloseCreateEvent();
         }} placement="right" showArrow={true} radius="sm" shadow="lg">
             <PopoverTrigger>
                 <Button aria-label='event' onClick={() => { console.log(event.id); handleToggleEvent() }} className="flex flex-col h-full w-full bg-transparent z-50 rounded-none items-start justify-start p-1">
-                    <h1 className="text-white">
+                    <h1 className="text-primaryGrey truncate max-w-36">
                         {event?.title === "" ? "(Ingen titel)" : event?.title}
                     </h1>
-                    <p className="text-white -mt-2 font-light text-xs">
-                        {new Date(event?.start).toLocaleTimeString('en-US', { hour: '2-digit', hour12: true })} - 
-                        {new Date(event?.end).toLocaleTimeString('en-US', { hour: '2-digit', hour12: true })} 
+                    <p className="text-primaryGrey -mt-2 font-light text-xs">
+                        {new Date(event?.start).toLocaleTimeString('en-US', { hour: '2-digit', hour12: true })} -  {new Date(event?.end).toLocaleTimeString('en-US', { hour: '2-digit', hour12: true })} 
                     </p>
                 </Button>
             </PopoverTrigger>

@@ -41,7 +41,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 		}
 
 		handleUser();
-	}, [user, path]);
+	}, [user, path, setUser]);
 
 	const value = {
 		user,

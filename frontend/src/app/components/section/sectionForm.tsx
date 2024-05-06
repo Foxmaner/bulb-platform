@@ -13,20 +13,18 @@
 "use client";
 
 import {
-    Button, ButtonGroup, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Textarea, Modal,
+    Button,
+    Textarea, 
+    Modal,
     ModalContent,
-    ModalHeader,
     ModalBody,
     ModalFooter,
     useDisclosure
 } from "@nextui-org/react";
-import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
+
 import { useEffect, useState, useRef, useCallback } from "react";
 import ParagraphForm from "../paragraph/paragraph";
-import { RxCross2 } from "react-icons/rx";
 import { Section, Paragraph } from "index";
-import { title } from "process";
 import { useMeetingContext } from "../../context/meetingProvider";
 
 import { useEditorContext } from '../../context/editorProvider';
@@ -47,7 +45,9 @@ export default function SectionForm({ data, selectedSectionTitle }: SectionFormP
 
     const sectionRef = useRef<HTMLTextAreaElement>(null)
 
-    const { doc, currentEditor, setCurrentEditor, socket } = useEditorContext();
+    const [ dontShow, setDontShow ] = useState<string[]>([])
+
+    const { socket, setCurrentEditor, doc } = useEditorContext();
 
     /**
     *  setMeeting(
@@ -88,6 +88,8 @@ export default function SectionForm({ data, selectedSectionTitle }: SectionFormP
                 return section;
             })
         })
+
+
     }, [data._id, meeting, setMeeting]);
 
     const sendAddParagraph = useCallback((useTitle?: boolean) => {
@@ -114,11 +116,53 @@ export default function SectionForm({ data, selectedSectionTitle }: SectionFormP
         })
     }
 
+    const deleteParagraph = useCallback((editor: any, id: string) => {
+
+        if (!editor) {
+            console.warn("CURRENT IS NULL");
+            return;
+        }
+
+        editor.destroy();
+        doc.share.delete(`${data._id}.${id}`);
+
+        setCurrentEditor(null);
+                
+        /*setMeeting(prevMeeting => ({
+            ...prevMeeting,
+            sections: prevMeeting.sections.map(section => {
+                if (section._id === data._id) {
+
+                    return ({
+                        ...section,
+                        contains: section.contains.filter(paragraph => { 
+                            console.log(paragraph._id, id, paragraph._id !== id)
+                            return paragraph._id !== id
+                        })
+                    });
+                }
+                return section;
+            })
+        }));*/
+
+        setDontShow([...dontShow, id])
+    }, [doc.share, data._id, setCurrentEditor, dontShow]);
+
+    const sendDeleteParagraph = useCallback((editor: any, id: string) => {
+        if (!id)
+            console.log(meeting)
+        console.log("EMIT!!", id, socket === null, meeting._id, data._id)
+        socket?.emit("paragraph_delete", ({ meetingID: meeting._id, sectionID: data._id, paragraphID: id }), (data: any) => {
+            console.log("7777", data)
+            deleteParagraph(editor, id);
+        })
+
+    }, [data._id, deleteParagraph, meeting, socket]);
+
     useEffect(() => {
         const socketHandler = () => {
             socket?.on("paragraph_created", (data: any) => {
-                
-                addParagraph(data.paragraph.id);
+                addParagraph(data.paragraph);
             });
 
             return () => {
@@ -148,41 +192,8 @@ export default function SectionForm({ data, selectedSectionTitle }: SectionFormP
         };
     }, [socket, selectedSectionTitle, data.title, addParagraph]);
 
-    const deleteParagraph = useCallback((editor: any, id: string) => {
-
-        if (!editor) {
-            console.warn("CURRENT IS NULL");
-            return;
-        }
-
-        editor.destroy();
-                
-        setMeeting(prevMeeting => ({
-            ...prevMeeting,
-            sections: prevMeeting.sections.map(section => {
-                if (section._id === data._id) {
-
-                    return ({
-                        ...section,
-                        contains: section.contains.filter(paragraph => paragraph._id !== id)
-                    });
-                }
-                return section;
-            })
-        }));
-    }, [meeting, currentEditor]);
-
-    const sendDeleteParagraph = useCallback((editor: any, id: string) => {
-        console.log("EMIT!!")
-        socket?.emit("paragraph_delete", ({ meetingID: meeting._id, sectionID: data._id, paragraphID: id }), (data: any) => {
-            console.log("7777", data)
-            deleteParagraph(editor, id);
-        })
-
-    }, [currentEditor, data._id, doc.share, setMeeting]);
-
     return (
-        <div className="flex flex-col gap-2 w-full items-center">
+        <div className="flex flex-col w-full items-center relative">
             <Textarea
                 variant="underlined"
                 radius="none"
@@ -196,21 +207,28 @@ export default function SectionForm({ data, selectedSectionTitle }: SectionFormP
             />
             
             {
-                data.contains?.map((paragraph: Paragraph, index: number) => (
-                    <div key={index} className="flex justify-center items-center w-full px-2">
-                        <ParagraphForm 
-                            sendDeleteParagraph={sendDeleteParagraph}
-                            deleteParagraph={deleteParagraph} 
-                            sectionID={data._id} 
-                            data={paragraph} 
-                        />
-                    </div>
-                )
-            )}
+                data.contains?.map((paragraph: Paragraph, index: number) => {
+                    if (dontShow.includes(paragraph._id)) {
+                       return (<div key={index}></div>)
+                    } else {
+                        return (
+                            <div key={index} className="flex justify-center items-center w-full px-2 my-2">
+                                <ParagraphForm 
+                                    select={index === 0}
+                                    sendDeleteParagraph={sendDeleteParagraph}
+                                    deleteParagraph={deleteParagraph} 
+                                    sectionID={data._id} 
+                                    data={paragraph} 
+                                />
+                            </div>
+                        )
+                    }
+                })
+            }
 
             <div className="flex flex-col w-full h-full">
                 <div ref={popupRef} className="relative w-full h-full flex justify-center">
-                    <div className="border-2 w-11/12 h-11/12 text-center border-dashed cursor-pointer" onClick={onOpen}>
+                    <div className="border-2 w-11/12 h-11/12 text-center border-dashed cursor-pointer my-2" onClick={onOpen}>
                         <p className="text-3xl select-none">+</p>
                     </div>
 

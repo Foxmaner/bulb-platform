@@ -54,7 +54,7 @@ export async function middleware(req: NextRequest) {
     }
 
     if (authorized) {
-        if (pathname === '/login') {
+        if (pathname === '/login' || pathname === '/') {
             const response = NextResponse.redirect(new URL('/meetings', req.nextUrl.origin))
             return response;
         }

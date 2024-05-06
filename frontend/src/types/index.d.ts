@@ -1,6 +1,7 @@
 
 
 declare module "index" {
+    
     type User = {
         _id: string;
         name: string;
@@ -19,6 +20,8 @@ declare module "index" {
         _id: string,
         name: string,
         team: string,
+        scheduledStart?: Date,
+        scheduledEnd?: Date,
         status: string,
         date: string,
         sections: Section[],

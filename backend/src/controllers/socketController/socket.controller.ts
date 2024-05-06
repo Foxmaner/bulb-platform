@@ -49,13 +49,24 @@ export class SocketController {
     }
 
     static async delete_paragraph(socket, data: IParagraph, callback){
+        console.log(data);
         const respMeeting = await MeetingModel.get(data.meetingID);
-        const meeting = respMeeting.body.meeting;
-        const resp = await meeting.removeParagraph(data.sectionID, data.paragraphID);
 
+        console.log(respMeeting);
+        const meeting = respMeeting.body.meeting;
+
+        let resp;
+        if (respMeeting.statusCode === 200) {
+            resp = await meeting.removeParagraph(data.sectionID, data.paragraphID);
+        } else {
+            console.log("Meeting not found");
+            socket.emit('error', { message: 'Meeting not found' });
+            return;
+        }
         console.log("9999", resp)
 
         if (resp.statusCode === 200) {
+            console.log("Meeting not found");
             socket.broadcast.to(data.meetingID).emit(`paragraph_${data.sectionID}.${data.paragraphID}_deleted`, { resp });
             callback({ "message": `${data.sectionID}.${data.paragraphID} was removed` });
         } else {

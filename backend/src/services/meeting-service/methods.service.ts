@@ -77,9 +77,18 @@ export class MethodMeetingService extends mongoose.Model<Meeting> {
             return res.status(404).json({ message: "User not found" });
         }
 
-        resp.user.addMeeting(this._id, res);
+        console.log(resp)
 
-        if (resp.statusCode !== 200) {
+        const addMeetingResp = resp.body.user.addMeeting(this._id);
+
+        await this.updateOne({ 
+            $push: { members: {
+                userID,
+                role: "editor"
+            } } 
+        });
+
+        if (addMeetingResp.statusCode !== 200) {
             return res.status(500).json({ message: "Error adding meeting to user" });
         }
 

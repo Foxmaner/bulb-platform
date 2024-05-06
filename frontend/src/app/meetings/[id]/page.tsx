@@ -21,16 +21,7 @@ import AddSection from "../../components/section/defaultAddsection";
 
 import SectionForm from "app/components/section/sectionForm"
 
-import { Section, Paragraph } from "index";
-import { VerticalDotsIcon } from "components/btn/VerticalDotBtn";
-import {
-    Dropdown,
-    DropdownTrigger,
-    DropdownMenu,
-    DropdownSection,
-    DropdownItem
-  } from "@nextui-org/dropdown";
-
+import { Section } from "index";
   
 import { useMeetingContext } from "../../context/meetingProvider";
 import { Toolbar } from "app/components/toolbar";
@@ -45,31 +36,31 @@ import { useCurrentEditor } from "app/context/editorProvider";
 import MeetingHelpInfo from "app/components/MeetingHelpInfo";
 
 import { useRouter } from "next/navigation";
+import ShareModal from "app/components/ShareModal";
 
 
 export default function MeetingPage() {
 
-    const {isOpen, onOpen, onOpenChange} = useDisclosure();
+    const { isOpen, onOpenChange, onClose, onOpen } = useDisclosure();
     const { meeting, setMeeting } = useMeetingContext();
     const router = useRouter();
-    const { socket } = useCurrentEditor();
-    
-    
+    const { socket, provider } = useCurrentEditor();
+
     const [ selectedSectionTitle, setSelectedSectionTitle ] = useState<string | null>(null);
     const sectionRefs = useRef<Array<React.RefObject<HTMLDivElement>>>([]);
     
     const scrollToTitle = (ref: string) => {
         const section = meeting.sections.find(section => section.title === ref)
-       if(section){
-        const sectionIndex = meeting.sections.indexOf(section);
-        const sectionRef = sectionRefs.current[sectionIndex]?.current
-        if(sectionRef){
-            window.scrollTo({
-                top :sectionRef.offsetTop,
-                behavior: 'smooth'
-            })
+        if(section){
+            const sectionIndex = meeting.sections.indexOf(section);
+            const sectionRef = sectionRefs.current[sectionIndex]?.current
+            if(sectionRef){
+                window.scrollTo({
+                    top :sectionRef.offsetTop,
+                    behavior: 'smooth'
+                })
+            }
         }
-       }
     };
 
     const scrollToTitleButtonClick = (title: string) => {
@@ -88,8 +79,6 @@ export default function MeetingPage() {
     }, [meeting, setMeeting]);
 
     const sendAddSection = useCallback((useTitle?: boolean) => {
-        console.log('section_create')
-        console.log(meeting)
         socket?.emit("section_create", { meetingID: meeting._id }, (data: any) => {
             addSection(data.section);
         });
@@ -104,7 +93,7 @@ export default function MeetingPage() {
         }
     }, [socket, addSection])
 
-    if (meeting._id === "") {
+    if (meeting._id === "" || !provider) {
         return (
             <div className="w-screen h-screen flex justify-center items-center">
                 <Spinner />
@@ -115,21 +104,21 @@ export default function MeetingPage() {
     return (
         <div>
             <div className="absolute w-screen h-screen inset-0 z-0">
-                <Image className="absolute top-0 left-0  w-[1.5%]" src={bgSqures} alt="bg-squares"></Image>
+                <Image className="absolute -top-1 left-0  w-[1%]" src={bgSqures} alt="bg-squares"></Image>
 
-                <Image className="absolute bottom-0 left-0 w-[10%]" src={bgC} alt="bg-C"></Image>
+                <Image className="absolute bottom-0 left-0 w-[8%]" src={bgC} alt="bg-C"></Image>
 
-                <Image className="absolute bottom-0 right-12" src={bgHalfCircle} alt="halfcircle"></Image>
-                <Image className="absolute top-48 right-28" src={bgLeafRight} alt="leafRight"></Image>
-                <Image className="absolute top-0 right-0" src={bgLeafLeft} alt="leafLeft"></Image>
-                <Image className="absolute bottom-0 right-0  w-[1.2%]" src={bgSqures} alt="bg-squares"></Image>
+                <Image className="absolute bottom-0 right-28 w-[5%]" src={bgHalfCircle} alt="halfcircle"></Image>
+                <Image className="absolute top-48 right-28 w-[5%]" src={bgLeafRight} alt="leafRight"></Image>
+                <Image className="absolute top-0 right-0 w-[5%]" src={bgLeafLeft} alt="leafLeft"></Image>
+                <Image className="absolute bottom-0 right-0 w-[1%]" src={bgSqures} alt="bg-squares"></Image>
             </div>
             <div className="flex w-screen h-screen content-center justify-center items-center relative">
-                <div className="flex flex-row mr-[10%] bg-white w-[calc(85%)] h-[calc(98%)] px-4">
+                <div className="flex flex-row mr-[10%] mt-[1%] bg-white w-[calc(85%)] h-[calc(98%)] px-4">
                     {/*Vänstra div den med loggan*/}
                     <div className="flex flex-col text-black">
                         <div className='px-5 pt-6 pb-4'>
-                            <Link href="/">
+                            <Link href="/meetings">
                                 <h1 className="text-primary font-bold text-3xl">East <br /> Sweden <br /> MedTech</h1>
                             </Link>
                         </div>
@@ -161,24 +150,25 @@ export default function MeetingPage() {
 
                     <div className="flex flex-col text-primaryText gap-5 w-11/12 py-5 px-8">
 
-                        <div className="flex flex-row border-b-1 border-edge">                    
-                            <div className="flex flex-col gap-2 w-11/12">
+                        <div className="flex flex-row items-center justify-between border-b-1 border-edge pb-2">                    
+                            <div className="flex flex-row items-end gap-2 w-1/3">
                                 <Input
                                     classNames={{
-                                        input: "text-3xl font-bold text-black placeholder:text-black bg-transparent",
+                                        base: "w-2/3",
+                                        input: "text-3xl font-bold text-titleText placeholder:text-titleText bg-transparent",
                                         inputWrapper: "bg-transparent shadow-none border-none",
                                     }} 
+                                    variant="underlined"
                                     disableAnimation={true} 
                                     radius="lg" 
                                     type={meeting.name} 
                                     placeholder="Tomt möte" 
                                     isRequired={true}
                                 />
-                                {new Date(meeting.date).toLocaleDateString("sv", { day: "numeric", month: "short", year: "numeric" })}
                             </div>
                             <div className="flex flex-row gap-2">
-                                <Button color="primary" size="sm">Publicera</Button>
-                                <Button color="primary" size="sm">Dela</Button>
+                                <Button className="border-1" variant="bordered" size="sm">Publicera</Button>
+                                <Button className="border-1" variant="bordered" onClick={onOpen} size="sm">Dela</Button>
                             </div>
                         </div>
 
@@ -205,26 +195,19 @@ export default function MeetingPage() {
                         </ScrollShadow>
                         <div className="place-self-end">
                             <div className="flex flex-row gap-2">
-                                <Button color="primary" size="sm" onClick={() => sendAddSection()}>Nytt avsnitt</Button>
-                                <Button color="primary" size="sm" onClick={() => router.push("/meetings")}>Stäng</Button>
-                                <Button color="primary" size="sm">Publicera</Button>
-                                <Button color="primary" size="sm">Dela</Button>
+                                <Button className="border-1" variant="bordered" size="sm" onClick={() => sendAddSection()}>Nytt avsnitt</Button>
+                                <Button className="border-1" variant="bordered" size="sm" onClick={() => router.push("/meetings")}>Stäng</Button>
                             </div>
-                            <Modal backdrop="transparent" isOpen={isOpen} onOpenChange={onOpenChange} size="5xl">
+                            <Modal isOpen={isOpen} onOpenChange={onOpenChange} radius="sm" size="xl">
                                 <ModalContent>
-                                    {(onclose) =>(
-                                        <>
-                                        <ModalHeader className="flex flex-col gap-1">Hjälp</ModalHeader>
-                                        <ModalBody>
-                                            <MeetingHelpInfo/>
-                                        </ModalBody>
-                                        <ModalFooter>
-                                            <Button color="danger" variant="light" onClick={onclose}>Stäng</Button>
-                                        </ModalFooter>
-                                        </>
-                                    )}
+                                    <ModalHeader className="flex flex-col gap-1">Dela Möte</ModalHeader>
+                                    <ModalBody>
+                                        <ShareModal/>
+                                    </ModalBody>
+                                    <ModalFooter>
+                                    <Button color="danger" variant="light" onClick={onClose}>Stäng</Button>
+                                </ModalFooter>
                                 </ModalContent>
-
                             </Modal>
                         </div>
                     </div>
