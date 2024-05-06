@@ -115,10 +115,10 @@ export default function Navbar() {
           </DropdownTrigger>
           <DropdownMenu aria-label="Static Actions">
             <DropdownItem color="secondary" key="profile" onPress={(e) => router.push("/profile")}>
-              Profile
+              Profil
             </DropdownItem>
             <DropdownItem color="danger" className="text-danger" key="signout" onPress={handleOAuth}>
-              SignOut
+              Logga ut
             </DropdownItem>
           </DropdownMenu>
         </Dropdown>

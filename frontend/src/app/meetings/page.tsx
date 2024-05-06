@@ -133,7 +133,7 @@ export default function MeetingsPage() {
 
 	return (
 		<div className="flex-col h-[calc(100vh-2rem)] w-full bg-white border m-4 ml-0 rounded-lg">
-			<PageHeader contentTitle="Meetings">
+			<PageHeader contentTitle="Möten">
 				<div className="flex flex-row items-center justify-between space-x-2 w-1/5 ml-0.5 mt-2">
 					<div className="flex-1">
 						<MenuBtn createButton={createMeeting}>

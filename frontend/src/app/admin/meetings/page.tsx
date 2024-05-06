@@ -21,10 +21,11 @@ const statusColorMap: Record<string, ChipProps["color"]> = {
 
 const meetings: Meeting[] = Array.from({ length: 50 }, (_, index) => (
 	{
-		_id: index,
+		_id: index.toString(),
 		name: `test ${index}`,
         team: "test",
         status: "done",
+		sections: [],
 		date: new Date().toISOString(),
 	}
 ));

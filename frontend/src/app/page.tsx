@@ -11,7 +11,7 @@ export default function Home() {
 				<h1 className="text-white font-bold text-8xl z-10 text-cente p-4">BULB</h1>
 				<h2 className="text-thridGrey text-3xl z-10 text-center">Varje vårdsituation är en möjlighet till förändring.</h2>
 				<div className="flex flex-row items-center justify-center w-full z-10 m-4">
-					<Link href={"/loginPage"} className="m-4 bg-primaryLight text-white font-bold text-xl px-6 py-2 rounded-lg">
+					<Link href={"/login"} className="m-4 bg-primaryLight text-white font-bold text-xl px-6 py-2 rounded-lg">
 						Börja Nu
 					</Link>
 					<Link href={"https://eastswedenmedtech.se/en/start-uk/"} className="m-4 bg-primaryLight text-white font-bold text-xl px-6 py-2 rounded-lg">
@@ -36,11 +36,11 @@ export default function Home() {
 				<div className="flex flex-row justify-evenly items-center h-4/5 mt-4">
 					<div className="flex flex-col items-center justify-center">
 						<h1 className="font-bold text-5xl text-primary m-2">1400</h1>
-						<h2 className="font-bold text-2xl text-primaryText">Alltal behov i vården</h2>
+						<h2 className="font-bold text-2xl text-primaryText">Antal behov i vården</h2>
 					</div>
 					<div className="flex flex-col items-center justify-center">
 						<h1 className="font-bold text-5xl text-primary m-2">1400</h1>
-						<h2 className="font-bold text-2xl text-primaryText">Alltalet vi försöker lösa</h2>
+						<h2 className="font-bold text-2xl text-primaryText">Antalet vi försöker lösa</h2>
 					</div>
 					<div className="flex flex-col items-center justify-center">
 						<h1 className="font-bold text-5xl text-primary m-2">1400</h1>

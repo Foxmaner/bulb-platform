@@ -38,7 +38,7 @@ export default function Profile() {
 
     return (
         <div className="flex flex-col h-[calc(100vh-2rem)] w-full bg-white border m-4 ml-0 rounded-lg justify-between relative overflow-hidden">
-            <PageHeader contentTitle="Profile" />
+            <PageHeader contentTitle="Profil" />
             <div className="ml-5 flex flex-row w-full h-full">
                 <div className="w-1 h-[90%] bg-primary mt-8"/>
                 <div className="flex flex-col w-full ml-4">
@@ -51,7 +51,7 @@ export default function Profile() {
                         <Input
                             radius="sm"
                             type="name"
-                            label="Display Name"
+                            label="Namn"
                             variant="underlined"
                             className="w-[30%] mr-8"
                             value={user?.name}
@@ -72,7 +72,7 @@ export default function Profile() {
                             isReadOnly
                             radius="sm"
                             type="company"
-                            label="Company"
+                            label="Företag"
                             className="w-[26%]"
                             variant="underlined"
                             defaultValue={user?.team}
@@ -84,7 +84,7 @@ export default function Profile() {
                             key="delete"
                             variant="bordered"
                         >
-                            Apply
+                            Lägg till
                         </Button>
                     </div>
                     <div className="flex w-full flex-col m-3.5 max-w-[50%]">
@@ -109,7 +109,7 @@ export default function Profile() {
                         key="delete"
                         onPress={handleDeleteUser}
                     >
-                        Delete Profile
+                        Ta bort profil
                     </Button>
                 </div>
             </div>

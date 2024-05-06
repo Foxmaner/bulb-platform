@@ -31,7 +31,7 @@ export default function Menu() {
           className="mr-1"
           color={`${pathname.includes("/calendar") ? "#831843" : "#6b7280"}`}
         />
-        Calendar
+        Kalender
       </Link>
       {/* Möten */}
       <div
@@ -93,15 +93,15 @@ export default function Menu() {
         Mallar
       </Link>
       <Link
-        href="/companty"
+        href="/organisation"
         className={`text-gray-500 font-bold text-lg flex items-center mb-1 ${
-          pathname.includes("/company") ? "text-primary" : "hover:text-secondary"
+          pathname.includes("/organisation") ? "text-primary" : "hover:text-secondary"
         }`}
         onClick={setInvisible}
       >
         <BsBuilding
           className="mr-1"
-          color={`${pathname.includes("/company") ? "#831843" : "#6b7280"}`}
+          color={`${pathname.includes("/organisation") ? "#831843" : "#6b7280"}`}
         />
         Organisation
       </Link>

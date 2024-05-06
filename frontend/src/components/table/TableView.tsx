@@ -216,9 +216,9 @@ export default function TableView<T extends { _id: string }>({
                                 </Button>
                             </DropdownTrigger>
                             <DropdownMenu>
-                                <DropdownItem>View</DropdownItem>
-                                <DropdownItem>Edit</DropdownItem>
-                                <DropdownItem>Delete</DropdownItem>
+                                <DropdownItem>Vy</DropdownItem>
+                                <DropdownItem>Redigera</DropdownItem>
+                                <DropdownItem>Tabort</DropdownItem>
                             </DropdownMenu>
                         </Dropdown>
                     </div>

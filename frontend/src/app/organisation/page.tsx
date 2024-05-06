@@ -20,13 +20,12 @@ const statusColorMap: Record<string, ChipProps["color"]> = {
 
 const users = Array.from({ length: 50 }, (_, index) => (
 	{
-		_id: index,
+		_id: index.toString(),
 		name: `User${index}`,
 		role: "some role",
 		team: "Management",
 		status: "active",
 		age: "29",
-		avatar: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
 		email: "user@gmail.com",
 	}
 ));
@@ -63,7 +62,6 @@ export default function MeetingPage() {
 					specificComponents={{
 						name: (value: User, cellvalue: string) => (
 							<UserComponent
-								avatarProps={{ radius: "lg", src: value.avatar }}
 								description={value.email}
 								name={cellvalue}
 							>
@@ -92,8 +90,7 @@ export default function MeetingPage() {
 					}}
 
 					data={users}
-					columns={columns}
-				/>
+					columns={columns} loading={false}				/>
 			</div>
 
 		</div>

@@ -28,27 +28,27 @@ export type TCalendarHeader = {
 
 const updateWeekDate = (start: Date, end: Date): string => {
     if (start.getMonth() === end.getMonth()) {
-        return start.toLocaleDateString("default", { month: "long", year: "numeric" });
+        return start.toLocaleDateString("sv", { month: "long", year: "numeric" });
     
     } else if (start.getMonth() !== end.getMonth() && start.getFullYear() === end.getFullYear()) {
         return`${
-            start.toLocaleString('default', { month: 'short' })
-        }. - ${end.toLocaleString('default', { month: 'short' })}. ${end.getFullYear()}`;
+            start.toLocaleString('sv', { month: 'short' })
+        }. - ${end.toLocaleString('sv', { month: 'short' })}. ${end.getFullYear()}`;
     }
     else {
         return `${
             start.toLocaleString('default', { month: 'short' })
-        }. ${start.getFullYear()} - ${end.toLocaleString('default', { month: 'short' })}. ${end.getFullYear()}`;
+        }. ${start.getFullYear()} - ${end.toLocaleString('sv', { month: 'short' })}. ${end.getFullYear()}`;
     }
 }
 
 const updateDayDate = (start: Date): string => {
-    return `Den ${start.toLocaleDateString("default", { day: "numeric", month: "long", year: "numeric" })}`
+    return `Den ${start.toLocaleDateString("sv", { day: "numeric", month: "long", year: "numeric" })}`
 }
 
 const updateMonthDate = (start: Date): string => {
     start.setDate(start.getDay()+7);
-    return start.toLocaleDateString("default", { month: "long", year: "numeric" });
+    return start.toLocaleDateString("sv", { month: "long", year: "numeric" });
 }
 
 const getDefaultDates = (): [start: Date, end: Date] => {
@@ -129,14 +129,14 @@ export function CalendarHeader({ calendarRef, selectedViews, setSelectedViews }:
     return (
         <header className="flex flex-row justify-between items-center m-0 mb-2 p-0 px-8 pb-3 w-full border-b border-edge">
             <div className="flex ml-4">
-                <h1 className="text-3xl mr-8">Calender</h1>
+                <h1 className="text-3xl mr-8">Kalender</h1>
                 <Button
                     color="primary"
                     variant="bordered"
                     className="border-1 border-edge rounded-lg"
                     onClick={() => handleDateChange("today")}
                 >
-                    Today
+                    Idag
                 </Button>
 
                 <div className="flex flex-row justify-center items-center ml-4">
@@ -233,7 +233,7 @@ export function CalendarHeader({ calendarRef, selectedViews, setSelectedViews }:
                         aria-label="Dropdown Variants"
                     >
                         <DropdownItem key="viewWeekends">Visa Helger</DropdownItem>
-                        <DropdownItem key="viewEndedMeetings">Visa slutfördamöten</DropdownItem>
+                        <DropdownItem key="viewEndedMeetings">Visa slutförda möten</DropdownItem>
                     </DropdownMenu>
                 </Dropdown>
                 <Select
@@ -259,7 +259,7 @@ export function CalendarHeader({ calendarRef, selectedViews, setSelectedViews }:
                         value={"Day"}
                         onClick={() => handleDateChange("today")}
                     >
-                        Day
+                        Dag
                     </SelectItem>
                     <SelectItem
                         classNames={{
@@ -269,7 +269,7 @@ export function CalendarHeader({ calendarRef, selectedViews, setSelectedViews }:
                         value={"Week"}
                         onClick={() => handleDateChange("today")}
                     >
-                        Week
+                        Vecka
                     </SelectItem>
                     <SelectItem
                         classNames={{
@@ -279,7 +279,7 @@ export function CalendarHeader({ calendarRef, selectedViews, setSelectedViews }:
                         value={"Month"}
                         onClick={() => handleDateChange("today")}
                     >
-                        Month
+                        Månad
                     </SelectItem>
                 </Select>
             </div>

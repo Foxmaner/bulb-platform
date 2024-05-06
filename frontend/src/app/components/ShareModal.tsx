@@ -153,8 +153,8 @@ export default function ShareModal() {
                 <Listbox
 					arial-label="user"
                     classNames={{
-                        base: "max-w-xs ml-8",
-                        list: "max-h-[150px] overflow-scroll w-96",
+                        base: "max-w-xs ml-8 overflow-y-hidden",
+                        list: "max-h-[150px] overflow-hidden w-96",
                     }}
                     items={guests}
                     label="Assigned to"
@@ -168,14 +168,14 @@ export default function ShareModal() {
                         <ListboxItem
 							arial-label="userlist"
                             classNames={{
-                                base: "flex flex-row items-center justify-between w-200",
-                                wrapper: "flex flex-row items-center justify-between w-200",
+                                base: "flex flex-row items-center justify-between w-96 overflow-hidden",
+                                wrapper: "flex flex-row items-center justify-between w-96 overflow-hidden",
                             }}
                             aria-label="user"
                             key={item._id}
                             textValue={item.name}
                         >
-                            <div arial-label="usertype" className="flex flex-row items-center justify-between w-120">
+                            <div arial-label="usertype" className="flex overflow-hidden flex-row items-center justify-between">
 								<UserComponent arial-label="usertype" name={item.name} />
                                 
 								{

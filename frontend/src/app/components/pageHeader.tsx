@@ -1,6 +1,7 @@
 import React from "react";
 import MenuBtn from "../../components/btn/MenuBtn";
 import Image from "next/image";
+import { useUserContext } from "app/context/userProvider";
 
 
 interface PageHeaderProps {
@@ -9,11 +10,12 @@ interface PageHeaderProps {
 }
 
 export default function PageHeader({ children, contentTitle }: PageHeaderProps) {
-	const username = "Test User1";
+	const userContext = useUserContext();
+	const username = userContext.user?.name;
 	const times = [
-		"Morning",
-		"Afternoon",
-		"Evening"
+		"Morgon",
+		"Eftermiddag",
+		"Kväll"
 	]
 
 	const getTimes = (): string => {
@@ -32,7 +34,7 @@ export default function PageHeader({ children, contentTitle }: PageHeaderProps) 
 	return (
 		<div className=" w-full flex-col justify-between mb-2">
 			<div className="w-full px-5 py-2">
-				<h2 className="text-titleText font-medium">Good {getTimes()}, {username.split(" ")[0]}!</h2>
+				<h2 className="text-titleText font-medium">God {getTimes()}, {username?.split(" ")[0]}!</h2>
 			</div>
 
 			<div className="bg-primaryGrey w-full flex flex-row justify-between items-center pl-4 border-y border-primaryBorder overflow-hidden">

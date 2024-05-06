@@ -31,18 +31,7 @@ const columns = [
 export default function TemplatesPage() {
 	return (
 		<div className="flex-col h-[calc(100vh-2rem)] w-full bg-white border m-4 ml-0 rounded-lg">
-			<PageHeader contentTitle="Templates" />
-			<div className="h-[70%]">
-				<TableView<Meeting>
-					link="/templates/"
-					name="templates"
-					defaultVisibleColumns={["name", "date", "status", "actions"]}
-
-					
-					data={templates}
-					columns={columns}
-				/>
-			</div>
+			
 
 		</div>
 	);
