@@ -25,6 +25,7 @@ import {
     sectionRoutes,
     templateRoutes,
     wordcloudRoutes,
+    cardRoutes,
 } from "./routes";
 
 
@@ -105,6 +106,7 @@ const run = async () => {
     app.use("/section", sectionRoutes);
     app.use("/template", templateRoutes);
     app.use("/wordcloud", wordcloudRoutes); 
+    app.use("/card", cardRoutes);
 
     io.use(wrap(runSessionMiddleware()))
     //io.use(verifySocket);
