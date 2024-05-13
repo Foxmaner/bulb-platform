@@ -60,6 +60,7 @@ export default function StickerNote() {
         const fetchData = async () => {
           const response = await fetch('/brainstorm'); // replace with your URL
           const text = await response.text();
+          console.log(text)
           setData(JSON.parse(text));
         };
         
