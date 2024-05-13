@@ -35,12 +35,14 @@ export default function Page({ params }: { params: { id: string } }) {
   useEffect(() => {
     
     const fetchData = async () => {
+      const newID = params.id.replace('id=', '');
       const resp = await Request.post({
-				url: "/wordcloud/create/"+params.id
+				url: "/wordcloud/create/" + newID,
 			});
 
 
       const text = await resp.json();
+      console.log(text)
       setData(text);
     };
 
