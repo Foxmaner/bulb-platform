@@ -30,6 +30,7 @@ export default function Page({ params }: { params: { id: string } }) {
   const schemeCategory10ScaleOrdinal = scaleOrdinal(schemeCategory10);
 
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const rotate = useCallback((word: any) => word.value % 2, []);
 
   useEffect(() => {
@@ -42,16 +43,18 @@ export default function Page({ params }: { params: { id: string } }) {
 
 
       const text = await resp.json();
-      console.log(text)
       setData(text);
+      setLoading(false);
     };
 
     fetchData();
   }, []);
 
-
+  if (loading) {
+    return <div>Loading...</div>;
+  }
   return (
-
+    
     <div className="w-screen h-screen">
       <WordCloud data={data} width={500} height={200} fontSize={(word) => Math.log2(word.value) * 20} rotate={rotate} />
       <QRCodeWindow qrData={params.id} />
