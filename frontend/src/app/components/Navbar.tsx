@@ -31,6 +31,7 @@ const navbarPaths = [
   "/profile",
   "/organisation",
   "/admin/meetings",
+  "/careneeds"
 ];
 
 export default function Navbar() {

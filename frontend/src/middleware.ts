@@ -13,16 +13,18 @@ import { parse } from 'cookie';
 */
 
 const routes = [
-    '/documents',
     '/templates',
     '/meetings',
     '/auth/signin'
 ]
 
 const protectedRoutes = [
-    '/documents',
     '/templates',
-    '/meetings'
+    '/meetings',
+    '/organisation',
+    '/admin',
+    '/careneeds',
+    '/calendar',
 ];
 
 export async function middleware(req: NextRequest) {
@@ -65,7 +67,6 @@ export async function middleware(req: NextRequest) {
             return NextResponse.redirect(new URL('/login', req.nextUrl.origin));
         }
     }
-
 }
 
 

@@ -58,7 +58,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 export const useUserContext = () => {
 	const context = useContext(UserContext);
 	if (!context) {
-    	throw new Error('useSectionContext must be used within an SectionProvider');
+    	throw new Error('useSectionContext must be used within an Userprovider');
 	}
 
   	return context;

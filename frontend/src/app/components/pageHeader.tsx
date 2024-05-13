@@ -39,7 +39,7 @@ export default function PageHeader({ children, contentTitle }: PageHeaderProps) 
 
 			<div className="bg-primaryGrey w-full flex flex-row justify-between items-center pl-4 border-y border-primaryBorder overflow-hidden">
 				<div className="w-full flex flex-col items-start pr-2">
-					<h1 className="text-black font-bold text-7xl">
+					<h1 className="text-titleText font-bold text-7xl">
 						{contentTitle}
 					</h1>
 					{children}
