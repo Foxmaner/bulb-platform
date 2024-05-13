@@ -5,11 +5,11 @@ import WordcloudController from '../controllers/routeController/wordcloud.contro
 const wordcloudRoutes: Router = Router();
 
 
-wordcloudRoutes.put('/create/:sectionId', WordcloudController.create)
+wordcloudRoutes.post('/create/:meetingId', WordcloudController.create)
 
 wordcloudRoutes.delete('/delete/:id', WordcloudController.delete)
 
-wordcloudRoutes.post('/edit/:id', WordcloudController.edit)
+wordcloudRoutes.put('/edit/:id', WordcloudController.edit)
 
 
 export { wordcloudRoutes }
