@@ -6,11 +6,16 @@ import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDi
 
 import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/react";
 import { useState } from "react";
-
+import { usePathname} from 'next/navigation'
 
 export default function Page({ qrData }: { qrData: string }) {
+  const pathname = usePathname()
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [isCardVisible, setCardVisible] = useState(true); // Add this line
+  const qrDataLink = "localhost:3000" + pathname + "/mobile/"
+
+  
+
 
   return (
 
@@ -37,7 +42,7 @@ export default function Page({ qrData }: { qrData: string }) {
                     <BsX size={50} />
                   </Button>
                   <div className="bg-white">
-                    <p className="text-center text-2xl font-bold underline ">{qrData}</p>
+                    <p className="text-center text-xl font-bold underline ">{qrData}</p>
                   </div>
                 </div>
               </div>
@@ -53,11 +58,11 @@ export default function Page({ qrData }: { qrData: string }) {
             <>
               <ModalBody className="bg-primaryGrey">
                 <div className="flex items-center space-x-4">
-                  <QRCode value={qrData} />
+                  <QRCode value={qrDataLink} />
                   <div className="space-y-4 flex-col">
                     <p className="text-4xl font-bold underline">Kod</p>
                     <div className="bg-white">
-                      <p className="text-center text-3xl font-bold underline ">{qrData}</p>
+                      <p className="text-center text-xl font-bold underline ">{qrData}</p>
                     </div>
                   </div>
                 </div>

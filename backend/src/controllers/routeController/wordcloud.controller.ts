@@ -63,9 +63,9 @@ export default class WordcloudController {
 
 
     const cnt = wordsLeft.toLowerCase().match(/\w+/g);  // Convert text to lower case and split into words
-    const wordCount = {};
+    const wordCount: { [key: string]: number } = {};
 
-    if (!cnt) return res.status(200).json({ words: wordCount });
+    if (!cnt) return res.status(200).json(wordCount);
 
     cnt!.forEach(word => {
         if (wordCount[word]) {
@@ -75,7 +75,7 @@ export default class WordcloudController {
         }
     });
 
-    return res.status(200).json({ words: wordCount });
+    return res.status(200).json(Object.entries(wordCount).map(([text, value]) => ({ text, value })));
   }
 
   static edit(req: Request, res: Response) {}
