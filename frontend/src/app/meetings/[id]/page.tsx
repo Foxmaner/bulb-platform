@@ -18,6 +18,7 @@ import { Button, ScrollShadow, Tooltip, Input, Modal, ModalContent, ModalHeader,
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import AddSection from "../../components/section/defaultAddsection";
+import WordCloudPage from "../../components/WordCloudPage";
 
 import SectionForm from "app/components/section/sectionForm"
 
@@ -47,9 +48,10 @@ import MeetingHelpInfo from "app/components/MeetingHelpInfo";
 import { useRouter } from "next/navigation";
 
 
-export default function MeetingPage() {
+export default function MeetingPage({ params }: { params: { id: string } }) {
 
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
+    const {isOpen:isOpenWordCloud, onOpen:onOpenWordCloud, onOpenChange:onOpenChangeWordCloud} = useDisclosure();
     const { meeting, setMeeting } = useMeetingContext();
     const router = useRouter();
     const { socket } = useCurrentEditor();
@@ -111,7 +113,6 @@ export default function MeetingPage() {
             </div>
         );
     }
- 
     return (
         <div>
             <div className="absolute w-screen h-screen inset-0 z-0">
@@ -209,6 +210,7 @@ export default function MeetingPage() {
                                 <Button color="primary" size="sm" onClick={() => router.push("/meetings")}>Stäng</Button>
                                 <Button color="primary" size="sm">Publicera</Button>
                                 <Button color="primary" size="sm">Dela</Button>
+                                <Button color="primary" size="sm" onPress={onOpenWordCloud}>Generera ordmoln</Button>
                             </div>
                             <Modal backdrop="transparent" isOpen={isOpen} onOpenChange={onOpenChange} size="5xl">
                                 <ModalContent>
@@ -221,6 +223,20 @@ export default function MeetingPage() {
                                         <ModalFooter>
                                             <Button color="danger" variant="light" onClick={onclose}>Stäng</Button>
                                         </ModalFooter>
+                                        </>
+                                    )}
+                                </ModalContent>
+
+                            </Modal>
+                            <Modal backdrop="transparent" isOpen={isOpenWordCloud} onOpenChange={onOpenChangeWordCloud} size="5xl">
+                                <ModalContent>
+                                    {(oncloseWordCloud) =>(
+                                        <>
+                                        <ModalHeader className="flex flex-col gap-1">Ordmoln</ModalHeader>
+                                        <ModalBody>
+                                            <WordCloudPage id={params.id}/>
+                                        </ModalBody>
+                                        
                                         </>
                                     )}
                                 </ModalContent>
