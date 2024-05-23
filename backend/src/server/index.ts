@@ -16,7 +16,8 @@ function connectionHandler(socket: any): void {
     });
 
     socket.on('notes_movement', (data) =>{
-        BrainstormController.notes_move(socket,data);
+        console.log(data);
+        BrainstormController.notes_move(socket, data);
     });
 
     socket.on('create_note', (data) =>{

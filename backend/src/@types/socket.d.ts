@@ -27,7 +27,7 @@ declare module "socket" {
 
     interface INote{
         meetingID: string,
-        noteID: string,
+        answerID: string,
         sectionID: string,
         paragraphID: string,
         xPos: string,

@@ -1,10 +1,12 @@
 "use client";
 import QRCodeWindow from "app/components/QrCode";
-import React, { useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import { scaleOrdinal } from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';
 const WordCloud = dynamic(() => import('app/components/WordCloud'), { ssr: false });
+import Request from "../../../utils/client-request";
+
 
 function generateData(str: string) {
   const words = str.split(' ');
@@ -26,10 +28,33 @@ let sampleString = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nul
 
 export default function Page({ params }: { params: { id: string } }) {
   const schemeCategory10ScaleOrdinal = scaleOrdinal(schemeCategory10);
-  let data = generateData(sampleString)
-  const rotate = useCallback((word: any) => word.value % 2, []);
-  return (
 
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const rotate = useCallback((word: any) => word.value % 2, []);
+
+  useEffect(() => {
+    
+    const fetchData = async () => {
+      const newID = params.id.replace('id=', '');
+      const resp = await Request.post({
+				url: "/wordcloud/create/" + newID,
+			});
+
+
+      const text = await resp.json();
+      setData(text);
+      setLoading(false);
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+  return (
+    
     <div className="w-screen h-screen">
       <WordCloud data={data} width={500} height={200} fontSize={(word) => Math.log2(word.value) * 20} rotate={rotate} />
       <QRCodeWindow qrData={params.id} />
