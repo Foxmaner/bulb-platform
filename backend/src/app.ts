@@ -23,6 +23,7 @@ import {
     sectionRoutes,
     templateRoutes,
     wordcloudRoutes,
+    cardRoutes,
 } from "./routes";
 
 import dotenv from "dotenv";
@@ -129,6 +130,7 @@ const run = async () => {
     app.use("/section", sectionRoutes);
     app.use("/template", templateRoutes);
     app.use("/wordcloud", wordcloudRoutes); 
+    app.use("/card", cardRoutes);
 
     io.use(function(socket, next){
         socket.request.headers.cookie = socket.handshake.auth.cookie;

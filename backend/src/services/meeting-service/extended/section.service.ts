@@ -21,13 +21,13 @@ export class MethodSectionService extends mongoose.Model<Meeting> {
             { $match: { 'sections._id': sectionID } },
             { $project: { 'sections': sectionID } }
         ])
-
-        if (!section) {
+        if (!section || section.length === 0) {
             return res.status(404).json({ message: "No meeting" });
         }
 
         return res.status(200).json(section[0].sections);
     }
+
 
     async addSection (name: string = "Untitled Section") {
         var _id = Math.max(...this.sections.map((section: any) => section._id),

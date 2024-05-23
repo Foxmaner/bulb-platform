@@ -16,3 +16,5 @@ export * from './section.route';
 export * from './template.route';
 
 export * from './wordcloud.route';
+
+export * from './card.route';

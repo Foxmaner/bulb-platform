@@ -1,9 +1,11 @@
 import { TestDecorators } from "../../utils";
 import { IParagraphEdit } from "socket";
 import Delta from "quill-delta";
+import { get } from "http";
 @TestDecorators.describeSocket("Meeting Socket tests")
 class MeetingTest {
 
+    
     @TestDecorators.test("Sections")
     async socketTestSection(openSocket: any, req: any) {
 
@@ -111,7 +113,10 @@ class MeetingTest {
 
             const resp2 = await req.get(`/meeting/${meetingID}`);
             const section = resp2.body.meeting.sections[0];
+            console.log("83998912390812907857384957893475987349" + section);
+
             const sectionID = section._id;
+            
             const paramsCreate = {meetingID, sectionID}
             socket2.emit("paragraph_create", paramsCreate);
 
@@ -134,6 +139,8 @@ class MeetingTest {
             const tmp = resp3.body.meeting.sections;
             console.log(111, tmp);
             const paragraphID = tmp[0].contains[0]._id;
+            const paragraph1 = tmp[0].contains[0];
+            console.log(222, paragraph1);
             // const patches = [{
             //     diffs: [ [ 1, 'Hello World!' ] ],
             //     start1: 0,
@@ -141,12 +148,20 @@ class MeetingTest {
             //     length1: 0,
             //     length2: 12
             // }]
-            let change = new Delta().insert('Hello, ').ops;
+            
+            // Ops verkar få den att crasha
+            //let change = new Delta().insert('Hello, ').ops;
+            let change = new Delta().insert('Hello, ');
+
             console.log(change);
             const paramEdit : IParagraphEdit = {meetingID, sectionID, paragraphID, change}
             socket2.emit("paragraph_edit", paramEdit);
 
+            const paragraph2 = tmp[0].contains[0];
+            console.log(333, paragraph2);
+
             //change = new Delta().retain(7).insert('world!');
+            const paragraphs = section;
 
 
         });
@@ -156,7 +171,6 @@ class MeetingTest {
                 resolve({id:3});
             }, 1000);
         })
-        
     }
 
     // @TestDecorators.test("Test cursor in socket")

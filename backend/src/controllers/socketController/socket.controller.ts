@@ -75,7 +75,8 @@ export class SocketController {
     }
 
     static async edit_paragraph(socket, data: IParagraphEdit) {
-        
+        console.log("+++++++++++++++++++-------------++  " + data.change);
+
         const respMeeting = await MeetingModel.get(data.meetingID);
         const meeting = respMeeting.body.meeting;
         const paragraph = await meeting.getParagraph(data.sectionID, data.paragraphID);
